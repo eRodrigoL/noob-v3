@@ -1,4 +1,6 @@
 // babel.config.js
+// Configuração do Babel com suporte ao Expo e aliases personalizados
+
 module.exports = function (api) {
   api.cache(true);
   return {
@@ -23,6 +25,7 @@ module.exports = function (api) {
           },
         },
       ],
+      'expo-router/babel', // Plugin obrigatório para Expo Router
     ],
   };
 };
