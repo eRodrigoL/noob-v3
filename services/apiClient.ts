@@ -1,4 +1,4 @@
-// src/services/apiClient.ts
+// services/apiClient.ts
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import Constants from 'expo-constants';

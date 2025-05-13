@@ -1,4 +1,4 @@
-// src/lib/logger.ts
+// lib/logger.ts
 // Logger seguro: mostra logs somente em desenvolvimento e ignora no modo produção.
 // Usa `EXPO_PUBLIC_APP_MODE` como chave para ativar logs (definida no `.env`).
 

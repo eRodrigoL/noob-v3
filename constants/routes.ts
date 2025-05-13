@@ -1,4 +1,4 @@
-// src/constants/routes.ts
+// constants/routes.ts
 
 // Rotas organizadas por contexto, mas temporariamente apontando para a tela inicial.
 // Substitua os caminhos conforme as telas forem migradas.
