@@ -136,7 +136,7 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 - [✔️] `app.json` convertido em `app.config.js`
 - [✔️] `.env` criado e listado no `.gitignore`
 - [✔️] Escrever README.md
-- [] configurar o Prettier e `.prettierignore`
+- [✔️] configurado o Prettier, `.prettierignore`, ESLint e `.eslintignore`
 - [] Criar arquivo `logger`
 - [] Criar arquivos `apiClient.ts`
 - [] Documentar cada etapa/processo

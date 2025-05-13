@@ -1,0 +1,13 @@
+# .prettierignore
+node_modules
+ios
+android
+.expo
+.expo-shared
+.vscode
+.git
+.env
+assets
+*.config.js
+package-lock.json
+yarn.lock
