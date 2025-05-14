@@ -157,8 +157,8 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 
 - [] Copiar arquivos do repositório `https://github.com/eRodrigoL/noob`:
   - componentes (origem)
-    - [] `componments/ButtonGoBack.tsx`
-    - [] `componments/ButtonPrimary.tsx`
+    - [✔️] `componments/ButtonGoBack.tsx`
+    - [✔️] `componments/ButtonPrimary.tsx`
     - [] `componments/ButtonSecondary.tsx`
     - [] `componments/Header.tsx`
     - [] `componments/ParallaxProfile.tsx`
