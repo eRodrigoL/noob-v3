@@ -146,39 +146,54 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 
 ### [✅] **Hospedar repositório na web via Vercel**
 
-- [✔️] Linkar seu GitHub à Vercel e importar o repositório
-- [✔️] Definir `output directory` como `dist/` (ou deixar vazio se for projeto Expo Web)
-- [✔️] Publicar usando domínio gratuito ou personalizado (como `meuapp.vercel.app`)
-- [✔️] Documentar cada etapa/processo
+- [✔️] Linkado GitHub à Vercel e importado o repositório
+- [✔️] Definido `output directory` como `dist/`
+- [✔️] Publicado usando domínio `noob.app.br`
+- [✔️] Documentado arquivo vercelConfig.md
 
 ---
 
 ### [ ] Copiar o app do ZIP para a estrutura nova
 
-- [] Extraia o `.zip`.
-- [] Copie os arquivos por categoria **apenas o necessário**:
-  - respeitando novas pastas (auth, app, etc.)
-    - [] Telas > `src/app/`
-    - [] Componentes > `src/components/`
-    - [] Estilos > `src/theme/`
-    - [] Hooks > `src/hooks/`
-    - [] Stores > `src/store/`
-    - [] API > `src/services/`
-    - [] Constantes > `src/constants/`
-    - [] Utils > `src/lib/`
-    - [] Testes > `src/tests/`
-    - [...]
-- [] Documentar cada etapa/processo
+- [] Copiar arquivos do repositório `https://github.com/eRodrigoL/noob`:
+  - componentes (origem)
+    - [] `componments/ButtonGoBack.tsx`
+    - [] `componments/ButtonPrimary.tsx`
+    - [] `componments/ButtonSecondary.tsx`
+    - [] `componments/Header.tsx`
+    - [] `componments/ParallaxProfile.tsx`
+    - [] `componments/SandwichMenu.tsx`
+    - [] `componments/SearchBar.tsx`
+    - telas (origem)
+    - [] `scrreen/user/UserProfile.tsx`
+    - [] `scrreen/user/RegisterUser.tsx`
+    - [] `scrreen/user/Login.tsx`
+    - [] `scrreen/user/EditUser.tsx`
+    - [] `scrreen/user/(userProfile)/Descricao.tsx`
+    - [] `scrreen/user/(userProfile)/Desempenho.tsx`
+    - [] `scrreen/user/(userProfile)/Historico.tsx`
+    - [] `scrreen/user/(userProfile)/UserProfile.tsx`
+    - [] `scrreen/matches/MatchFinish.tsx`
+    - [] `scrreen/matches/MatchStart.tsx`
+    - [] `scrreen/matches/Matches.tsx`
+    - [] `scrreen/boardgame/RegisterGame.tsx`
+    - [] `scrreen/boardgame/List.tsx`
+    - [] `scrreen/boardgame/EditGame.tsx`
+    - [] `scrreen/boardgame/(gameProfile)/GameDashboard.tsx`
+    - [] `scrreen/boardgame/(gameProfile)/GameReview.tsx`
+    - [] `scrreen/boardgame/(gameProfile)/Ranking.tsx`
+    - [] `scrreen/boardgame/(gameProfile)/Descricao.tsx`
+    - [] `scrreen/boardgame/(gameProfile)/GameProfile.tsx`
 
 ---
 
 ### [ ] Migrar estilos comuns para globais
 
 - Crie ou preencha:
-  - [] `src/theme/global/theme.ts`
-  - [] `src/theme/global/typography.ts`
-  - [] `src/theme/global/globalStyles.ts`
-  - [] `src/theme/index.ts`
+  - [] `theme/global/theme.ts`
+  - [] `theme/global/typography.ts`
+  - [] `theme/global/globalStyles.ts`
+  - [] `theme/index.ts`
 - importar com: import { globalStyles } from '@theme/index';
 - Unifique tokens de cor, fontes, tamanhos e use com hook `useTheme.ts`.
 - [] Documentar cada etapa/processo
@@ -256,9 +271,9 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
   - Store/hooks: `tests/unit/store.test.ts`
   - Integração: `tests/integration/Header.test.tsx`
   - Fluxo completo: `tests/e2e/login-flow.test.ts`
-  - Unitários: `src/tests/unit/`
-  - Integração: `src/tests/integration/`
-  - End-to-end (opcional): `src/tests/e2e/`
+  - Unitários: `tests/unit/`
+  - Integração: `tests/integration/`
+  - End-to-end (opcional): `tests/e2e/`
   - [...]
 - [] Configurar `jest.config.js` com suporte ao Expo + TypeScript
 - [] Documentar cada etapa/processo
