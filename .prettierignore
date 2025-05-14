@@ -11,3 +11,4 @@ assets
 *.config.js
 package-lock.json
 yarn.lock
+*.md

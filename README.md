@@ -139,7 +139,7 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 - [✔️] configurado o Prettier, `.prettierignore`, ESLint e `.eslintignore`
 - [✔️] Criar arquivo `logger`
 - [✔️] Configurar aliases
-- [] Criar arquivos `apiClient.ts`
+- [✔️] Criar arquivos `apiClient.ts`
 - [] Documentar cada etapa/processo
 
 ---
