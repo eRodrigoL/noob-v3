@@ -46,7 +46,7 @@ export default ({ config }) => ({
   web: {
     bundler: "metro", // Usar Metro como empacotador no build web
     output: "static", // Gera arquivos estáticos para publicação em CDN/Vercel
-    favicon: "./assets/images/ui/favicon1.png", // Ícone da aba do navegador
+    favicon: "./assets/images/ui/favicon.png", // Ícone da aba do navegador
   },
 
   // 🧩 Plugins usados no app

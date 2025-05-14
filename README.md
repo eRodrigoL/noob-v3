@@ -131,16 +131,16 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 - [✔️] Criar repositório no GitHub
 - [✔️] Criar branch de desenvolvimento
 
-### [ ] Configurações iniciais
+### [✅] Configurações iniciais
 
 - [✔️] `app.json` convertido em `app.config.js`
 - [✔️] `.env` criado e listado no `.gitignore`
-- [✔️] Escrever README.md
+- [✔️] Escrito README.md
 - [✔️] configurado o Prettier, `.prettierignore`, ESLint e `.eslintignore`
-- [✔️] Criar arquivo `logger`
-- [✔️] Configurar aliases
-- [✔️] Criar arquivos `apiClient.ts`
-- [] Documentar cada etapa/processo
+- [✔️] Criado arquivo `logger`
+- [✔️] Aliases configurado
+- [✔️] Criado arquivo `apiClient.ts`
+- [✔️] Documentado cada arquivo
 
 ---
 
@@ -148,7 +148,7 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 
 - [] Linkar seu GitHub à Vercel e importar o repositório
 - [] Definir `output directory` como `dist/` (ou deixar vazio se for projeto Expo Web)
-- [] Publicar usando domínio gratuito ou personalizado (como `meuapp.vercel.app`)- []
+- [] Publicar usando domínio gratuito ou personalizado (como `meuapp.vercel.app`)
 - [] Documentar cada etapa/processo
 
 ---
