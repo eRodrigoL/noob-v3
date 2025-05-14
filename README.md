@@ -144,12 +144,12 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 
 ---
 
-### [ ] **Hospedar repositório na web via Vercel**
+### [✅] **Hospedar repositório na web via Vercel**
 
-- [] Linkar seu GitHub à Vercel e importar o repositório
-- [] Definir `output directory` como `dist/` (ou deixar vazio se for projeto Expo Web)
-- [] Publicar usando domínio gratuito ou personalizado (como `meuapp.vercel.app`)
-- [] Documentar cada etapa/processo
+- [✔️] Linkar seu GitHub à Vercel e importar o repositório
+- [✔️] Definir `output directory` como `dist/` (ou deixar vazio se for projeto Expo Web)
+- [✔️] Publicar usando domínio gratuito ou personalizado (como `meuapp.vercel.app`)
+- [✔️] Documentar cada etapa/processo
 
 ---
 
