@@ -1,4 +1,4 @@
-// components/ButtonPrimary/Theme.ts
+// components/SandwichMenu/Theme.ts
 
 // Define um objeto Colors que contém as cores utilizadas no tema
 const Colors = {
