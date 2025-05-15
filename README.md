@@ -163,7 +163,7 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
     - [] `componments/Header.tsx`
     - [] `componments/ParallaxProfile.tsx`
     - [✔️] `componments/SandwichMenu.tsx`
-    - [] `componments/SearchBar.tsx`
+    - [✔️] `componments/SearchBar.tsx`
     - telas (origem)
     - [] `scrreen/user/UserProfile.tsx`
     - [] `scrreen/user/RegisterUser.tsx`
