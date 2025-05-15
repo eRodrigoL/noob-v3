@@ -160,7 +160,7 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
     - [✔️] `componments/ButtonGoBack.tsx`
     - [✔️] `componments/ButtonPrimary.tsx`
     - [] `componments/ButtonSecondary.tsx`
-    - [] `componments/Header.tsx`
+    - [✔️] `componments/Header.tsx`
     - [] `componments/ParallaxProfile.tsx`
     - [✔️] `componments/SandwichMenu.tsx`
     - [✔️] `componments/SearchBar.tsx`

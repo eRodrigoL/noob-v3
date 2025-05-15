@@ -21,7 +21,7 @@ const ButtonGoBack: React.FC = () => {
 
 export default ButtonGoBack;
 
-// Estilos para o componente
+// TODO: Mover estilos arquivo próprio
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',

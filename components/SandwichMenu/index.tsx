@@ -123,24 +123,10 @@ export const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
   return (
     <Modal animationType="none" transparent={true} visible={visible} onRequestClose={handleClose}>
       <TouchableWithoutFeedback onPress={handleClose}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          }}>
+        <View style={styles.modalContainer}>
           <TouchableWithoutFeedback>
-            <Animated.View
-              style={{
-                width: '60%',
-                height: '100%',
-                backgroundColor: '#f2f2f2', // TODO: substituir por Theme via useTheme()
-                padding: 20,
-                justifyContent: 'flex-start',
-                transform: [{ translateX: slideAnim }],
-              }}>
-              <View style={{ marginTop: 20 }}>
+            <Animated.View style={styles.modalView}>
+              <View style={styles.buttonContainer}>
                 <ButtonPrimary title="Início" onPress={() => router.replace(ROUTES.HOME)} />
                 {!isAuthenticated ? (
                   <ButtonPrimary title="Login" onPress={() => router.replace(ROUTES.USER.LOGIN)} />
@@ -163,7 +149,7 @@ export const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
   );
 };
 
-// TODO: aplicar estes estilos no lugar de estilos inline
+// TODO: Mover estilos arquivo próprio
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
