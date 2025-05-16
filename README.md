@@ -152,7 +152,35 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   ├── [❗] 🧩 _layout.tsx                 |> Layout raiz que engloba todas as páginas (SafeArea, ThemeProvider etc.)
 │   ├── [❗] 📄 index.tsx                   |> Tela inicial da aplicação (landing ou redirecionamento)
 │   ├── [✖️] 📄 +not-found.tsx              |> Página de erro 404 para rotas não encontradas
-│   ├── 📁 [✖️] (auth)/                     |> Rotas públicas: login e registro
+
+│   ├── 📁 [✅] (legacy)/                   |> telas antigas e temporárias
+│   ├── 📁 boardgame/             |> Telas de informações dos jogos
+│   │   ├── 📄 index.tsx
+│   │   ├── 📄 Analises.tsx
+│   │   ├── 📄 Avaliacao.tsx
+│   │   ├── 📄 Classificacao.tsx
+│   │   ├── 📄 Descricao.tsx
+│   │   └── 📁 (userProfile)/     |> Abas do perfil dentro de jogo
+│   │       ├── 📄 index.tsx
+│   │       ├── 📄 Descricao.tsx
+│   │       ├── 📄 Desempenho.tsx
+│   │       └── 📄 Historico.tsx
+│   ├── 📁 matches/
+│   │   ├── 📄 index.tsx
+│   │   ├── 📄 MatchFinish.tsx
+│   │   └── 📄 RegisMatchStart.tsx
+│   └── 📁 user/
+│       ├── 📄 index.tsx
+│       ├── 📄 Login.tsx
+│       ├── 📄 RegisterUser.tsx
+│       ├── 📄 UserProfile.tsx
+│       └── 📁 (userProfile)/
+│           ├── 📄 index.tsx
+│           ├── 📄 Descricao.tsx
+│           ├── 📄 Desempenho.tsx
+│           └── 📄 Historico.tsx
+
+│   ├── 📁 [✅] (auth)/                     |> Rotas públicas: login e registro
 │   │   ├── 📁 [✖️] login/                  |> Tela de login do usuário
 │   │   │   ├── [✖️] 📄 index.tsx           |> Componente de tela
 │   │   │   ├── [✖️] 🎨 style.ts            |> Estilos específicos da tela
@@ -161,41 +189,43 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   │       ├── [✖️] 📄 index.tsx
 │   │       ├── [✖️] 🎨 style.ts
 │   │       └── [✖️] 🧪 register.test.tsx
+│   ├── 📁 [✅] (public)/                   |> Rotas acessíveis sem login
+│   │   └── 📁 [✅] boardgame/              |> Lista de jogos e visualização pública
+│   │       ├── [✖️] 📄 index.tsx           |> Lista pública de jogos
+│   │       └── 📁 [✖️] [id]/               |> Perfil público do jogo
+│   │           ├── [✖️] 📄 index.tsx       |> Info e avaliações públicas
+│   │           └── [✖️] 🎨 style.ts
 │   └── 📁 [✖️] (app)/                      |> Rotas privadas (usuário autenticado)
 │       ├── [✖️] 🧩 _layout.tsx             |> Layout das rotas internas após login
-│       ├── [✖️] 📄 index.tsx               |> Dashboard ou página principal
-│       ├── 📁 [✖️] boardgame/              |> Tela de listagem e edição de jogos
-│       │   ├── [✖️] 📄 index.tsx
-│       │   ├── [✖️] 🎨 style.ts
-│       │   ├── [✖️] 🧪 boardgame.test.tsx  |> Testes da tela de jogos
+│       ├── 📁 [✖️] boardgame/              |> Gerenciamento de jogos (usuário logado)
 │       │   ├── 📁 [✖️] register/           |> Tela para cadastrar novo jogo
 │       │   │   ├── [✖️] 📄 index.tsx
 │       │   │   └── [✖️] 🎨 style.ts
-│       │   └── 📁 [✖️] [id]/               |> Detalhes de um jogo específico
-│       │       ├── [✖️] 📄 index.tsx
-│       │       ├── [✖️] 🎨 style.ts
-│       │       ├── 📁 [✖️] edit/           |> Tela de edição de jogo
-│       │       │   ├── [✖️] 📄 index.tsx
-│       │       │   └── [✖️] 🎨 style.ts
-│       │       └── [✖️] 🧪 edit.test.tsx
+│       │   └── 📁 [✖️] [id]/               |> Funções privadas do jogo
+│       │       ├── [✖️] 📄 edit.tsx        |> Aba: editar informações
+│       │       ├── [✖️] 📄 rate.tsx        |> Aba: avaliar ou editar avaliação
+│       │       ├── [✖️] 📄 performance.tsx |> Aba: desempenho dos usuários
+│       │       └── [✖️] 🎨 style.ts
+│       ├── 📁 [✖️] profile/                |> Perfil do usuário logado
+│       │   ├── [✖️] 📄 index.tsx           |> Tela principal com abas
+│       │   ├── [✖️] 📄 edit.tsx            |> Aba: editar dados pessoais
+│       │   ├── [✖️] 📄 history.tsx         |> Aba: histórico de partidas
+│       │   ├── [✖️] 📄 performance.tsx     |> Aba: desempenho geral
+│       │   └── [✖️] 🎨 style.ts
 │       ├── 📁 [✖️] matches/                |> Tela de partidas (listagem, nova, editar)
 │       │   ├── [✖️] 📄 index.tsx
-│       │   ├── [✖️] 🎨 style.ts
 │       │   ├── 📁 [✖️] new/                |> Nova partida
 │       │   │   ├── [✖️] 📄 index.tsx
 │       │   │   └── [✖️] 🎨 style.ts
 │       │   └── 📁 [✖️] [id]/               |> Detalhes de partida específica
 │       │       ├── [✖️] 📄 index.tsx
 │       │       └── [✖️] 🎨 style.ts
-│       ├── 📁 [✖️] performance/            |> Tela de desempenho dos jogadores
+│       ├── 📁 [✖️] performance/            |> Dashboard geral do sistema
 │       │   ├── [✖️] 📄 index.tsx
 │       │   └── [✖️] 🎨 style.ts
-│       ├── 📁 [✖️] profile/                |> Tela de perfil do usuário
+│       ├── 📁 [✖️] reports/                |> Tela de denúncias
 │       │   ├── [✖️] 📄 index.tsx
-│       │   ├── [✖️] 🎨 style.ts
-│       │   └── 📁 [✖️] edit/               |> Tela para editar perfil
-│       │       ├── [✖️] 📄 index.tsx
-│       │       └── [✖️] 🎨 style.ts
+│       │   └── [✖️] 🎨 style.ts
 │       ├── 📁 [✖️] settings/               |> Tela de configurações visuais
 │       │   ├── [✖️] 📄 index.tsx
 │       │   └── [✖️] 🎨 style.ts
