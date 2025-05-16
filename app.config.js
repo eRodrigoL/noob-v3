@@ -67,6 +67,11 @@ export default ({ config }) => ({
   experiments: {
     typedRoutes: true,
   },
+  
+  extra: {
+    apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
+    appMode: process.env.EXPO_PUBLIC_APP_MODE || 'development',
+  },
 
   // 📦 Define quais arquivos serão empacotados no build
   assetBundlePatterns: ["**/*"], // Inclui todos os arquivos da pasta `assets/`
