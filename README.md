@@ -37,7 +37,7 @@ A navegação é gerenciada por **Expo Router**, e cada tela corresponde a um ar
 
 > Estrutura completa disponível em [`docs/documentation/folderTree.md`](./docs/documentation/folderTree.md)
 
-```ts
+```plaintext
 src/
 ├── app/               // Rotas por arquivos
 ├── assets/            // Fontes, imagens e recursos estáticos
@@ -119,6 +119,196 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 | `assetsGuide.md`    | Organização das imagens, nomes de arquivos e boas práticas                |
 | `splashAndIcons.md` | Como alterar splash, ícones e favicon em diferentes plataformas           |
 | `migrationPlan.md`  | Mapeamento da migração do app antigo para a nova estrutura                |
+
+---
+
+## 📁 Estrutura de pasta <!-- TODO: mover para arquivo prórpio: folderTree.md -->
+
+### Emojis para o status de implementação
+
+[✅] - Arquivo/pasta existente e pronto
+[❗] - Arquivo/pasta existente e importante
+[✖️] - Arquivo/pasta ainda não existe
+
+### Emoji para tipos de Arquivo
+
+📄 - Arquivo geral de código (TypeScript, TSX, JS)
+🧩 - Componente reutilizável, layout ou hook
+🎨 - Arquivo de estilo (style.ts, styles.tsx)
+🧪 - Teste (.test.tsx, .test.ts)
+⚙️ - Configuração (config.js, .prettierrc, .eslintrc, tsconfig.json, etc.)
+📓 - Documentação de arquivos (.md)
+📚 - Documentação de processos (.md)
+📦 - Arquivo de dependências (package.json, package-lock.json)
+🗑️ - Arquivo de ignore (.gitignore, .eslintignore, .prettierignore)
+🔑 - Arquivo de variáveis de ambiente (.env)
+🖼️ - Imagem (png, jpg, gif, svg, etc.)
+🅰️ - Arquivo de tipagem (.d.ts)
+🗂️ - Barrel file (index.tsx em components, layouts, etc.)
+
+```plaintext
+📁 [✅] noob/                               |> Código-fonte principal do aplicativo
+├── 📁 [✅] app/                            |> Arquivos de rotas do Expo Router
+│   ├── [❗] 🧩 _layout.tsx                 |> Layout raiz que engloba todas as páginas (SafeArea, ThemeProvider etc.)
+│   ├── [❗] 📄 index.tsx                   |> Tela inicial da aplicação (landing ou redirecionamento)
+│   ├── [✖️] 📄 +not-found.tsx              |> Página de erro 404 para rotas não encontradas
+│   ├── 📁 [✖️] (auth)/                     |> Rotas públicas: login e registro
+│   │   ├── 📁 [✖️] login/                  |> Tela de login do usuário
+│   │   │   ├── [✖️] 📄 index.tsx           |> Componente de tela
+│   │   │   ├── [✖️] 🎨 style.ts            |> Estilos específicos da tela
+│   │   │   └── [✖️] 🧪 login.test.tsx      |> Testes unitários da tela
+│   │   └── 📁 [✖️] register/               |> Tela de cadastro de usuário
+│   │       ├── [✖️] 📄 index.tsx
+│   │       ├── [✖️] 🎨 style.ts
+│   │       └── [✖️] 🧪 register.test.tsx
+│   └── 📁 [✖️] (app)/                      |> Rotas privadas (usuário autenticado)
+│       ├── [✖️] 🧩 _layout.tsx             |> Layout das rotas internas após login
+│       ├── [✖️] 📄 index.tsx               |> Dashboard ou página principal
+│       ├── 📁 [✖️] boardgame/              |> Tela de listagem e edição de jogos
+│       │   ├── [✖️] 📄 index.tsx
+│       │   ├── [✖️] 🎨 style.ts
+│       │   ├── [✖️] 🧪 boardgame.test.tsx  |> Testes da tela de jogos
+│       │   ├── 📁 [✖️] register/           |> Tela para cadastrar novo jogo
+│       │   │   ├── [✖️] 📄 index.tsx
+│       │   │   └── [✖️] 🎨 style.ts
+│       │   └── 📁 [✖️] [id]/               |> Detalhes de um jogo específico
+│       │       ├── [✖️] 📄 index.tsx
+│       │       ├── [✖️] 🎨 style.ts
+│       │       ├── 📁 [✖️] edit/           |> Tela de edição de jogo
+│       │       │   ├── [✖️] 📄 index.tsx
+│       │       │   └── [✖️] 🎨 style.ts
+│       │       └── [✖️] 🧪 edit.test.tsx
+│       ├── 📁 [✖️] matches/                |> Tela de partidas (listagem, nova, editar)
+│       │   ├── [✖️] 📄 index.tsx
+│       │   ├── [✖️] 🎨 style.ts
+│       │   ├── 📁 [✖️] new/                |> Nova partida
+│       │   │   ├── [✖️] 📄 index.tsx
+│       │   │   └── [✖️] 🎨 style.ts
+│       │   └── 📁 [✖️] [id]/               |> Detalhes de partida específica
+│       │       ├── [✖️] 📄 index.tsx
+│       │       └── [✖️] 🎨 style.ts
+│       ├── 📁 [✖️] performance/            |> Tela de desempenho dos jogadores
+│       │   ├── [✖️] 📄 index.tsx
+│       │   └── [✖️] 🎨 style.ts
+│       ├── 📁 [✖️] profile/                |> Tela de perfil do usuário
+│       │   ├── [✖️] 📄 index.tsx
+│       │   ├── [✖️] 🎨 style.ts
+│       │   └── 📁 [✖️] edit/               |> Tela para editar perfil
+│       │       ├── [✖️] 📄 index.tsx
+│       │       └── [✖️] 🎨 style.ts
+│       ├── 📁 [✖️] settings/               |> Tela de configurações visuais
+│       │   ├── [✖️] 📄 index.tsx
+│       │   └── [✖️] 🎨 style.ts
+│       └── 📁 [✖️] test/                   |> Tela de teste/experimentos
+│           ├── [✖️] 📄 index.tsx
+│           └── [✖️] 🎨 style.ts
+├── 📁 [✅] assets/                        |> Recursos estáticos do projeto (imagens, fontes)
+│   ├── 📁 [✅] fonts/                     |> Fontes personalizadas da aplicação
+│   └── 📁 [✅] images/                    |> Imagens organizadas por contexto
+│       ├── 📁 [✖️] boardgame/             |> Imagens relacionadas a jogos
+│       │   └── [✖️] 🖼️ loading.gif
+│       ├── 📁 [✖️] users/                 |> Imagens de usuário (foto de perfil, capa)
+│       │   └── [✖️] 🖼️ userCover.png
+│       ├── 📁 [✖️] games/                 |> Capa de jogos cadastrados
+│       ├── 📁 [✅] ui/                    |> Ícones e imagens da interface
+│       │   ├── [❗] 🖼️ splash.png
+│       │   ├── [❗] 🖼️ icon.png
+│       │   ├── [❗] 🖼️ favicon.png
+│       │   └── [❗] 🖼️ adaptive-icon.png
+│       ├── 📁 [✖️] placeholders/          |> Imagens de falha ou ausentes
+│       │   └── [❗] 🖼️ unavailable.png
+│       └── 📁 [✖️] backgrounds/           |> Imagens de fundo ou wallpapers
+├── 📁 [✅] components/                    |> Componentes reutilizáveis da interface
+│   ├── [✖️] 🗂️ index.tsx                  |> Barrel file para exportação centralizada
+│   ├── 📁 [✖️] buttons/                   |> Botões personalizados
+│   │   ├── 📁 [❗] ButtonHighlight/       |> Botão com destaque visual
+│   │   │   ├── [✖️] 🧩 index.tsx
+│   │   │   ├── [✖️] 🎨 style.ts
+│   │   │   └── [✖️] 🧪 ButtonHighlight.test.tsx
+│   │   ├── 📁 [✖️] ButtonSemiHighlight/
+│   │   │   ├── [✖️] 🧩 index.tsx
+│   │   │   ├── [✖️] 🎨 style.ts
+│   │   │   └── [✖️] 🧪 ButtonSemiHighlight.test.tsx
+│   │   └── 📁 [❗] SandwichMenu/          |> Menu lateral (hambúrguer)
+│   │       ├── [✖️] 🧩 index.tsx
+│   │       ├── [✖️] 🎨 styles.tsx
+│   │       └── [✖️] 🧪 SandwichMenu.test.tsx
+│   ├── 📁 [✖️] cards/
+│   │   └── 📁 [✖️] GameCard/              |> Cartão de exibição de jogo
+│   │       ├── [✖️] 🧩 index.tsx
+│   │       ├── [✖️] 🎨 styles.tsx
+│   │       └── [✖️] 🧪 GameCard.test.tsx
+│   ├── 📁 [✖️] layouts/
+│   │   └── 📁 [❗] HeaderLayout/          |> Cabeçalho da aplicação
+│   │       ├── [✖️] 🧩 index.tsx
+│   │       ├── [✖️] 🎨 styles.tsx
+│   │       └── [✖️] 🧪 HeaderLayout.test.tsx
+│   └── 📁 [✖️] feedback/
+│       ├── 📁 [✖️] LoadingIndicator/      |> Tela de carregamento local (em uma tela)
+│       │   ├── [✖️] 🧩 index.tsx
+│       │   └── [✖️] 🎨 style.ts
+│       └── 📁 [✅] Splash/                |> Tela de carregamento global (ao iniciar o app)
+│           ├── [❗] 🧩 index.tsx
+│           └── [✖️] 🎨 style.ts
+├── 📁 [✅] constants/                     |> Constantes reutilizadas (rotas, imagens)
+│   ├── [❗] 📄 images.ts
+│   ├── [✖️] 📄 index.ts
+│   └── [❗] 📄 routes.ts
+├── 📁 [✅] docs/                          |> Documentação do projeto
+│   ├── [❗] 📓 index.md                   |> Introdução geral
+│   └── 📁 [✅] documentation/
+│       ├── [✖️] 📓 commits.md             |> Padrão de commits
+│       ├── [✖️] 📚 dependencies.md        |> Lista de dependências
+│       ├── [✖️] 📓 eslintConfig.md        |> Regras do ESLint
+│       ├── [✖️] 📚 folderTree.md          |> Estrutura de pastas
+│       ├── [✖️] 📓 prettierConfig.md      |> Regras do Prettier
+│       ├── [✖️] 📓 styling.md             |> Explicação da estilização
+│       └── [✖️] 📚 tsconfig.md            |> Configuração TypeScript
+├── 📁 [✅] hooks/                         |> Hooks personalizados
+│   ├── [✅] 🧩 useKeepApiAwake.ts         |> Mantém a API acordada no fundo
+│   ├── [✖️] 🧩 useTheme.ts                |> Retorna tema e tamanhos de fonte ajustados
+│   └── [✅] 🧩 useWarmUpApi.ts            |> Alternativa de "wake-up" da API
+├── 📁 [✅] lib/                           |> Funções utilitárias reutilizáveis
+│   ├── [✖️] 📄 formatDate.ts
+│   ├── [✅] ⚙️ logger.ts                  |> Logger central (desativa logs em produção)
+│   └── [✖️] 📄 validations.ts             |> Validações comuns (ex: email, senha)
+├── 📁 [✅] services/                       |> Comunicação com a API
+│   ├── [✅] ⚙️ apiClient.ts               |> Axios configurado
+│   ├── [✖️] 📄 users.ts
+│   ├── [✖️] 📄 games.ts
+│   ├── [✖️] 📄 matches.ts
+│   └── [✖️] 📄 ratings.ts
+├── 📁 [✖️] store/                          |> Zustand stores (estado global)
+│   ├── [✖️] 🧩 useSettingsStore.ts         |> Tema, fonte, acessibilidade
+│   └── [✖️] 🧩 useUserStore.ts             |> Informações do usuário logado
+├── 📁 [✖️] theme/                          |> Tema global da aplicação
+│   ├── [✖️] 📄 index.ts                    |> Exportação unificada
+│   └── 📁 [✖️] global/
+│       ├── [✖️] 📄 theme.ts                |> Paletas de cores (claro, escuro, daltônico)
+│       ├── [✖️] 📄 typography.ts           |> Tamanhos de fonte e multiplicadores
+│       └── [✖️] 🎨 globalStyles.ts         |> Estilos globais reaproveitáveis
+├── 📁 [✖️] tests/                          |> Testes não acoplados aos componentes
+│   ├── 📁 [✖️] unit/                       |> Testes unitários (ex: store, utils)
+│   │   └── [✖️] 🧪 store.test.ts
+│   ├── 📁 [✖️] integration/                |> Testes de integração entre componentes
+│   │   └── [✖️] 🧪 Header.test.tsx
+│   └── 📁 [✖️] e2e/                        |> Testes de fluxo completo (end-to-end)
+│       └── [✖️] 🧪 login-flow.test.ts
+├── [✅] 🔑 .env                            |> Variáveis de ambiente
+├── [✅] 🗑️ .eslintignore
+├── [✅] 🗑️ .gitignore                      |> Arquivos ignorados no Git
+├── [✅] 🗑️ .prettierignore                 |> Arquivos ignorados pelo Prettier
+├── [✅] ⚙️ .prettierrc                     |> Configuração de formatação Prettier
+├── [✅] ⚙️ app.config.js                   |> Configuração do Expo com variáveis dinâmicas
+├── [✅] ⚙️ babel.config.js                 |> Babel para transpilar código moderno
+├── [✅] 🅰️ declarations.d.ts               |> Tipagens globais (ex: módulos não tipados)
+├── [✅] ⚙️ eslint.config.js                |> Configuração ESLint moderna (v9+)
+├── [✅] 📦 package-lock.json
+├── [✅] 📦 package.json                    |> Dependências e scripts do projeto
+├── [✅] 📑 README.md                       |> Introdução e instruções do projeto
+├── [✅] ⚙️ tsconfig.json                   |> Configuração do TypeScript
+└── [✅] ⚙️ vercel.json                     |> Configuração para deploy no Vercel
+```
 
 ---
 
