@@ -159,7 +159,6 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
   - componentes (origem)
     - [✔️] `componments/ButtonGoBack.tsx`
     - [✔️] `componments/ButtonPrimary.tsx`
-    - [] `componments/ButtonSecondary.tsx`
     - [✔️] `componments/Header.tsx`
     - [✔️] `componments/ParallaxProfile.tsx`
     - [✔️] `componments/SandwichMenu.tsx`
@@ -251,12 +250,13 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 ### [ ] Detalhes visuais e comportamentais
 
 - [] Splash screen personalizada:
-  - Substituir imagem em `assets/images/ui/splash.png`
-  - Configurar `app.config.js`
+  - [] Substituir imagem em `assets/images/ui/splash.png` <!-- aparece logo ao abrir o app, antes de qualquer código JS ser executado -->
+  - [] Configurar `app.config.js` <!-- se necessário. Para ler a imagem correta -->
+  - [] Criar componente Splash <!-- aparece depois, quando seu app React já está rodando e pode mostrar algo enquanto a API desperta e o tema dinâmico vigora -->
 - [] Ícone e favicon:
   - Substituir `assets/images/ui/icon.png`, `favicon.png`, `adaptive-icon.png`
 - [] Carregamento ao iniciar:
-  - Mostrar `<Splash />` enquanto `useSettingsStore().isLoaded` for `false`
+  - Mostrar `<Splash />` enquanto `useSettingsStore().isLoaded` for `false` <!-- TODO: talvez seja melhor criar um componente LoadingIndicator -->
 - [] Carregamento ao atualizar (F5 web):
   - Usar `SplashScreen.preventAutoHideAsync()` + `useEffect` no `_layout.tsx`
 - [] Documentar cada etapa/processo
