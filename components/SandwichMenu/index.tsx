@@ -26,7 +26,7 @@ interface ModalProps {
   onClose: () => void;
 }
 
-export const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
+const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
   const slideAnim = useRef(new Animated.Value(-width)).current;
   const [hasOpenMatch, setHasOpenMatch] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -168,3 +168,5 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
+
+export default SandwichMenu;

@@ -219,8 +219,8 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │       │   └── [❗] 🖼️ unavailable.png
 │       └── 📁 [✖️] backgrounds/           |> Imagens de fundo ou wallpapers
 ├── 📁 [✅] components/                    |> Componentes reutilizáveis da interface
-│   ├── [✖️] 🗂️ index.tsx                  |> Barrel file para exportação centralizada
-│   ├── 📁 [✖️] buttons/                   |> Botões personalizados
+│   ├── [✖️] index.tsx                  |> Barrel file para exportação centralizada
+│   ├── 📁 [✖️] 🧩 buttons/                   |> Botões personalizados
 │   │   ├── 📁 [❗] ButtonHighlight/       |> Botão com destaque visual
 │   │   │   ├── [✖️] 🧩 index.tsx
 │   │   │   ├── [✖️] 🎨 style.ts
@@ -353,6 +353,7 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
     - [✔️] `componments/ParallaxProfile.tsx`
     - [✔️] `componments/SandwichMenu.tsx`
     - [✔️] `componments/SearchBar.tsx`
+    - [✔️] `componments/Splash.tsx`
     - telas (origem)
     - [] `scrreen/user/UserProfile.tsx`
     - [] `scrreen/user/RegisterUser.tsx`
