@@ -1,5 +1,4 @@
 // src/services/apiClient.ts
-import { ROUTES } from '@constants/routes';
 import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -51,7 +50,7 @@ apiClient.interceptors.response.use(
         });
 
         await AsyncStorage.multiRemove(['token', 'userId']);
-        router.replace(ROUTES.HOME); // Redireciona usando a constante definida
+        router.replace('/(legacy)/boardgameOld');
       }
     }
 
