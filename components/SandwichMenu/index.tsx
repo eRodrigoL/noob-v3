@@ -129,7 +129,10 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
               <View style={styles.buttonContainer}>
                 <ButtonPrimary title="Início" onPress={() => router.replace(ROUTES.HOME)} />
                 {!isAuthenticated ? (
-                  <ButtonPrimary title="Login" onPress={() => router.replace(ROUTES.USER.LOGIN)} />
+                  <ButtonPrimary
+                    title="Login"
+                    onPress={() => router.replace('/(legacy)/user/Login')}
+                  />
                 ) : (
                   <>
                     <ButtonPrimary

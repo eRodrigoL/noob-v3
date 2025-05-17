@@ -154,8 +154,8 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   ├── [✖️] 📄 +not-found.tsx              |> Página de erro 404 para rotas não encontradas
 
 │   ├── 📁 [✅] (legacy)/                   |> telas antigas e temporárias
-│   ├── 📁 boardgame/             |> Telas de informações dos jogos
-│   │   ├── 📄 index.tsx
+│   ├── 📁 [✅] boardgame/             |> Telas de informações dos jogos
+│   │   ├── [✅] index.tsx
 │   │   ├── 📄 Analises.tsx
 │   │   ├── 📄 Avaliacao.tsx
 │   │   ├── 📄 Classificacao.tsx
@@ -169,9 +169,9 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   │   ├── 📄 index.tsx
 │   │   ├── 📄 MatchFinish.tsx
 │   │   └── 📄 RegisMatchStart.tsx
-│   └── 📁 user/
-│       ├── 📄 index.tsx
-│       ├── 📄 Login.tsx
+│   └── 📁 [✅] user/
+│       ├── [✅] index.tsx
+│       ├── [✅] Login.tsx
 │       ├── 📄 RegisterUser.tsx
 │       ├── 📄 UserProfile.tsx
 │       └── 📁 (userProfile)/
