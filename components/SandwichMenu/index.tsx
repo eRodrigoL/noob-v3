@@ -16,8 +16,8 @@ import Toast from 'react-native-toast-message';
 import { ROUTES } from '@constants/routes';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
+import { Theme } from '@theme/themOld/theme';
 import axios from 'axios';
-import { Theme } from './Theme';
 
 const { width } = Dimensions.get('window');
 

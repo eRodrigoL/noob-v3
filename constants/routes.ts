@@ -5,27 +5,27 @@
 
 export const ROUTES = {
   USER: {
-    LOGIN: '/', // TODO: substituir por '/(auth)/login'
-    REGISTER: '/', // TODO: substituir por '/(auth)/register'
-    SETTINGS: '/', // TODO: substituir por '/(app)/settings'
-    PROFILE: '/', // TODO: substituir por '/(app)/profile'
+    LOGIN: '/', // TODO: SandwichMenu
+    REGISTER: '/',
+    SETTINGS: '/',
+    PROFILE: '/', // TODO: SandwichMenu
   },
   GAMES: {
-    LIST: '/', // TODO: substituir por '/(app)/boardgame'
-    REGISTER: '/', // TODO: substituir por '/(app)/boardgame/register'
-    DETAILS: '/', // TODO: substituir por '/(app)/boardgame/[id]'
-    EDIT: '/', // TODO: substituir por '/(app)/boardgame/[id]/edit'
+    LIST: '/',
+    REGISTER: '/',
+    DETAILS: (id: string) => `/app/boardgame/${id}`, // TODO: no futuro -> DETAILS: '/(public)/boardgame/[id]',
+    EDIT: '/',
   },
   MATCHES: {
-    LIST: '/', // TODO: substituir por '/(app)/matches'
-    REGISTER: '/', // TODO: substituir por '/(app)/matches/new'
-    DETAILS: '/', // TODO: substituir por '/(app)/matches/[id]'
+    LIST: '/',
+    REGISTER: '/',
+    DETAILS: '/', // TODO: SandwichMenu
   },
   PERFORMANCE: {
-    DASHBOARD: '/', // TODO: substituir por '/(app)/performance'
+    DASHBOARD: '/',
   },
-  TEST: '/', // Rota temporária usada durante desenvolvimento
-  HOME: '/', // A futura lista de jogos (será GAMES.LIST)
+  TEST: '/',
+  HOME: '/(legacy)/boardgameOld', // TODO: -> Header, SandwichMenu
 } as const;
 
 // Utilitário para extrair todas as rotas válidas como union type de strings

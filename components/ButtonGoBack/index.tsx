@@ -1,8 +1,8 @@
 // components/BottonGoBack/index.tsx
+import { Theme } from '@theme/themOld/theme';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Theme } from './Theme';
 
 const ButtonGoBack: React.FC = () => {
   const router = useRouter();

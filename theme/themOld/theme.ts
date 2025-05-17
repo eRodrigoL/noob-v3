@@ -1,5 +1,3 @@
-// components/SandwichMenu/Theme.ts
-
 // Define um objeto Colors que contém as cores utilizadas no tema
 const Colors = {
   orange: '#FF8C00', // Cor laranja para botões e links

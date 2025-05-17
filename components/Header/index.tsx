@@ -9,9 +9,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ROUTES } from '@constants/routes';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
+import { Theme } from '@theme/themOld/theme';
 import axios from 'axios';
-import { SandwichMenu } from '../SandwichMenu';
-import { Theme } from './Theme';
+import SandwichMenu from '../SandwichMenu';
 
 const Header = ({ title }: { title: string }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -76,7 +76,7 @@ const Header = ({ title }: { title: string }) => {
 
   // Função para decidir qual tela abrir ao clicar no botão de configurações
   const handleSettingsPress = () => {
-    router.replace(hasOpenMatch ? ROUTES.MATCHES.DETAILS : ROUTES.MATCHES.REGISTER);
+    router.replace(hasOpenMatch ? ROUTES.MATCHES.DETAILS : ROUTES.MATCHES.REGISTER); // TODO: remover ROUTES
   };
 
   return (

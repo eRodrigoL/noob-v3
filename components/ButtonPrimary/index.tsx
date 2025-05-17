@@ -1,7 +1,7 @@
 // components/ButtonPrimary/index.tsx
+import styles from '@theme/themOld/globalStyle';
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
-import styles from './Default';
 
 interface ButtonPrimaryProps {
   title: string;

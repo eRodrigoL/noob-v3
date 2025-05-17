@@ -3,6 +3,7 @@
 // Importa as bibliotecas e componentes necessários para o funcionamento do componente
 import { images } from '@constants/images';
 import { getImageSource } from '@lib/getImageSource';
+import { Theme } from '@theme/themOld/theme';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import {
@@ -21,7 +22,6 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
-import { Theme } from './Theme';
 
 // Obtém as dimensões da tela e define valores constantes para o cabeçalho e cobertura da página
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');

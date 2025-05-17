@@ -1,6 +1,5 @@
-// components/ButtonPrimary/Default.tsx
 import { StyleSheet } from 'react-native'; // Importa o módulo StyleSheet do React Native para criar estilos
-import { Theme } from './Theme'; // Importa o tema de cores para o estilo do aplicativo
+import { Theme } from './theme'; // Importa o tema de cores para o estilo do aplicativo
 
 // Cria um objeto de estilos usando StyleSheet
 const styles = StyleSheet.create({

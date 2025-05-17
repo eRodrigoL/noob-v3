@@ -1,7 +1,7 @@
 // components/SearchBar/index.tsx
+import styles from '@theme/themOld/globalStyle'; // TODO: substituir por estilos locais no futuro
 import React from 'react';
 import { TextInput } from 'react-native';
-import styles from './Default'; // TODO: substituir por estilos locais no futuro
 
 // TODO: usar logger se necessário para debug
 
