@@ -127,7 +127,10 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
           <TouchableWithoutFeedback>
             <Animated.View style={styles.modalView}>
               <View style={styles.buttonContainer}>
-                <ButtonPrimary title="Início" onPress={() => router.replace(ROUTES.HOME)} />
+                <ButtonPrimary
+                  title="Início"
+                  onPress={() => router.replace('/(legacy)/boardgameOld')}
+                />
                 {!isAuthenticated ? (
                   <ButtonPrimary
                     title="Login"
@@ -137,7 +140,7 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
                   <>
                     <ButtonPrimary
                       title="Perfil"
-                      onPress={() => router.replace(ROUTES.USER.PROFILE)}
+                      onPress={() => router.replace('/(legacy)/user')}
                     />
                     <ButtonPrimary title="Jogar" onPress={handlePlayPress} />
                     <ButtonPrimary title="Sair" onPress={handleLogout} />

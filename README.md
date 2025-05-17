@@ -173,7 +173,7 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │       ├── [✅] index.tsx
 │       ├── [✅] Login.tsx
 │       ├── [✅] RegisterUser.tsx
-│       ├── 📄 UserProfile.tsx
+│       ├── [✅] UserProfile.tsx
 │       └── 📁 (userProfile)/
 │           ├── 📄 index.tsx
 │           ├── 📄 Descricao.tsx
