@@ -20,12 +20,6 @@ export default ({ config }) => ({
     backgroundColor: "#ffffff", // Cor de fundo do splash
   },
 
-  // 💡 Informações adicionais acessíveis via Constants.expoConfig.extra
-  extra: {
-    apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL, // URL base da sua API (deve começar com EXPO_PUBLIC_)
-    appMode: process.env.EXPO_PUBLIC_APP_MODE || "development", // Modo do app: development / production
-  },
-
   // 🚀 Configuração de atualizações OTA (Over The Air)
   updates: {
     fallbackToCacheTimeout: 0, // Usar cache imediatamente se não conseguir buscar atualizações
@@ -67,10 +61,11 @@ export default ({ config }) => ({
   experiments: {
     typedRoutes: true,
   },
-  
+
+  // 💡 Informações adicionais acessíveis via Constants.expoConfig.extra
   extra: {
-    apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
-    appMode: process.env.EXPO_PUBLIC_APP_MODE || 'development',
+    apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL, // URL base da sua API (deve começar com EXPO_PUBLIC_)
+    appMode: process.env.EXPO_PUBLIC_APP_MODE || "development", // Modo do app: development / production
   },
 
   // 📦 Define quais arquivos serão empacotados no build

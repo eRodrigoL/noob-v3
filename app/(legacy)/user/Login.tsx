@@ -1,3 +1,4 @@
+// app/(legacy)/user/Login.tsx
 import { HeaderLayout } from '@components/index';
 import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -93,7 +94,7 @@ const Login: React.FC = () => {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={styles.signupText}>Ainda não tem uma conta?</Text>
           {/* TODO: definir rota -> '/(auth)/register' */}
-          <TouchableOpacity onPress={() => router.push('/')}>
+          <TouchableOpacity onPress={() => router.push('/(legacy)/user/RegisterUser')}>
             <Text style={styles.signupLink}> Cadastre-se</Text>
           </TouchableOpacity>
         </View>

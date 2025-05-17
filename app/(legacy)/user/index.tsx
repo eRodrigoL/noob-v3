@@ -1,4 +1,4 @@
-// app/index.tsx
+// app/(legacy)/user/index.tsx
 import { Redirect } from 'expo-router';
 
 export default function Home() {
