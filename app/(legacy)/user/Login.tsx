@@ -1,5 +1,5 @@
 // app/(legacy)/user/Login.tsx
-import { HeaderLayout } from '@components/index';
+import { Header } from '@components/index';
 import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
@@ -59,7 +59,7 @@ const Login: React.FC = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <HeaderLayout title="Login" />
+      <Header title="Login" />
       <View style={styles.container}>
         <Text style={styles.title}>
           Noob <Text style={styles.diceIcon}>🎲</Text>

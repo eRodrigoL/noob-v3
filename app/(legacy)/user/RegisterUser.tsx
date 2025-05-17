@@ -1,5 +1,5 @@
 // app/(legacy)/user/RegisterUser.tsx
-import { HeaderLayout } from '@components/index';
+import { Header } from '@components/index';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import styles from '@theme/themOld/globalStyle';
@@ -119,7 +119,7 @@ const RegisterUser: React.FC = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <HeaderLayout title="Registro de usuário" />
+      <Header title="Registro de usuário" />
       <ScrollView>
         <View style={styles.container}>
           <Text style={styles.title}>Crie sua conta:</Text>

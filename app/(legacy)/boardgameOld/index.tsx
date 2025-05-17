@@ -1,5 +1,5 @@
 // app/(legacy)/boardgame/index.tsx
-import { ButtonHighlight, HeaderLayout, SearchBar } from '@components/index';
+import { ButtonHighlight, Header, SearchBar } from '@components/index';
 import { images } from '@constants/images';
 import { ROUTES } from '@constants/routes';
 import { logger } from '@lib/logger';
@@ -78,7 +78,7 @@ export default function List() {
 
   return (
     <View style={{ flex: 1 }}>
-      <HeaderLayout title="Jogos" />
+      <Header title="Jogos" />
       <SearchBar
         placeholder="Pesquisar jogos..."
         value={searchQuery}

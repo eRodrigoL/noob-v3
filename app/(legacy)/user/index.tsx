@@ -1,5 +1,5 @@
 // app/(legacy)/user/index.tsx
-import { HeaderLayout } from '@components/index';
+import { Header } from '@components/index';
 import ParallaxProfile from '@components/ParallaxProfile';
 import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -183,7 +183,7 @@ const UserProfile: React.FC = () => {
   return (
     <View style={{ flex: 1 }}>
       {/* Exibe o cabeçalho com título */}
-      <HeaderLayout title="Perfil" />
+      <Header title="Perfil" />
 
       <ParallaxProfile
         id={user._id}
