@@ -5,7 +5,7 @@
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
-const isDev = Constants.expoConfig?.extra?.appMode === 'development';
+const isDev = Constants.expoConfig?.extra?.EXPO_PUBLIC_APP_MODE === 'development';
 
 function log(...args: unknown[]) {
   if (isDev) console.log('[LOG]', ...args);

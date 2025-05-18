@@ -8,7 +8,7 @@ import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
 
 // Recupera a URL base da API definida em app.config.js (extra.apiBaseUrl)
-const baseURL = Constants.expoConfig?.extra?.apiBaseUrl;
+const baseURL = Constants.expoConfig?.extra?.EXPO_PUBLIC_API_BASE_URL;
 
 if (!baseURL) {
   throw new Error(
