@@ -6,7 +6,6 @@ import { router } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { ROUTES } from '@constants/routes';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { Theme } from '@theme/themOld/theme';
@@ -55,10 +54,10 @@ const Header = ({ title }: { title: string }) => {
         if (error.response && error.response.status === 404) {
           setHasOpenMatch(false); // Nenhuma partida em aberto
         } else {
-          console.error('Erro ao verificar partidas em aberto:', error);
+          logger.error('Erro ao verificar partidas em aberto:', error);
         }
       } else {
-        console.error('Erro desconhecido:', error);
+        logger.error('Erro desconhecido:', error);
       }
     }
   };
@@ -76,7 +75,7 @@ const Header = ({ title }: { title: string }) => {
 
   // Função para decidir qual tela abrir ao clicar no botão de configurações
   const handleSettingsPress = () => {
-    router.replace(hasOpenMatch ? ROUTES.MATCHES.DETAILS : ROUTES.MATCHES.REGISTER); // TODO: remover ROUTES
+    router.replace(hasOpenMatch ? '/(legacy)/matches/MatchFinish' : '/(legacy)/matches/MatchStart'); // TODO: remover ROUTES
   };
 
   return (
