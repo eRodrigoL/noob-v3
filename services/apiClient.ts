@@ -3,12 +3,11 @@ import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
-import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
 
 // Recupera a URL base da API definida em app.config.js (extra.apiBaseUrl)
-const baseURL = Constants.expoConfig?.extra?.apiBaseUrl;
+const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 if (!baseURL) {
   throw new Error(

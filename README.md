@@ -171,14 +171,15 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   │   └── 📄 RegisMatchStart.tsx
 │   └── 📁 [✅] user/
 │       ├── [✅] index.tsx
+│       ├── [✅] EditUser.tsx
 │       ├── [✅] Login.tsx
 │       ├── [✅] RegisterUser.tsx
 │       ├── [✅] UserProfile.tsx
 │       └── 📁 (userProfile)/
-│           ├── 📄 index.tsx
-│           ├── 📄 Descricao.tsx
-│           ├── 📄 Desempenho.tsx
-│           └── 📄 Historico.tsx
+│           ├── [✅] _layout.tsx
+│           ├── [✅] Descricao.tsx
+│           ├── [✅] Desempenho.tsx
+│           └── [✅] Historico.tsx
 
 │   ├── 📁 [✅] (auth)/                     |> Rotas públicas: login e registro
 │   │   ├── 📁 [✖️] login/                  |> Tela de login do usuário
