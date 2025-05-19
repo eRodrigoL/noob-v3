@@ -1,3 +1,4 @@
+// app/(legacy)/user/(userProfile)/_layout.tsx
 import Header from '@components/Header';
 import ParallaxProfile from '@components/ParallaxProfile';
 import { Ionicons } from '@expo/vector-icons';

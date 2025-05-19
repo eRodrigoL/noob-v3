@@ -1,7 +1,6 @@
-// app/(legacy)/boardgame/index.tsx
+// app/(legacy)/boardgameOld/index.tsx
 import { ButtonHighlight, Header, SearchBar } from '@components/index';
 import { images } from '@constants/images';
-import { ROUTES } from '@constants/routes';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import styles from '@theme/themOld/globalStyle';
@@ -102,7 +101,10 @@ export default function List() {
         <View style={localStyles.noResultsContainer}>
           <Text style={localStyles.noResultsText}>Jogo não encontrado. Deseja adicioná-lo?</Text>
           {/* TODO: trocar o ROUTES  */}
-          <ButtonHighlight title="Adicionar" onPress={() => router.push(ROUTES.GAMES.REGISTER)} />
+          <ButtonHighlight
+            title="Adicionar"
+            onPress={() => router.push('/(legacy)/boardgameOld/RegisterGame')}
+          />
         </View>
       )}
     </View>

@@ -1,3 +1,4 @@
+// app/(legacy)/user/(userProfile)/Historico.tsx
 import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';

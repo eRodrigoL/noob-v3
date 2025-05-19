@@ -1,3 +1,4 @@
+// app/(legacy)/user/EditUser.tsx
 import Header from '@components/Header';
 import ParallaxProfile from '@components/ParallaxProfile';
 import { logger } from '@lib/logger';
