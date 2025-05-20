@@ -160,25 +160,28 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   │   ├── 📄 Avaliacao.tsx
 │   │   ├── 📄 Classificacao.tsx
 │   │   ├── 📄 Descricao.tsx
+│   │   ├── [✅] EditGame.tsx
+│   │   ├── [✅] RegisterGame.tsx
 │   │   └── 📁 (userProfile)/     |> Abas do perfil dentro de jogo
 │   │       ├── 📄 index.tsx
 │   │       ├── 📄 Descricao.tsx
 │   │       ├── 📄 Desempenho.tsx
 │   │       └── 📄 Historico.tsx
 │   ├── 📁 matches/
-│   │   ├── 📄 index.tsx
-│   │   ├── 📄 MatchFinish.tsx
-│   │   └── 📄 RegisMatchStart.tsx
+│   │   ├── [✅] index.tsx
+│   │   ├── [✅] MatchFinish.tsx
+│   │   └── [✅] RegisMatchStart.tsx
 │   └── 📁 [✅] user/
 │       ├── [✅] index.tsx
+│       ├── [✅] EditUser.tsx
 │       ├── [✅] Login.tsx
 │       ├── [✅] RegisterUser.tsx
 │       ├── [✅] UserProfile.tsx
 │       └── 📁 (userProfile)/
-│           ├── 📄 index.tsx
-│           ├── 📄 Descricao.tsx
-│           ├── 📄 Desempenho.tsx
-│           └── 📄 Historico.tsx
+│           ├── [✅] _layout.tsx
+│           ├── [✅] Descricao.tsx
+│           ├── [✅] Desempenho.tsx
+│           └── [✅] Historico.tsx
 
 │   ├── 📁 [✅] (auth)/                     |> Rotas públicas: login e registro
 │   │   ├── 📁 [✖️] login/                  |> Tela de login do usuário

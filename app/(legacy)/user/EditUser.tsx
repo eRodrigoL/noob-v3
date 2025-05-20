@@ -1,18 +1,19 @@
-// app/(legacy)/user/index.tsx
-import { Header } from '@components/index';
+// app/(legacy)/user/EditUser.tsx
+import Header from '@components/Header';
 import ParallaxProfile from '@components/ParallaxProfile';
 import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import styles from '@theme/themOld/globalStyle';
+import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
-const UserProfile: React.FC = () => {
+const EditUser: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
   const [editedUser, setEditedUser] = useState<any>(null);
 
   // Função para buscar os dados do usuário
@@ -24,8 +25,8 @@ const UserProfile: React.FC = () => {
       if (!userId || !token) {
         Toast.show({
           type: 'error',
-          text1: 'Sessão expirada',
-          text2: 'Por favor, faça login novamente para acessar seu perfil.',
+          text1: 'Erro',
+          text2: 'ID do usuário ou token não encontrados.',
         });
         return;
       }
@@ -44,8 +45,8 @@ const UserProfile: React.FC = () => {
       logger.error('Erro ao buscar os dados do usuário:', error);
       Toast.show({
         type: 'error',
-        text1: 'Erro ao carregar',
-        text2: 'Não foi possível acessar seus dados. Tente novamente.',
+        text1: 'Erro',
+        text2: 'Não foi possível carregar os dados do usuário.',
       });
     } finally {
       setLoading(false);
@@ -57,8 +58,8 @@ const UserProfile: React.FC = () => {
     if (!editedUser || !editedUser.nome || !editedUser.email) {
       Toast.show({
         type: 'error',
-        text1: '⛔ Nome e e-mail são obrigatórios',
-        text2: 'Verifique os campos e tente novamente.',
+        text1: 'Erro',
+        text2: 'Nome e email são obrigatórios.',
       });
       return;
     }
@@ -70,8 +71,8 @@ const UserProfile: React.FC = () => {
       if (!userId || !token) {
         Toast.show({
           type: 'error',
-          text1: 'Sessão expirada',
-          text2: 'Por favor, faça login novamente para acessar seu perfil.',
+          text1: 'Erro',
+          text2: 'ID do usuário ou token não encontrados.',
         });
         return;
       }
@@ -118,8 +119,8 @@ const UserProfile: React.FC = () => {
 
       Toast.show({
         type: 'success',
-        text1: '✅ Alterações salvas',
-        text2: 'Seu perfil foi atualizado com sucesso.',
+        text1: 'Perfil atualizado!',
+        text2: 'Suas informações foram salvas com sucesso.',
       });
 
       // Recarregar os dados do usuário após a atualização
@@ -134,8 +135,8 @@ const UserProfile: React.FC = () => {
       }
       Toast.show({
         type: 'error',
-        text1: 'Falha ao salvar',
-        text2: 'Verifique sua conexão ou tente novamente mais tarde.',
+        text1: 'Erro',
+        text2: 'Não foi possível atualizar o perfil.',
       });
     }
   };
@@ -143,15 +144,6 @@ const UserProfile: React.FC = () => {
   useEffect(() => {
     fetchUserData();
   }, []);
-
-  // Função para alternar entre edição e exibição
-  const handleEditToggle = () => {
-    if (isEditing) {
-      // Salva as alterações ao sair do modo de edição
-      updateUserProfile();
-    }
-    setIsEditing(!isEditing);
-  };
 
   if (loading) {
     return (
@@ -224,8 +216,13 @@ const UserProfile: React.FC = () => {
         )}
 
         {/* Botão de Editar/Salvar */}
-        <TouchableOpacity style={styles.buttonPrimary} onPress={handleEditToggle}>
-          <Text style={styles.buttonPrimaryText}>{isEditing ? 'Salvar' : 'Editar Perfil'}</Text>
+        <TouchableOpacity
+          style={styles.buttonPrimary}
+          onPress={() => {
+            updateUserProfile();
+            router.back();
+          }}>
+          <Text style={styles.buttonPrimaryText}>Salvar</Text>
         </TouchableOpacity>
 
         {/* Botão Cancelar visível apenas se isEditing for true */}
@@ -233,8 +230,8 @@ const UserProfile: React.FC = () => {
           <TouchableOpacity
             style={styles.buttonSecondary}
             onPress={() => {
-              setIsEditing(false); // Sai do modo de edição
               setEditedUser(user); // Reverte as mudanças, restaurando os dados originais
+              router.back();
             }}>
             <Text style={styles.buttonSecondaryText}>Cancelar</Text>
           </TouchableOpacity>
@@ -244,4 +241,4 @@ const UserProfile: React.FC = () => {
   );
 };
 
-export default UserProfile;
+export default EditUser;
