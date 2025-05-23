@@ -142,6 +142,10 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
                       title="Perfil"
                       onPress={() => router.replace('/(legacy)/user')}
                     />
+                    <ButtonPrimary
+                      title="Conigurações"
+                      onPress={() => router.replace('/(app)/settings')}
+                    />
                     <ButtonPrimary title="Jogar" onPress={handlePlayPress} />
                     <ButtonPrimary title="Sair" onPress={handleLogout} />
                   </>

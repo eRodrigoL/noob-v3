@@ -1,0 +1,183 @@
+// components/buttons/SandwichMenu/index.tsx
+import ButtonHighlight from '@components/buttons/ButtonHighlight';
+import { useTheme } from '@hooks/useTheme';
+import { logger } from '@lib/logger';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { apiClient } from '@services/apiClient';
+import axios from 'axios';
+import { Href, useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Alert, Animated, Dimensions, Modal, Platform, Pressable, View } from 'react-native';
+import stylesSandwichMenu from './styles';
+
+interface ModalProps {
+  visible: boolean;
+  onClose: () => void;
+}
+
+const { width } = Dimensions.get('window');
+
+const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
+  const { colors } = useTheme();
+  const slideAnim = React.useRef(new Animated.Value(-width)).current;
+  const [hasOpenMatch, setHasOpenMatch] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
+
+  // Verifica se há usuário logado
+  const checkAuthentication = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const token = await AsyncStorage.getItem('token');
+      setIsAuthenticated(!!userId && !!token);
+    } catch (error) {
+      logger.warn('[SandwichMenu] Erro ao verificar autenticação:', error);
+      setIsAuthenticated(false);
+    }
+  };
+
+  // Verifica se há partidas em aberto
+  const checkOpenMatches = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const token = await AsyncStorage.getItem('token');
+
+      if (userId && token) {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        };
+
+        const response = await apiClient.get(
+          `/partidas/filtro?registrador=${userId}&fim=null`,
+          config
+        );
+
+        setHasOpenMatch(response.data.length > 0);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 404) {
+          setHasOpenMatch(false);
+        } else {
+          logger.warn('[SandwichMenu] Erro na verificação de partidas:', error.message);
+        }
+      } else {
+        logger.warn('[SandwichMenu] Erro desconhecido:', error);
+      }
+    }
+  };
+
+  // Logout do usuário
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.multiRemove(['token', 'userId']);
+      if (Platform.OS === 'web') {
+        logger.log('[SandwichMenu] Logout realizado com sucesso.');
+      } else {
+        Alert.alert('Sucesso', 'Logout realizado com sucesso!');
+      }
+      setIsAuthenticated(false);
+      onClose();
+      router.push('/user/Login');
+    } catch (error) {
+      logger.warn('[SandwichMenu] Erro ao realizar logout:', error);
+    }
+  };
+
+  // Animação de entrada e saída do menu
+  useEffect(() => {
+    if (visible) {
+      checkAuthentication();
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: Platform.OS !== 'web',
+      }).start();
+    } else {
+      Animated.timing(slideAnim, {
+        toValue: -width,
+        duration: 500,
+        useNativeDriver: Platform.OS !== 'web',
+      }).start(() => onClose());
+    }
+  }, [visible]);
+
+  // Verifica partidas após confirmação de login
+  useEffect(() => {
+    if (isAuthenticated) {
+      checkOpenMatches();
+    }
+  }, [isAuthenticated]);
+
+  // Fecha o menu com animação
+  const handleClose = () => {
+    Animated.timing(slideAnim, {
+      toValue: -width,
+      duration: 500,
+      useNativeDriver: Platform.OS !== 'web',
+    }).start(() => onClose());
+  };
+
+  // Navega para uma rota e fecha o menu
+  const handleNavigate = (path: Href) => {
+    handleClose();
+    router.push(path);
+  };
+
+  // Lógica para botão "Jogar"
+  const handlePlayPress = () => {
+    handleClose();
+    if (hasOpenMatch) {
+      // TODO: Adicionar rota para finalizar partida
+      // TODO: router.push('/matches/finish');
+    } else {
+      // TODO: Adicionar rota para finalizar partida
+      // TODO: router.push('/matches/play');
+    }
+  };
+
+  return (
+    <Modal animationType="none" transparent visible={visible} onRequestClose={handleClose}>
+      <Pressable onPress={handleClose} style={stylesSandwichMenu.modalContainer}>
+        <Animated.View
+          style={[
+            stylesSandwichMenu.modalView,
+            {
+              transform: [{ translateX: slideAnim }],
+              backgroundColor: colors.backgroundSemiHighlight,
+            },
+          ]}>
+          <View style={stylesSandwichMenu.buttonContainer}>
+            <ButtonHighlight
+              title="Início"
+              onPress={() => handleNavigate('/(legacy)/boardgameOld')}
+            />
+            {!isAuthenticated ? (
+              <ButtonHighlight title="Login" onPress={() => handleNavigate('/user/Login')} />
+            ) : (
+              <>
+                <ButtonHighlight
+                  title="Perfil"
+                  onPress={() => {
+                    // TODO: adicionar rota de perfil
+                  }}
+                />
+                <ButtonHighlight
+                  title="Configurações"
+                  onPress={() => handleNavigate('/settings')}
+                />
+                <ButtonHighlight title="Jogar" onPress={handlePlayPress} />
+                <ButtonHighlight title="Sair" onPress={handleLogout} />
+              </>
+            )}
+          </View>
+        </Animated.View>
+      </Pressable>
+    </Modal>
+  );
+};
+
+export default SandwichMenu;
