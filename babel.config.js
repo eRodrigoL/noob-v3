@@ -22,6 +22,7 @@ module.exports = function (api) {
             '@store': './store',
             '@theme': './theme',
             '@tests': './tests',
+            '@utils': './utils',
           },
         },
       ],

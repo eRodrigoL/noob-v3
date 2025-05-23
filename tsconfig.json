@@ -15,7 +15,8 @@
       "@services/*": ["services/*"],
       "@store/*": ["store/*"],
       "@theme/*": ["theme/*"],
-      "@tests/*": ["tests/*"]
+      "@tests/*": ["tests/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "declarations.d.ts"]
