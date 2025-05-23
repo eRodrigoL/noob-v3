@@ -314,12 +314,12 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 ├── 📁 [✖️] store/                          |> Zustand stores (estado global)
 │   ├── [✖️] 🧩 useSettingsStore.ts         |> Tema, fonte, acessibilidade
 │   └── [✖️] 🧩 useUserStore.ts             |> Informações do usuário logado
-├── 📁 [✖️] theme/                          |> Tema global da aplicação
+├── 📁 [✅] theme/                          |> Tema global da aplicação
 │   ├── [✖️] 📄 index.ts                    |> Exportação unificada
-│   └── 📁 [✖️] global/
-│       ├── [✖️] 📄 theme.ts                |> Paletas de cores (claro, escuro, daltônico)
-│       ├── [✖️] 📄 typography.ts           |> Tamanhos de fonte e multiplicadores
-│       └── [✖️] 🎨 globalStyles.ts         |> Estilos globais reaproveitáveis
+│   └── 📁 [✅] global/
+│       ├── [✅] 📄 theme.ts                |> Paletas de cores (claro, escuro, daltônico)
+│       ├── [✅] 📄 typography.ts           |> Tamanhos de fonte e multiplicadores
+│       └── [✅] 🎨 globalStyles.ts         |> Estilos globais reaproveitáveis
 ├── 📁 [✖️] tests/                          |> Testes não acoplados aos componentes
 │   ├── 📁 [✖️] unit/                       |> Testes unitários (ex: store, utils)
 │   │   └── [✖️] 🧪 store.test.ts
