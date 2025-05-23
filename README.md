@@ -315,6 +315,7 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   ├── [✖️] 🧩 useSettingsStore.ts         |> Tema, fonte, acessibilidade
 │   └── [✖️] 🧩 useUserStore.ts             |> Informações do usuário logado
 ├── 📁 [✅] theme/                          |> Tema global da aplicação
+├── 📁 [✅] theme/                          |> Tema global da aplicação
 │   ├── [✖️] 📄 index.ts                    |> Exportação unificada
 │   └── 📁 [✅] global/
 │       ├── [✅] 📄 theme.ts                |> Paletas de cores (claro, escuro, daltônico)
@@ -376,9 +377,9 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 
 ---
 
-### [ ] Copiar o app do ZIP para a estrutura nova
+### [✅] Copiar o app do ZIP para a estrutura nova
 
-- [] Copiar arquivos do repositório `https://github.com/eRodrigoL/noob`:
+- [✔️] Copiar arquivos do repositório `https://github.com/eRodrigoL/noob`:
   - componentes (origem)
     - [✔️] `componments/ButtonGoBack.tsx`
     - [✔️] `componments/ButtonPrimary.tsx`
@@ -388,25 +389,25 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
     - [✔️] `componments/SearchBar.tsx`
     - [✔️] `componments/Splash.tsx`
     - telas (origem)
-    - [] `scrreen/user/UserProfile.tsx`
-    - [] `scrreen/user/RegisterUser.tsx`
-    - [] `scrreen/user/Login.tsx`
-    - [] `scrreen/user/EditUser.tsx`
-    - [] `scrreen/user/(userProfile)/Descricao.tsx`
-    - [] `scrreen/user/(userProfile)/Desempenho.tsx`
-    - [] `scrreen/user/(userProfile)/Historico.tsx`
-    - [] `scrreen/user/(userProfile)/UserProfile.tsx`
-    - [] `scrreen/matches/MatchFinish.tsx`
-    - [] `scrreen/matches/MatchStart.tsx`
-    - [] `scrreen/matches/Matches.tsx`
-    - [] `scrreen/boardgame/RegisterGame.tsx`
-    - [] `scrreen/boardgame/List.tsx`
-    - [] `scrreen/boardgame/EditGame.tsx`
-    - [] `scrreen/boardgame/(gameProfile)/GameDashboard.tsx`
-    - [] `scrreen/boardgame/(gameProfile)/GameReview.tsx`
-    - [] `scrreen/boardgame/(gameProfile)/Ranking.tsx`
-    - [] `scrreen/boardgame/(gameProfile)/Descricao.tsx`
-    - [] `scrreen/boardgame/(gameProfile)/GameProfile.tsx`
+    - [✔️] `scrreen/user/UserProfile.tsx`
+    - [✔️] `scrreen/user/RegisterUser.tsx`
+    - [✔️] `scrreen/user/Login.tsx`
+    - [✔️] `scrreen/user/EditUser.tsx`
+    - [✔️] `scrreen/user/(userProfile)/Descricao.tsx`
+    - [✔️] `scrreen/user/(userProfile)/Desempenho.tsx`
+    - [✔️] `scrreen/user/(userProfile)/Historico.tsx`
+    - [✔️] `scrreen/user/(userProfile)/UserProfile.tsx`
+    - [✔️] `scrreen/matches/MatchFinish.tsx`
+    - [✔️] `scrreen/matches/MatchStart.tsx`
+    - [✔️] `scrreen/matches/Matches.tsx`
+    - [✔️] `scrreen/boardgame/RegisterGame.tsx`
+    - [✔️] `scrreen/boardgame/List.tsx`
+    - [✔️] `scrreen/boardgame/EditGame.tsx`
+    - [✔️] `scrreen/boardgame/(gameProfile)/GameDashboard.tsx`
+    - [✔️] `scrreen/boardgame/(gameProfile)/GameReview.tsx`
+    - [✔️] `scrreen/boardgame/(gameProfile)/Ranking.tsx`
+    - [✔️] `scrreen/boardgame/(gameProfile)/Descricao.tsx`
+    - [✔️] `scrreen/boardgame/(gameProfile)/GameProfile.tsx`
 
 ---
 
