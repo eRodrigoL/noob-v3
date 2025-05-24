@@ -80,8 +80,19 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 
   loadPreferences: async (userId: string) => {
     try {
-      const response = await apiClient.get(`/usuarios/preferencias/${userId}`);
-      const { fontOption, fontSize, theme } = response.data;
+      const token = await AsyncStorage.getItem('token');
+
+      if (!token) {
+        throw new Error('Sessão expirada, favor logar novamente.');
+      }
+
+      const response = await apiClient.get(`/usuarios/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const { fontOption, fontSize, theme: userTheme } = response.data;
 
       set({
         fontOption: fontOption in typography.fonts ? fontOption : DEFAULTS.fontOption,
@@ -90,7 +101,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
             Math.max(parseFloat(fontSize), typography.sizes.min / typography.sizes.base),
             typography.sizes.max / typography.sizes.base
           ) || DEFAULTS.fontSizeMultiplier,
-        theme: theme in theme ? theme : DEFAULTS.theme,
+        theme: userTheme in theme ? userTheme : DEFAULTS.theme,
         isLoaded: true,
       });
 
@@ -99,5 +110,5 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       logger.warn('⚠️ Erro ao carregar preferências, usando padrão.', error);
       set({ ...DEFAULTS, isLoaded: true });
     }
-  },
+  }
 }));
