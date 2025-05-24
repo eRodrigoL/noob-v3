@@ -36,9 +36,12 @@ const Login: React.FC = () => {
         const { token, usuario, msg } = response.data;
 
         await AsyncStorage.multiSet([
-          ['token', token],
-          ['userId', usuario.id],
-        ]);
+        ['token', token],
+        ['userId', usuario.id],
+        ['fontOption', usuario.fontOption],
+        ['fontSize', String(usuario.fontSize)], 
+        ['theme', usuario.theme],
+      ]);
 
         Toast.show({
           type: 'success',

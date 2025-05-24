@@ -9,7 +9,6 @@ import { create } from 'zustand';
 
 export type ThemeName = keyof typeof theme;
 export type FontOption = keyof typeof typography.fonts;
-export type FontSizeLevel = 'small' | 'base' | 'large' | 'giant';
 
 interface SettingsState {
   fontOption: FontOption;
@@ -24,7 +23,7 @@ interface SettingsState {
 
   restoreDefaults: () => void;
   confirmChanges: (userId: string) => Promise<void>;
-  loadPreferences: (userId: string) => Promise<void>;
+  loadPreferences: () => Promise<void>;
 }
 
 const DEFAULTS: Pick<SettingsState, 'fontOption' | 'fontSizeMultiplier' | 'theme'> = {
@@ -38,6 +37,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   isLoaded: false,
 
   setFont: (font) => set({ fontOption: font }),
+
   setFontSizeMultiplier: (multiplier) => {
     const clamped = Math.min(
       Math.max(multiplier, typography.sizes.min / typography.sizes.base),
@@ -45,7 +45,8 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     );
     set({ fontSizeMultiplier: clamped });
   },
-  setTheme: (theme) => set({ theme }),
+
+  setTheme: (themeName) => set({ theme: themeName }),
 
   restoreDefaults: () => {
     set({ ...DEFAULTS });
@@ -72,43 +73,59 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
         }
       );
       logger.log('✅ Preferências salvas com sucesso!');
+
+      // Atualiza o localStorage
+      await AsyncStorage.multiSet([
+        ['fontOption', fontOption],
+        ['fontSize', String(fontSizeMultiplier)],
+        ['theme', theme],
+      ]);
     } catch (error) {
       logger.error('❌ Erro ao salvar preferências:', error);
       throw error;
     }
   },
 
-  loadPreferences: async (userId: string) => {
+  loadPreferences: async () => {
     try {
-      const token = await AsyncStorage.getItem('token');
+      const entries = await AsyncStorage.multiGet(['fontOption', 'fontSize', 'theme']);
 
-      if (!token) {
-        throw new Error('Sessão expirada, favor logar novamente.');
-      }
+      const fontOptionValue = entries[0][1];
+      const fontSizeValue = entries[1][1];
+      const themeValue = entries[2][1];
 
-      const response = await apiClient.get(`/usuarios/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const validFontOptions = Object.keys(typography.fonts);
+      const validThemeOptions = Object.keys(theme);
 
-      const { fontOption, fontSize, theme: userTheme } = response.data;
+      const fontOption: FontOption =
+        validFontOptions.includes(fontOptionValue ?? '')
+          ? (fontOptionValue as FontOption)
+          : DEFAULTS.fontOption;
+
+      const themeName: ThemeName =
+        validThemeOptions.includes(themeValue ?? '')
+          ? (themeValue as ThemeName)
+          : DEFAULTS.theme;
+
+      const fontSize = parseFloat(fontSizeValue ?? '');
+      const fontSizeMultiplier =
+        Math.min(
+          Math.max(fontSize, typography.sizes.min / typography.sizes.base),
+          typography.sizes.max / typography.sizes.base
+        ) || DEFAULTS.fontSizeMultiplier;
 
       set({
-        fontOption: fontOption in typography.fonts ? fontOption : DEFAULTS.fontOption,
-        fontSizeMultiplier:
-          Math.min(
-            Math.max(parseFloat(fontSize), typography.sizes.min / typography.sizes.base),
-            typography.sizes.max / typography.sizes.base
-          ) || DEFAULTS.fontSizeMultiplier,
-        theme: userTheme in theme ? userTheme : DEFAULTS.theme,
+        fontOption,
+        fontSizeMultiplier,
+        theme: themeName,
         isLoaded: true,
       });
 
-      logger.log('📦 Preferências carregadas da API.');
+      logger.log('📦 Preferências carregadas do armazenamento local.');
     } catch (error) {
       logger.warn('⚠️ Erro ao carregar preferências, usando padrão.', error);
       set({ ...DEFAULTS, isLoaded: true });
     }
-  }
+  },
 }));
+
