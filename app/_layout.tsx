@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
-import { AppState, AppStateStatus } from 'react-native';
+import { AppState, AppStateStatus, StatusBar } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
 import { useKeepApiAwake } from '@hooks/useKeepApiAwke';
@@ -21,7 +22,7 @@ export default function RootLayout() {
     const prepare = async () => {
       const userId = await AsyncStorage.getItem('userId');
       if (userId) {
-        await loadPreferences(userId);
+        await loadPreferences(); // TODO: @motathais eu removi "userId" porque apresentava "0 argumentos eram esperados, mas 1 foram obtidos.ts(2554)" em "userId"
       } else {
         useSettingsStore.setState({ isLoaded: true }); // fallback caso não haja userId
       }
@@ -37,9 +38,10 @@ export default function RootLayout() {
   if (!isLoaded) return null; // enquanto não carrega, mantém tela branca (splash visível)
 
   return (
-    <>
+    <SafeAreaProvider>
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
       <Stack screenOptions={{ headerShown: false }} />
       <Toast />
-    </>
+    </SafeAreaProvider>
   );
 }
