@@ -1,4 +1,4 @@
-// components/inputs/UniversalSlider/index.tsx
+// components/UniversalSlider/index.tsx
 import Slider from '@react-native-community/slider';
 import React from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';

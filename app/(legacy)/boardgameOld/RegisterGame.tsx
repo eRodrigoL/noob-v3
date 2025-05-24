@@ -1,6 +1,6 @@
 // app/(legacy)/boardgameOld/RegisterGame.tsx
 import ButtonGoBack from '@components/ButtonGoBack';
-import ButtonPrimary from '@components/ButtonPrimary';
+import ButtonHighlight from '@components/buttons/ButtonHighlight';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import styles from '@theme/themOld/globalStyle';
@@ -235,7 +235,7 @@ const RegisterGame: React.FC = () => {
           />
 
           {/* Botão para cadastrar o jogo */}
-          <ButtonPrimary title="Cadastrar Jogo" onPress={gameRegister} />
+          <ButtonHighlight title="Cadastrar Jogo" onPress={gameRegister} />
         </View>
       </ScrollView>
     </View>

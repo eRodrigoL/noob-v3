@@ -7,6 +7,7 @@ import { Pressable, Text } from 'react-native';
 interface ButtonHighlightProps {
   title: string;
   onPress: () => void;
+  disabled?: boolean;
   fontFamilyOverride?: string;
   fontSizeOverride?: number;
   colorOverride?: string;
@@ -16,6 +17,7 @@ interface ButtonHighlightProps {
 const ButtonHighlight: React.FC<ButtonHighlightProps> = ({
   title,
   onPress,
+  disabled = false,
   fontFamilyOverride,
   fontSizeOverride,
   colorOverride,
@@ -25,12 +27,12 @@ const ButtonHighlight: React.FC<ButtonHighlightProps> = ({
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={disabled ? undefined : onPress}
       style={({ pressed }) => [
         globalStyles.button,
         {
           backgroundColor: backgroundColorOverride || colors.backgroundHighlight,
-          opacity: pressed ? 0.8 : 1, // efeito visual ao pressionar
+          opacity: disabled ? 0.4 : pressed ? 0.8 : 1, // efeito visual ao pressionar
         },
       ]}>
       <Text

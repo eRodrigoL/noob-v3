@@ -1,14 +1,15 @@
 // components/layouts/HeaderLayout/index.tsx
+import ButtonHighlight from '@components/buttons/ButtonHighlight';
+import SandwichMenu from '@components/buttons/SandwichMenu';
+import { useTheme } from '@hooks/useTheme';
+import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { ReactNode, useEffect, useState } from 'react';
-import { ScrollView, ScrollViewProps, Text, View, ViewStyle } from 'react-native';
-// import { useTheme } from '@theme/index';
-import SandwichMenu from '@components/SandwichMenu';
-import ButtonHighlight from '@components/buttons/ButtonHighlight';
-import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import axios from 'axios';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { ScrollView, ScrollViewProps, Text, View, ViewStyle } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import stylesHeaderLayout from './styles';
 
 interface HeaderLayoutProps {
@@ -39,6 +40,7 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [hasOpenMatch, setHasOpenMatch] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { colors, fontSizes, fontFamily } = useTheme();
 
   // Verifica se o usuário está autenticado com base no armazenamento local
   const checkAuthentication = async () => {
@@ -117,12 +119,11 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View
         style={[
           stylesHeaderLayout.headerContainer,
-          { backgroundColor: backgroundColorOverride },
-          // TODO: { backgroundColor: backgroundColorOverride || colors.backgroundHighlight },
+          { backgroundColor: backgroundColorOverride || colors.backgroundHighlight },
         ]}>
         {/* Botão de menu sanduíche à esquerda */}
         <ButtonHighlight
@@ -142,17 +143,10 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
           style={[
             stylesHeaderLayout.title,
             {
-              fontFamily: fontFamilyOverride,
-              fontSize: fontSizeOverride,
-              color: textColorOverride,
-            },
-            /* TODO:
-            {
               fontFamily: fontFamilyOverride || fontFamily,
               fontSize: fontSizeOverride || fontSizes.giant,
               color: textColorOverride || colors.textOnHighlight,
             },
-            */
           ]}>
           {title}
         </Text>
@@ -183,7 +177,7 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
       ) : (
         <View style={[{ flex: 1, padding: 16 }, contentStyle]}>{children}</View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -229,8 +229,8 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │       ├── 📁 [✖️] reports/                |> Tela de denúncias
 │       │   ├── [✖️] 📄 index.tsx
 │       │   └── [✖️] 🎨 style.ts
-│       ├── 📁 [✖️] settings/               |> Tela de configurações visuais
-│       │   ├── [✖️] 📄 index.tsx
+│       ├── 📁 [✅] settings/               |> Tela de configurações visuais
+│       │   ├── [✅] 📄 index.tsx
 │       │   └── [✖️] 🎨 style.ts
 │       └── 📁 [✖️] test/                   |> Tela de teste/experimentos
 │           ├── [✖️] 📄 index.tsx
@@ -252,29 +252,29 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │       │   └── [❗] 🖼️ unavailable.png
 │       └── 📁 [✖️] backgrounds/           |> Imagens de fundo ou wallpapers
 ├── 📁 [✅] components/                    |> Componentes reutilizáveis da interface
-│   ├── [✖️] index.tsx                  |> Barrel file para exportação centralizada
-│   ├── 📁 [✖️] 🧩 buttons/                   |> Botões personalizados
-│   │   ├── 📁 [❗] ButtonHighlight/       |> Botão com destaque visual
-│   │   │   ├── [✖️] 🧩 index.tsx
+│   ├── [✅] index.tsx                  |> Barrel file para exportação centralizada
+│   ├── 📁 [✅] 🧩 buttons/                   |> Botões personalizados
+│   │   ├── 📁 [✅] ButtonHighlight/       |> Botão com destaque visual
+│   │   │   ├── [✅] 🧩 index.tsx
 │   │   │   ├── [✖️] 🎨 style.ts
 │   │   │   └── [✖️] 🧪 ButtonHighlight.test.tsx
-│   │   ├── 📁 [✖️] ButtonSemiHighlight/
-│   │   │   ├── [✖️] 🧩 index.tsx
+│   │   ├── 📁 [✅] ButtonSemiHighlight/
+│   │   │   ├── [✅] 🧩 index.tsx
 │   │   │   ├── [✖️] 🎨 style.ts
 │   │   │   └── [✖️] 🧪 ButtonSemiHighlight.test.tsx
-│   │   └── 📁 [❗] SandwichMenu/          |> Menu lateral (hambúrguer)
-│   │       ├── [✖️] 🧩 index.tsx
-│   │       ├── [✖️] 🎨 styles.tsx
+│   │   └── 📁 [✅] SandwichMenu/          |> Menu lateral (hambúrguer)
+│   │       ├── [✅] 🧩 index.tsx
+│   │       ├── [✅] 🎨 styles.tsx
 │   │       └── [✖️] 🧪 SandwichMenu.test.tsx
 │   ├── 📁 [✖️] cards/
 │   │   └── 📁 [✖️] GameCard/              |> Cartão de exibição de jogo
 │   │       ├── [✖️] 🧩 index.tsx
 │   │       ├── [✖️] 🎨 styles.tsx
 │   │       └── [✖️] 🧪 GameCard.test.tsx
-│   ├── 📁 [✖️] layouts/
-│   │   └── 📁 [❗] HeaderLayout/          |> Cabeçalho da aplicação
-│   │       ├── [✖️] 🧩 index.tsx
-│   │       ├── [✖️] 🎨 styles.tsx
+│   ├── 📁 [✅] layouts/
+│   │   └── 📁 [✅] HeaderLayout/          |> Cabeçalho da aplicação
+│   │       ├── [✅] 🧩 index.tsx
+│   │       ├── [✅] 🎨 styles.tsx
 │   │       └── [✖️] 🧪 HeaderLayout.test.tsx
 │   └── 📁 [✖️] feedback/
 │       ├── 📁 [✖️] LoadingIndicator/      |> Tela de carregamento local (em uma tela)
@@ -299,10 +299,11 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │       └── [✖️] 📚 tsconfig.md            |> Configuração TypeScript
 ├── 📁 [✅] hooks/                         |> Hooks personalizados
 │   ├── [✅] 🧩 useKeepApiAwake.ts         |> Mantém a API acordada no fundo
-│   ├── [✖️] 🧩 useTheme.ts                |> Retorna tema e tamanhos de fonte ajustados
+│   ├── [✅] 🧩 useTheme.ts                |> Retorna tema e tamanhos de fonte ajustados
 │   └── [✅] 🧩 useWarmUpApi.ts            |> Alternativa de "wake-up" da API
 ├── 📁 [✅] lib/                           |> Funções utilitárias reutilizáveis
 │   ├── [✖️] 📄 formatDate.ts
+│   ├── [✅] getImageSource.ts
 │   ├── [✅] ⚙️ logger.ts                  |> Logger central (desativa logs em produção)
 │   └── [✖️] 📄 validations.ts             |> Validações comuns (ex: email, senha)
 ├── 📁 [✅] services/                       |> Comunicação com a API
@@ -311,10 +312,9 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   ├── [✖️] 📄 games.ts
 │   ├── [✖️] 📄 matches.ts
 │   └── [✖️] 📄 ratings.ts
-├── 📁 [✖️] store/                          |> Zustand stores (estado global)
-│   ├── [✖️] 🧩 useSettingsStore.ts         |> Tema, fonte, acessibilidade
+├── 📁 [✅] store/                          |> Zustand stores (estado global)
+│   ├── [✅] 🧩 useSettingsStore.ts         |> Tema, fonte, acessibilidade
 │   └── [✖️] 🧩 useUserStore.ts             |> Informações do usuário logado
-├── 📁 [✅] theme/                          |> Tema global da aplicação
 ├── 📁 [✅] theme/                          |> Tema global da aplicação
 │   ├── [✖️] 📄 index.ts                    |> Exportação unificada
 │   └── 📁 [✅] global/
@@ -328,6 +328,8 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   │   └── [✖️] 🧪 Header.test.tsx
 │   └── 📁 [✖️] e2e/                        |> Testes de fluxo completo (end-to-end)
 │       └── [✖️] 🧪 login-flow.test.ts
+├── 📁 [✅] utils/
+│   └── [✅] 🧪 store.test.ts
 ├── [✅] 🔑 .env                            |> Variáveis de ambiente
 ├── [✅] 🗑️ .eslintignore
 ├── [✅] 🗑️ .gitignore                      |> Arquivos ignorados no Git
@@ -382,10 +384,10 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 - [✔️] Copiar arquivos do repositório `https://github.com/eRodrigoL/noob`:
   - componentes (origem)
     - [✔️] `componments/ButtonGoBack.tsx`
-    - [✔️] `componments/ButtonPrimary.tsx`
+    - [✔️] `componments/ButtonPrimary.tsx` excluído!
     - [✔️] `componments/Header.tsx`
     - [✔️] `componments/ParallaxProfile.tsx`
-    - [✔️] `componments/SandwichMenu.tsx`
+    - [✔️] `componments/SandwichMenu.tsx` excluído!
     - [✔️] `componments/SearchBar.tsx`
     - [✔️] `componments/Splash.tsx`
     - telas (origem)

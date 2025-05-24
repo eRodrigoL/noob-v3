@@ -10,7 +10,7 @@ import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { Theme } from '@theme/themOld/theme';
 import axios from 'axios';
-import SandwichMenu from '../SandwichMenu';
+import SandwichMenu from '../buttons/SandwichMenu';
 
 const Header = ({ title }: { title: string }) => {
   const [modalVisible, setModalVisible] = useState(false);

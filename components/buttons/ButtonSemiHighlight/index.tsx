@@ -7,6 +7,7 @@ import { Pressable, Text } from 'react-native';
 interface ButtonSemiHighlightProps {
   title: string;
   onPress: () => void;
+  disabled?: boolean;
   fontFamilyOverride?: string;
   fontSizeOverride?: number;
   colorOverride?: string;
@@ -16,6 +17,7 @@ interface ButtonSemiHighlightProps {
 const ButtonSemiHighlight: React.FC<ButtonSemiHighlightProps> = ({
   title,
   onPress,
+  disabled = false,
   fontFamilyOverride,
   fontSizeOverride,
   colorOverride,
@@ -25,21 +27,21 @@ const ButtonSemiHighlight: React.FC<ButtonSemiHighlightProps> = ({
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={disabled ? undefined : onPress}
       style={({ pressed }) => [
         globalStyles.button,
         {
           backgroundColor: backgroundColorOverride || colors.backgroundSemiHighlight,
-          opacity: pressed ? 0.85 : 1, // Efeito de toque leve
+          opacity: disabled ? 0.4 : pressed ? 0.8 : 1, // Efeito de toque leve
         },
       ]}>
       <Text
         style={[
-          globalStyles.textCentered,
+          globalStyles.textCenteredBold,
           {
             fontFamily: fontFamilyOverride || fontFamily,
             fontSize: fontSizeOverride || fontSizes.base,
-            color: colorOverride || colors.textOnHighlight,
+            color: colorOverride || colors.textOnSemiHighlight,
           },
         ]}>
         {title}
