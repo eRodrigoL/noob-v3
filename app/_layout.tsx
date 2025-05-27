@@ -1,5 +1,7 @@
 // app/_layout.tsx
+import SandwichMenu from '@components/buttons/SandwichMenu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useUiStore } from '@store/useUiStore';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
@@ -15,6 +17,7 @@ SplashScreen.preventAutoHideAsync(); // impede que o splash desapareça automati
 export default function RootLayout() {
   const { isLoaded, loadPreferences } = useSettingsStore();
   const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState);
+  const { isMenuVisible, hideMenu } = useUiStore();
 
   useKeepApiAwake();
 
@@ -41,6 +44,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <StatusBar barStyle="dark-content" translucent backgroundColor="#ffffffff" />
       <Stack screenOptions={{ headerShown: false }} />
+      <SandwichMenu visible={isMenuVisible} onClose={hideMenu} />
       <Toast />
     </SafeAreaProvider>
   );

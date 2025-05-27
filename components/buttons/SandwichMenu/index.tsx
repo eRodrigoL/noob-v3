@@ -151,10 +151,7 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
             },
           ]}>
           <View style={stylesSandwichMenu.buttonContainer}>
-            <ButtonHighlight
-              title="Início"
-              onPress={() => handleNavigate('/(legacy)/boardgameOld')}
-            />
+            <ButtonHighlight title="Início" onPress={() => handleNavigate('/boardgameOld')} />
             {!isAuthenticated ? (
               <ButtonHighlight title="Login" onPress={() => handleNavigate('/user/Login')} />
             ) : (
@@ -170,6 +167,12 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
                   onPress={() => handleNavigate('/settings')}
                 />
                 <ButtonHighlight title="Jogar" onPress={handlePlayPress} />
+
+                <ButtonHighlight
+                  title="testando telas"
+                  onPress={() => handleNavigate('/boardgame')}
+                />
+
                 <ButtonHighlight title="Sair" onPress={handleLogout} />
               </>
             )}

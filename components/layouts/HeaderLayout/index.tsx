@@ -1,11 +1,11 @@
 // components/layouts/HeaderLayout/index.tsx
 import ButtonHighlight from '@components/buttons/ButtonHighlight';
-import SandwichMenu from '@components/buttons/SandwichMenu';
 import { useTheme } from '@hooks/useTheme';
 import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { apiClient } from '@services/apiClient';
+import { useUiStore } from '@store/useUiStore';
 import axios from 'axios';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { ScrollView, ScrollViewProps, Text, View, ViewStyle } from 'react-native';
@@ -126,17 +126,10 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
           { backgroundColor: backgroundColorOverride || colors.backgroundHighlight },
         ]}>
         {/* Botão de menu sanduíche à esquerda */}
-        <ButtonHighlight
-          title="☰"
-          onPress={handleOpenModal}
-          fontFamilyOverride={fontFamilyOverride}
-          fontSizeOverride={fontSizeOverride}
-          colorOverride={textColorOverride}
-          backgroundColorOverride={backgroundColorOverride}
-        />
+        <ButtonHighlight title="☰" onPress={useUiStore.getState().showMenu} />
 
-        {/* Modal de navegação lateral */}
-        <SandwichMenu visible={modalVisible} onClose={handleCloseModal} />
+        {/* Modal de navegação lateral
+        <SandwichMenu visible={modalVisible} onClose={handleCloseModal} /> */}
 
         {/* Título centralizado */}
         <Text
