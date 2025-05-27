@@ -201,7 +201,7 @@ const RegistroPartidaScreen = () => {
           type: 'success',
           text1: 'A partida cancelada com sucesso.',
         });
-        router.push('/(legacy)/boardgameOld'); // Redireciona para a lista após salvar
+        router.push('/boardgame'); // Redireciona para a lista após salvar
         return;
       } else {
         vencedor = participants.map((apelido) => ({ apelido }));
@@ -221,7 +221,7 @@ const RegistroPartidaScreen = () => {
       });
 
       refreshScreen();
-      router.push('/(legacy)/boardgameOld'); // Redireciona para a lista após salvar
+      router.push('/boardgame'); // Redireciona para a lista após salvar
     } catch (error) {
       logger.error('Erro ao atualizar a partida:', error);
       Toast.show({
@@ -337,7 +337,7 @@ const RegistroPartidaScreen = () => {
         <TouchableOpacity
           style={styles.buttonPrimary}
           onPress={() => {
-            router.push('/(legacy)/boardgameOld'); // Redireciona para a lista ao finalizar depois
+            router.push('/boardgame'); // Redireciona para a lista ao finalizar depois
             refreshScreen();
           }}>
           <Text style={styles.buttonPrimaryText}>Finalizar depois</Text>

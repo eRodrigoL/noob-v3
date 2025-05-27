@@ -25,7 +25,7 @@ export const ROUTES = {
     DASHBOARD: '/',
   },
   TEST: '/',
-  HOME: '/(legacy)/boardgameOld', // TODO: -> Header, SandwichMenu
+  HOME: '/boardgame', // TODO: -> Header, SandwichMenu
 } as const;
 
 // Utilitário para extrair todas as rotas válidas como union type de strings

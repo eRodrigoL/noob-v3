@@ -193,7 +193,7 @@ const RegisterUser: React.FC = () => {
 
           <TouchableOpacity
             style={styles.buttonSecondary}
-            onPress={() => router.replace('/(legacy)/boardgameOld')}>
+            onPress={() => router.replace('/boardgame')}>
             <Text style={styles.buttonPrimaryText}>Cancelar</Text>
           </TouchableOpacity>
         </View>

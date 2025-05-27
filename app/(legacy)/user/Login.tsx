@@ -36,19 +36,19 @@ const Login: React.FC = () => {
         const { token, usuario, msg } = response.data;
 
         await AsyncStorage.multiSet([
-        ['token', token],
-        ['userId', usuario.id],
-        ['fontOption', usuario.fontOption],
-        ['fontSize', String(usuario.fontSize)], 
-        ['theme', usuario.theme],
-      ]);
+          ['token', token],
+          ['userId', usuario.id],
+          ['fontOption', usuario.fontOption],
+          ['fontSize', String(usuario.fontSize)],
+          ['theme', usuario.theme],
+        ]);
 
         Toast.show({
           type: 'success',
           text1: msg,
         });
 
-        router.replace('/(legacy)/boardgameOld'); // TODO: substituir por rota protegida definitiva
+        router.replace('/boardgame'); // TODO: substituir por rota protegida definitiva
       }
     } catch (error: unknown) {
       logger.error('Erro no login:', error);

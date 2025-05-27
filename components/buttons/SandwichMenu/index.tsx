@@ -151,7 +151,7 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
             },
           ]}>
           <View style={stylesSandwichMenu.buttonContainer}>
-            <ButtonHighlight title="Início" onPress={() => handleNavigate('/boardgameOld')} />
+            <ButtonHighlight title="Início" onPress={() => handleNavigate('/(public)/boardgame')} />
             {!isAuthenticated ? (
               <ButtonHighlight title="Login" onPress={() => handleNavigate('/user/Login')} />
             ) : (
