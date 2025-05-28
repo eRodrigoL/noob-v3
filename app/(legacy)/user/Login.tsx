@@ -75,6 +75,8 @@ const Login: React.FC = () => {
           value={`@${apelido}`}
           onChangeText={(text) => setApelido(text.replace('@', ''))}
           autoCapitalize="none"
+          accessibilityLabel="Campo para inserir o apelido"
+          accessibilityHint="Digite seu nome de usuário, começando com arroba"
         />
 
         <Text style={styles.label}>Senha:</Text>
@@ -84,20 +86,37 @@ const Login: React.FC = () => {
           value={senha}
           onChangeText={setSenha}
           placeholder=""
+          accessibilityLabel="Campo para inserir a senha"
+          accessibilityHint="Digite sua senha. Os caracteres não serão visíveis."
         />
 
-        <TouchableOpacity style={styles.buttonPrimary} onPress={handleLogin}>
+        <TouchableOpacity
+          style={styles.buttonPrimary}
+          onPress={handleLogin}
+          accessibilityLabel="Botão Entrar"
+          accessibilityRole="button"
+        >
           <Text style={styles.buttonPrimaryText}>Entrar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buttonSecondary} onPress={() => router.back()}>
+        <TouchableOpacity
+          style={styles.buttonSecondary}
+          onPress={() => router.back()}
+          accessibilityLabel="Botão Voltar"
+          accessibilityRole="button"
+        >
           <Text style={styles.buttonPrimaryText}>Voltar</Text>
         </TouchableOpacity>
+
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={styles.signupText}>Ainda não tem uma conta?</Text>
           {/* TODO: definir rota -> '/(auth)/register' */}
-          <TouchableOpacity onPress={() => router.push('/(legacy)/user/RegisterUser')}>
+          <TouchableOpacity
+            onPress={() => router.push('/(legacy)/user/RegisterUser')}
+            accessibilityLabel="Link para cadastrar uma nova conta"
+            accessibilityRole="link"
+          >
             <Text style={styles.signupLink}> Cadastre-se</Text>
           </TouchableOpacity>
         </View>

@@ -162,7 +162,7 @@ function SettingsScreen() {
             onPress={() => router.back()}
             accessibilityLabel="Cancelar alterações"
             accessibilityHint="Descarta as alterações feitas e retorna para a tela anterior"
-          /><ButtonSemiHighlight title="Cancelar" onPress={() => router.back()} />
+          />
         </View>
       </HeaderLayout>
     </View>
