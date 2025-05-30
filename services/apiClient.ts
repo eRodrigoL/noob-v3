@@ -49,7 +49,7 @@ apiClient.interceptors.response.use(
         });
 
         await AsyncStorage.multiRemove(['token', 'userId']);
-        router.replace('/(public)/boardgame');
+        router.replace('/boardgame');
       }
     }
 
