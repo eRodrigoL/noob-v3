@@ -155,7 +155,6 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 
 │   ├── 📁 [✅] (legacy)/                   |> telas antigas e temporárias
 │   ├── 📁 [✅] boardgame/             |> Telas de informações dos jogos
-│   │   ├── [✅] index.tsx
 │   │   ├── 📄 Analises.tsx
 │   │   ├── 📄 Avaliacao.tsx
 │   │   ├── 📄 Classificacao.tsx
@@ -174,7 +173,6 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   └── 📁 [✅] user/
 │       ├── [✅] index.tsx
 │       ├── [✅] EditUser.tsx
-│       ├── [✅] Login.tsx
 │       ├── [✅] RegisterUser.tsx
 │       ├── [✅] UserProfile.tsx
 │       └── 📁 (userProfile)/
@@ -184,9 +182,9 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │           └── [✅] Historico.tsx
 
 │   ├── 📁 [✅] (auth)/                     |> Rotas públicas: login e registro
-│   │   ├── 📁 [✖️] login/                  |> Tela de login do usuário
-│   │   │   ├── [✖️] 📄 index.tsx           |> Componente de tela
-│   │   │   ├── [✖️] 🎨 style.ts            |> Estilos específicos da tela
+│   │   ├── 📁 [✅] login/                  |> Tela de login do usuário
+│   │   │   ├── [✅] 📄 index.tsx           |> Componente de tela
+│   │   │   ├── [✅] 🎨 style.ts            |> Estilos específicos da tela
 │   │   │   └── [✖️] 🧪 login.test.tsx      |> Testes unitários da tela
 │   │   └── 📁 [✖️] register/               |> Tela de cadastro de usuário
 │   │       ├── [✖️] 📄 index.tsx
@@ -194,7 +192,8 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   │       └── [✖️] 🧪 register.test.tsx
 │   ├── 📁 [✅] (public)/                   |> Rotas acessíveis sem login
 │   │   └── 📁 [✅] boardgame/              |> Lista de jogos e visualização pública
-│   │       ├── [✖️] 📄 index.tsx           |> Lista pública de jogos
+│   │       ├── [✅] 📄 index.tsx           |> Lista pública de jogos
+│   │       ├── [✅] 🎨 style.ts
 │   │       └── 📁 [✖️] [id]/               |> Perfil público do jogo
 │   │           ├── [✖️] 📄 index.tsx       |> Info e avaliações públicas
 │   │           └── [✖️] 🎨 style.ts
@@ -413,22 +412,9 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 
 ---
 
-### [ ] Migrar estilos comuns para globais
-
-- Crie ou preencha:
-  - [] `theme/global/theme.ts`
-  - [] `theme/global/typography.ts`
-  - [] `theme/global/globalStyles.ts`
-  - [] `theme/index.ts`
-- importar com: import { globalStyles } from '@theme/index';
-- Unifique tokens de cor, fontes, tamanhos e use com hook `useTheme.ts`.
-- [] Documentar cada etapa/processo
-
----
-
 ### [ ] Migrar estilos próprios para `style.ts`
 
-- [] Para cada tela/componente, crie o arquivo style.ts
+- [✔️] Para cada tela/componente, crie o arquivo style.ts
 - [] Nas telas/componentes, importar com: import { localStyles } from './styles';
 - [] Documentar cada etapa/processo
 
@@ -455,10 +441,10 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 
 ### [ ] Implementar tema dinâmico com tela de configurações
 
-- [] Criar store `useSettingsStore.ts` com tema, fonte e modo daltônico
-- [] Criar `theme.ts`, `typography.ts` e `globalStyles.ts` para centralizar
-- [] Criar `useTheme.ts` para retornar `colors`, `fontSizes`, `fontFamily` dinâmicos
-- [] Criar tela `settings/index.tsx` com botões de ajuste
+- [✔️] Criar store `useSettingsStore.ts` com tema, fonte e modo daltônico
+- [✔️] Criar `theme.ts`, `typography.ts` e `globalStyles.ts` para centralizar
+- [✔️] Criar `useTheme.ts` para retornar `colors`, `fontSizes`, `fontFamily` dinâmicos
+- [✔️] Criar tela `settings/index.tsx` com botões de ajuste
 - [] Documentar cada etapa/processo
 
 ---

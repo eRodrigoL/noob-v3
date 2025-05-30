@@ -81,7 +81,7 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
       }
       setIsAuthenticated(false);
       onClose();
-      router.push('/user/Login');
+      router.push('/login');
     } catch (error) {
       logger.warn('[SandwichMenu] Erro ao realizar logout:', error);
     }
@@ -153,13 +153,13 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
           <View style={stylesSandwichMenu.buttonContainer}>
             <ButtonHighlight title="Início" onPress={() => handleNavigate('/boardgame')} />
             {!isAuthenticated ? (
-              <ButtonHighlight title="Login" onPress={() => handleNavigate('/user/Login')} />
+              <ButtonHighlight title="Login" onPress={() => handleNavigate('/login')} />
             ) : (
               <>
                 <ButtonHighlight
                   title="Perfil"
                   onPress={() => {
-                    // TODO: adicionar rota de perfil
+                    handleNavigate('/profile');
                   }}
                 />
                 <ButtonHighlight

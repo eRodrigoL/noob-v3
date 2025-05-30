@@ -10,7 +10,7 @@ interface GameCardProps {
     titulo: string;
     ano?: number;
     capa?: string;
-    rating: string;
+    score: string;
   };
   onPress?: () => void;
   style?: object;
@@ -19,39 +19,31 @@ interface GameCardProps {
 const GameCard = ({ game, onPress, style }: GameCardProps) => {
   const { colors, fontSizes, fontFamily } = useTheme();
 
-  const accessibilityLabel = `${game.titulo}${game.ano ? `, lançado em ${game.ano}` : ''}, avaliação: ${game.rating}`;
-
   return (
     <Pressable
       onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
       style={({ pressed }) => [
         stylesGameCard.card,
         { backgroundColor: colors.backgroundSemiHighlight, opacity: pressed ? 0.9 : 1 },
         style,
-      ]}
-    >
+      ]}>
       <Image
         source={game.capa ? { uri: game.capa } : images.unavailable}
         style={stylesGameCard.image}
-        accessibilityIgnoresInvertColors
       />
       <View style={stylesGameCard.textContainer}>
         <Text
           style={[
             stylesGameCard.title,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-          ]}
-        >
+          ]}>
           {game.titulo} {game.ano ? `(${game.ano})` : ''}
         </Text>
         <Text
           style={[
-            stylesGameCard.rating,
+            stylesGameCard.score,
             { color: colors.border, fontFamily, fontSize: fontSizes.small },
-          ]}
-        >
+          ]}>
           {game.rating}
         </Text>
       </View>

@@ -25,6 +25,10 @@ const stylesHeaderLayout = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  childrenPadding: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
 });
 
 export default stylesHeaderLayout;

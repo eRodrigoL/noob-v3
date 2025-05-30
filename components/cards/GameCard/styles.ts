@@ -26,7 +26,7 @@ const stylesGameCard = StyleSheet.create({
   title: {
     marginBottom: 4,
   },
-  rating: {
+  score: {
     fontStyle: 'italic',
   },
 });

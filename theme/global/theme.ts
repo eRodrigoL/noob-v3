@@ -8,7 +8,8 @@ const theme = {
     backgroundBase: '#F2F2F7', // fundo do corpo da tela
     backgroundSemiHighlight: '#636363', // fundo de componentes neutros (botões secundários, inputs, etc.)
     backgroundHighlight: '#734500', // fundo de componentes em destaque (botões primários, cabeçalhos, etc.)
-    textOnBase: '#000000', // texto no fondo padrão
+    textHighlight: '#734500', // texto em destaque no fundo padrão
+    textOnBase: '#000000', // texto no fundo padrão
     textOnSemiHighlight: '#FFFFFF', // texto no fundo semidestacado
     textOnHighlight: '#FFFFFF', // texto no fundo destacado
     border: '#C7C7CC', // cor de bordas (inputs, cards, etc.)
@@ -22,6 +23,7 @@ const theme = {
     backgroundBase: '#1C1C1E',
     backgroundSemiHighlight: '#3A3A3C',
     backgroundHighlight: '#0A84FF',
+    textHighlight: '#0A84FF',
     textOnBase: '#FFFFFF',
     textOnSemiHighlight: '#FFFFFF',
     textOnHighlight: '#000000',
@@ -36,6 +38,7 @@ const theme = {
     backgroundBase: '#FDFDFD',
     backgroundSemiHighlight: '#7A9E9F', // tom azul-esverdeado para contraste seguro
     backgroundHighlight: '#F5A623', // laranja vivo e seguro para daltônicos
+    textHighlight: '#F5A623',
     textOnBase: '#000000',
     textOnSemiHighlight: '#FFFFFF',
     textOnHighlight: '#000000',

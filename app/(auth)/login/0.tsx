@@ -94,8 +94,7 @@ const Login: React.FC = () => {
           style={styles.buttonPrimary}
           onPress={handleLogin}
           accessibilityLabel="Botão Entrar"
-          accessibilityRole="button"
-        >
+          accessibilityRole="button">
           <Text style={styles.buttonPrimaryText}>Entrar</Text>
         </TouchableOpacity>
 
@@ -103,11 +102,9 @@ const Login: React.FC = () => {
           style={styles.buttonSecondary}
           onPress={() => router.back()}
           accessibilityLabel="Botão Voltar"
-          accessibilityRole="button"
-        >
+          accessibilityRole="button">
           <Text style={styles.buttonPrimaryText}>Voltar</Text>
         </TouchableOpacity>
-
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={styles.signupText}>Ainda não tem uma conta?</Text>
@@ -115,8 +112,7 @@ const Login: React.FC = () => {
           <TouchableOpacity
             onPress={() => router.push('/(legacy)/user/RegisterUser')}
             accessibilityLabel="Link para cadastrar uma nova conta"
-            accessibilityRole="link"
-          >
+            accessibilityRole="link">
             <Text style={styles.signupLink}> Cadastre-se</Text>
           </TouchableOpacity>
         </View>

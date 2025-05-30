@@ -162,13 +162,20 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
       {/* Conteúdo da tela, com scroll opcional */}
       {scrollable ? (
         <ScrollView
-          contentContainerStyle={[{ flexGrow: 1, padding: 16 }, contentStyle]}
+          contentContainerStyle={[
+            stylesHeaderLayout.childrenPadding,
+            { flexGrow: 1 },
+            contentStyle,
+          ]}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
           {...scrollProps}>
           {children}
         </ScrollView>
       ) : (
-        <View style={[{ flex: 1, padding: 16 }, contentStyle]}>{children}</View>
+        <View style={[stylesHeaderLayout.childrenPadding, { flex: 1 }, contentStyle]}>
+          {children}
+        </View>
       )}
     </SafeAreaView>
   );
