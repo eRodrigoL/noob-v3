@@ -14,15 +14,26 @@ const NoResults = ({ message, actionText, onAction }: NoResultsProps) => {
   const { colors, fontSizes, fontFamily } = useTheme();
 
   return (
-    <View style={stylesNoResults.container}>
+    <View
+      style={stylesNoResults.container}
+      accessible
+      accessibilityRole="text"
+      accessibilityLabel={message}
+    >
       <Text
         style={[
           stylesNoResults.message,
           { fontFamily, fontSize: fontSizes.base, color: colors.textOnBase },
-        ]}>
+        ]}
+      >
         {message}
       </Text>
-      {actionText && onAction && <ButtonHighlight title={actionText} onPress={onAction} />}
+      {actionText && onAction && (
+        <ButtonHighlight
+          title={actionText}
+          onPress={onAction}
+        />
+      )}
     </View>
   );
 };
