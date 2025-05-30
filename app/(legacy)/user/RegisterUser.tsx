@@ -105,7 +105,7 @@ const RegisterUser: React.FC = () => {
           type: 'success',
           text1: response.data.message || 'Usuário criado com sucesso!',
         });
-        router.replace('/(legacy)/user/Login'); // TODO: substituir por /(auth)/login
+        router.replace('/login');
       }
     } catch (error: unknown) {
       logger.error('Erro ao registrar usuário:', error);
