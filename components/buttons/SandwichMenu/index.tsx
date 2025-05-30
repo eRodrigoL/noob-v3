@@ -159,7 +159,7 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
                 <ButtonHighlight
                   title="Perfil"
                   onPress={() => {
-                    // TODO: adicionar rota de perfil
+                    handleNavigate('/profile');
                   }}
                 />
                 <ButtonHighlight
