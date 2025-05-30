@@ -1,7 +1,7 @@
 // components/UniversalSlider/index.tsx
 import Slider from '@react-native-community/slider';
 import React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View, AccessibilityProps } from 'react-native';
 
 type Props = {
   value: number;
@@ -11,7 +11,7 @@ type Props = {
   step?: number;
   disabled?: boolean;
   showValue?: boolean;
-};
+} & AccessibilityProps;
 
 const UniversalSlider: React.FC<Props> = ({
   value,
@@ -21,6 +21,8 @@ const UniversalSlider: React.FC<Props> = ({
   step = 0.1,
   disabled = false,
   showValue = false,
+  accessibilityLabel,
+  accessibilityHint,
 }) => {
   if (Platform.OS === 'web') {
     return (
@@ -34,6 +36,11 @@ const UniversalSlider: React.FC<Props> = ({
           disabled={disabled}
           onChange={(e) => onChange?.(parseFloat(e.target.value))}
           style={styles.webSlider as React.CSSProperties}
+          aria-label={accessibilityLabel}
+          aria-disabled={disabled}
+          aria-valuemin={min}
+          aria-valuemax={max}
+          aria-valuenow={value}
         />
         {showValue && <Text style={styles.valueText}>{value.toFixed(2)}</Text>}
       </View>
@@ -49,6 +56,8 @@ const UniversalSlider: React.FC<Props> = ({
         maximumValue={max}
         step={step}
         disabled={disabled}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint={accessibilityHint}
       />
       {showValue && <Text style={styles.valueText}>{value.toFixed(2)}</Text>}
     </View>
