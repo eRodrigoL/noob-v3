@@ -79,6 +79,7 @@ function SettingsScreen() {
           Tema
         </Text>
         <Picker
+          accessibilityLabel="Selecionar tema do aplicativo"
           style={{
             backgroundColor: colors.backgroundBase,
             color: colors.textOnBase,
@@ -123,6 +124,8 @@ function SettingsScreen() {
           Tamanho da fonte
         </Text>
         <UniversalSlider
+          accessibilityLabel="Ajustar tamanho da fonte"
+          accessibilityHint="Deslize para alterar o tamanho do texto exibido no app"
           value={fontSizeMultiplier}
           onChange={setFontSizeMultiplier}
           min={typography.sizes.min / typography.sizes.base}
@@ -139,9 +142,21 @@ function SettingsScreen() {
         </Text>
 
         {/* Botões */}
-        <ButtonHighlight title="Salvar" onPress={handleConfirm} disabled={localLoading} />
 
-        <ButtonSemiHighlight title="Restaurar padrão" onPress={restoreDefaults} />
+        <ButtonHighlight
+          title="Salvar"
+          onPress={handleConfirm}
+          disabled={localLoading}
+          accessibilityLabel="Salvar preferências visuais"
+          accessibilityHint="Confirma e aplica as configurações de tema, fonte e tamanho selecionadas"
+        />
+
+        <ButtonSemiHighlight
+          title="Restaurar padrão"
+          onPress={restoreDefaults}
+          accessibilityLabel="Restaurar configurações para o padrão"
+          accessibilityHint="Restaura o tema, fonte e tamanho da fonte para os valores originais"
+        />
 
         <ButtonSemiHighlight title="Cancelar" onPress={() => router.back()} />
       </HeaderLayout>

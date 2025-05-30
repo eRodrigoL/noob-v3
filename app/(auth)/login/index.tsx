@@ -99,6 +99,8 @@ const Login: React.FC = () => {
               value={`@${apelido}`}
               onChangeText={(text) => setApelido(text.replace('@', ''))}
               autoCapitalize="none"
+              accessibilityLabel="Campo para inserir o apelido"
+              accessibilityHint="Digite seu nome de usuário, começando com arroba"
             />
 
             <Text
@@ -123,10 +125,22 @@ const Login: React.FC = () => {
               value={senha}
               onChangeText={setSenha}
               placeholder=""
+              accessibilityLabel="Campo para inserir a senha"
+              accessibilityHint="Digite sua senha. Os caracteres não serão visíveis."
             />
 
-            <ButtonHighlight title="Entrar" onPress={handleLogin} />
-            <ButtonSemiHighlight title="Voltar" onPress={() => router.back()} />
+            <ButtonHighlight
+              title="Entrar"
+              onPress={handleLogin}
+              accessibilityLabel="Botão Entrar"
+              accessibilityRole="button"
+            />
+            <ButtonSemiHighlight
+              title="Voltar"
+              onPress={() => router.back()}
+              accessibilityLabel="Botão Voltar"
+              accessibilityRole="button"
+            />
 
             <View style={stylesLogin.linkContainer}>
               <Text
@@ -137,7 +151,10 @@ const Login: React.FC = () => {
                 Ainda não tem uma conta?
               </Text>
               {/* TODO: ajusar estilo e definir rota -> '/(auth)/register' */}
-              <Pressable onPress={() => router.push('/(legacy)/user/RegisterUser')}>
+              <Pressable
+                onPress={() => router.push('/(legacy)/user/RegisterUser')}
+                accessibilityLabel="Link para cadastrar uma nova conta"
+                accessibilityRole="link">
                 <Text
                   style={{
                     color: colors.textHighlight,
