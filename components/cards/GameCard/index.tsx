@@ -10,7 +10,7 @@ interface GameCardProps {
     titulo: string;
     ano?: number;
     capa?: string;
-    rating: string;
+    score: string;
   };
   onPress?: () => void;
   style?: object;
@@ -41,10 +41,10 @@ const GameCard = ({ game, onPress, style }: GameCardProps) => {
         </Text>
         <Text
           style={[
-            stylesGameCard.rating,
+            stylesGameCard.score,
             { color: colors.border, fontFamily, fontSize: fontSizes.small },
           ]}>
-          {game.rating}
+          {game.score}
         </Text>
       </View>
     </Pressable>

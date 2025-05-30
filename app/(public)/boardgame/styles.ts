@@ -30,7 +30,7 @@ const stylesListGame = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
   },
-  productRating: {
+  productscore: {
     fontSize: 14,
   },
   loadingContainer: {
