@@ -13,7 +13,7 @@ export const ROUTES = {
   GAMES: {
     LIST: '/',
     REGISTER: '/',
-    DETAILS: (id: string) => `/app/boardgame/${id}`, // TODO: no futuro -> DETAILS: '/(public)/boardgame/[id]',
+    DETAILS: (id: string) => `/app/boardgame/${id}`, // TODO: no futuro -> DETAILS: '/boardgame/[id]',
     EDIT: '/',
   },
   MATCHES: {

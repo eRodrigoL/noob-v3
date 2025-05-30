@@ -12,7 +12,7 @@ export default function Index() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.replace('/(public)/boardgame');
+      router.replace('/boardgame');
       setLoading(false);
     }, 1000);
 
