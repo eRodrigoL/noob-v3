@@ -81,6 +81,7 @@ function SettingsScreen() {
           </Text>
           <Picker
             style={{
+              backgroundColor: colors.backgroundBase,
               color: colors.textOnBase,
               fontFamily: fontFamily,
               fontSize: fontSizes.base,
@@ -102,6 +103,7 @@ function SettingsScreen() {
           </Text>
           <Picker
             style={{
+              backgroundColor: colors.backgroundBase,
               color: colors.textOnBase,
               fontFamily: fontFamily,
               fontSize: fontSizes.base,

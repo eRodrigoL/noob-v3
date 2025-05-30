@@ -164,6 +164,7 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
         <ScrollView
           contentContainerStyle={[{ flexGrow: 1, padding: 16 }, contentStyle]}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
           {...scrollProps}>
           {children}
         </ScrollView>
