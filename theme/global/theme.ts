@@ -4,7 +4,7 @@
 const theme = {
   // Tema claro
    light: {
-    name: 'light',
+    name: 'Light',
     backgroundBase: '#F8FFFE', // fundo do corpo da tela
     backgroundSemiHighlight: '#FFFFFF', // fundo de componentes neutros (botões secundários, inputs, etc.)
     backgroundHighlight: '#F35B04', // fundo de componentes em destaque (botões primários, cabeçalhos, etc.)
@@ -20,7 +20,7 @@ const theme = {
 
   // Tema escuro com cores escolhidas
 dark: {
-  name: 'dark',
+  name: 'Dark',
   backgroundBase: '#1C1C1E', // Fundo principal
   backgroundSemiHighlight: '#3A3A3C', // Fundo neutro
   backgroundHighlight: '#F35B04', // Destaque principal
@@ -61,7 +61,6 @@ daltonic_2: {
   shadow: 'rgba(0, 0, 0, 0.7)', // Sombra
   overlay: 'rgba(255, 255, 255, 0.2)', // Sobreposições
 },
-
 
 daltonic_3: {
   name: 'Daltonic 3',
