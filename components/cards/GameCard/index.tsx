@@ -44,7 +44,7 @@ const GameCard = ({ game, onPress, style }: GameCardProps) => {
             stylesGameCard.score,
             { color: colors.border, fontFamily, fontSize: fontSizes.small },
           ]}>
-          {game.rating}
+          {game.score}
         </Text>
       </View>
     </Pressable>

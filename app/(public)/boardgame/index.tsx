@@ -41,15 +41,24 @@ export default function List() {
       const avaliacoes = avaliacoesResponse.data;
 
       const produtosComScore = jogos.map((jogo: any) => {
-        const avaliacao = avaliacoes.find((a: any) => a.jogo === jogo._id);
-        const nota = avaliacao?.nota ?? 'N/A';
+        // Pega todas as avaliações com o mesmo id de jogo
+        const avaliacoesDoJogo = avaliacoes.filter((a: any) => a.jogo === jogo._id);
+
+        // Calcula a média das notas, se houver alguma
+        const mediaNota =
+          avaliacoesDoJogo.length > 0
+            ? (
+              avaliacoesDoJogo.reduce((soma: number, a: any) => soma + (a.nota || 0), 0) /
+              avaliacoesDoJogo.length
+            ).toFixed(1)
+            : 'N/A';
 
         return {
           id: jogo._id,
           titulo: jogo.titulo,
           ano: jogo.ano,
           capa: jogo.capa,
-          score: `${nota} ⭐`,
+          score: `${mediaNota} ⭐`,
         };
       });
 
@@ -67,6 +76,7 @@ export default function List() {
       }
     }
   };
+
 
   // TENTATIVA 1
   // const fetchData = async () => {
