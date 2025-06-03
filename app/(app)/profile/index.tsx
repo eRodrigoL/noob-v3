@@ -191,6 +191,7 @@ const UserProfile: React.FC = () => {
           cover={user.capa}
           initialIsRegisting={false}
           isEditing={isEditing}
+          isUser={true}
           setEdited={setEditedUser}>
           {/* Apelido */}
           <Text style={styles.label}>Apelido:</Text>

@@ -1,3 +1,4 @@
+// components/layout/ProfileLayout/styles.ts
 import { StyleSheet } from 'react-native';
 
 const heightCover = 200;
@@ -77,12 +78,10 @@ const stylesProfileLayout = StyleSheet.create({
   containerChildrenUser: {
     marginTop: heightCover + heightPhoto / 2,
     flex: 1,
-    padding: 0,
   },
   containerChildrenGame: {
     marginTop: heightPhoto,
     flex: 1,
-    padding: 0,
   },
 });
 
