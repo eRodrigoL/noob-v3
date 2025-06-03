@@ -220,7 +220,7 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
           isUser
             ? stylesProfileLayout.containerChildrenUser
             : stylesProfileLayout.containerChildrenGame,
-          { backgroundColor: colors.backgroundBase },
+          { backgroundColor: colors.backgroundBase, paddingHorizontal: 15 },
         ]}>
         {children}
       </View>
