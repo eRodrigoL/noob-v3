@@ -5,10 +5,12 @@
 import loading from '@assets/images/boardgames/loading.gif';
 import fundo from '@assets/images/cover.jpg';
 import unavailable from '@assets/images/Unavailable.png';
+import userUnavailable from '@assets/images/user/userUnavailable.png';
 
 // 🎯 Exporta tudo agrupado
 export const images = {
   fundo,
   loading,
   unavailable,
+  userUnavailable,
 };

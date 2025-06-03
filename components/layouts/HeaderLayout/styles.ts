@@ -8,7 +8,6 @@ const stylesHeaderLayout = StyleSheet.create({
     height: 70,
     justifyContent: 'space-between',
     padding: 0,
-    zIndex: 1,
   },
   iconPlaceholder: {
     alignItems: 'center',
@@ -26,8 +25,7 @@ const stylesHeaderLayout = StyleSheet.create({
     textAlign: 'center',
   },
   childrenPadding: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
+    padding: 0,
   },
 });
 
