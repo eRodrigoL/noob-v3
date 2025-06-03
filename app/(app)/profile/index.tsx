@@ -1,6 +1,6 @@
 // app/(legacy)/user/index.tsx
-import { Header } from '@components/index';
-import ParallaxProfile from '@components/ParallaxProfile';
+import { HeaderLayout } from '@components/index';
+import ProfileLayout from '@components/layouts/ProfileLayout';
 import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
@@ -183,63 +183,63 @@ const UserProfile: React.FC = () => {
   return (
     <View style={{ flex: 1 }}>
       {/* Exibe o cabeçalho com título */}
-      <Header title="Perfil" />
+      <HeaderLayout title="Perfil">
+        <ProfileLayout
+          id={user._id}
+          name={user.nome}
+          photo={user.foto}
+          cover={user.capa}
+          initialIsRegisting={false}
+          isEditing={isEditing}
+          isUser={true}
+          setEdited={setEditedUser}>
+          {/* Apelido */}
+          <Text style={styles.label}>Apelido:</Text>
+          <Text style={styles.label}>{user.apelido}</Text>
 
-      <ParallaxProfile
-        id={user._id}
-        name={user.nome}
-        photo={user.foto}
-        cover={user.capa}
-        initialIsEditing={false}
-        initialIsRegisting={false}
-        isEditing={isEditing}
-        setEdited={setEditedUser}>
-        {/* Apelido */}
-        <Text style={styles.label}>Apelido:</Text>
-        <Text style={styles.label}>{user.apelido}</Text>
+          {/* Email */}
+          <Text style={styles.label}>Email:</Text>
+          {isEditing ? (
+            <TextInput
+              style={styles.input}
+              value={editedUser.email}
+              onChangeText={(text) =>
+                setEditedUser((prevState: any) => ({
+                  ...prevState,
+                  email: text,
+                }))
+              }
+            />
+          ) : (
+            <Text style={styles.label}>{user.email}</Text>
+          )}
 
-        {/* Email */}
-        <Text style={styles.label}>Email:</Text>
-        {isEditing ? (
-          <TextInput
-            style={styles.input}
-            value={editedUser.email}
-            onChangeText={(text) =>
-              setEditedUser((prevState: any) => ({
-                ...prevState,
-                email: text,
-              }))
-            }
-          />
-        ) : (
-          <Text style={styles.label}>{user.email}</Text>
-        )}
+          {/* Data de Nascimento */}
+          <Text style={styles.label}>Data de Nascimento:</Text>
+          {isEditing ? (
+            <TextInput style={styles.input} value={addOneDay(editedUser.nascimento)} />
+          ) : (
+            <Text style={styles.label}>{addOneDay(user.nascimento)}</Text>
+          )}
 
-        {/* Data de Nascimento */}
-        <Text style={styles.label}>Data de Nascimento:</Text>
-        {isEditing ? (
-          <TextInput style={styles.input} value={addOneDay(editedUser.nascimento)} />
-        ) : (
-          <Text style={styles.label}>{addOneDay(user.nascimento)}</Text>
-        )}
-
-        {/* Botão de Editar/Salvar */}
-        <TouchableOpacity style={styles.buttonPrimary} onPress={handleEditToggle}>
-          <Text style={styles.buttonPrimaryText}>{isEditing ? 'Salvar' : 'Editar Perfil'}</Text>
-        </TouchableOpacity>
-
-        {/* Botão Cancelar visível apenas se isEditing for true */}
-        {isEditing && (
-          <TouchableOpacity
-            style={styles.buttonSecondary}
-            onPress={() => {
-              setIsEditing(false); // Sai do modo de edição
-              setEditedUser(user); // Reverte as mudanças, restaurando os dados originais
-            }}>
-            <Text style={styles.buttonSecondaryText}>Cancelar</Text>
+          {/* Botão de Editar/Salvar */}
+          <TouchableOpacity style={styles.buttonPrimary} onPress={handleEditToggle}>
+            <Text style={styles.buttonPrimaryText}>{isEditing ? 'Salvar' : 'Editar Perfil'}</Text>
           </TouchableOpacity>
-        )}
-      </ParallaxProfile>
+
+          {/* Botão Cancelar visível apenas se isEditing for true */}
+          {isEditing && (
+            <TouchableOpacity
+              style={styles.buttonSecondary}
+              onPress={() => {
+                setIsEditing(false); // Sai do modo de edição
+                setEditedUser(user); // Reverte as mudanças, restaurando os dados originais
+              }}>
+              <Text style={styles.buttonSecondaryText}>Cancelar</Text>
+            </TouchableOpacity>
+          )}
+        </ProfileLayout>
+      </HeaderLayout>
     </View>
   );
 };
