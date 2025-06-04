@@ -186,8 +186,8 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   │   │   ├── [✅] 📄 index.tsx           |> Componente de tela
 │   │   │   ├── [✅] 🎨 style.ts            |> Estilos específicos da tela
 │   │   │   └── [✖️] 🧪 login.test.tsx      |> Testes unitários da tela
-│   │   └── 📁 [✖️] register/               |> Tela de cadastro de usuário
-│   │       ├── [✖️] 📄 index.tsx
+│   │   └── 📁 [✅] register/               |> Tela de cadastro de usuário
+│   │       ├── [✅] 📄 index.tsx
 │   │       ├── [✖️] 🎨 style.ts
 │   │       └── [✖️] 🧪 register.test.tsx
 │   ├── 📁 [✅] (public)/                   |> Rotas acessíveis sem login
@@ -197,7 +197,7 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   │       └── 📁 [✖️] [id]/               |> Perfil público do jogo
 │   │           ├── [✖️] 📄 index.tsx       |> Info e avaliações públicas
 │   │           └── [✖️] 🎨 style.ts
-│   └── 📁 [✖️] (app)/                      |> Rotas privadas (usuário autenticado)
+│   └── 📁 [✅] (app)/                      |> Rotas privadas (usuário autenticado)
 │       ├── [✖️] 🧩 _layout.tsx             |> Layout das rotas internas após login
 │       ├── 📁 [✖️] boardgame/              |> Gerenciamento de jogos (usuário logado)
 │       │   ├── 📁 [✖️] register/           |> Tela para cadastrar novo jogo
@@ -208,8 +208,8 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │       │       ├── [✖️] 📄 rate.tsx        |> Aba: avaliar ou editar avaliação
 │       │       ├── [✖️] 📄 performance.tsx |> Aba: desempenho dos usuários
 │       │       └── [✖️] 🎨 style.ts
-│       ├── 📁 [✖️] profile/                |> Perfil do usuário logado
-│       │   ├── [✖️] 📄 index.tsx           |> Tela principal com abas
+│       ├── 📁 [✅] profile/                |> Perfil do usuário logado
+│       │   ├── [✅] 📄 index.tsx           |> Tela principal com abas
 │       │   ├── [✖️] 📄 edit.tsx            |> Aba: editar dados pessoais
 │       │   ├── [✖️] 📄 history.tsx         |> Aba: histórico de partidas
 │       │   ├── [✖️] 📄 performance.tsx     |> Aba: desempenho geral
@@ -265,13 +265,21 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 │   │       ├── [✅] 🧩 index.tsx
 │   │       ├── [✅] 🎨 styles.tsx
 │   │       └── [✖️] 🧪 SandwichMenu.test.tsx
-│   ├── 📁 [✖️] cards/
-│   │   └── 📁 [✖️] GameCard/              |> Cartão de exibição de jogo
-│   │       ├── [✖️] 🧩 index.tsx
-│   │       ├── [✖️] 🎨 styles.tsx
+│   ├── 📁 [✅] cards/
+│   │   └── 📁 [✅] GameCard/              |> Cartão de exibição de jogo
+│   │       ├── [✅] 🧩 index.tsx
+│   │       ├── [✅] 🎨 styles.tsx
 │   │       └── [✖️] 🧪 GameCard.test.tsx
 │   ├── 📁 [✅] layouts/
 │   │   └── 📁 [✅] HeaderLayout/          |> Cabeçalho da aplicação
+│   │   │   ├── [✅] 🧩 index.tsx
+│   │   │   ├── [✅] 🎨 styles.tsx
+│   │   │   └── [✖️] 🧪 HeaderLayout.test.tsx
+│   │   └── 📁 [✅] ParallaxLayout/
+│   │   │   ├── [✅] 🧩 index.tsx
+│   │   │   ├── [✅] 🎨 styles.tsx
+│   │   │   └── [✖️] 🧪 HeaderLayout.test.tsx
+│   │   └── 📁 [✅] ProfileLayout/
 │   │       ├── [✅] 🧩 index.tsx
 │   │       ├── [✅] 🎨 styles.tsx
 │   │       └── [✖️] 🧪 HeaderLayout.test.tsx

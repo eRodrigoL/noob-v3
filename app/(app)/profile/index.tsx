@@ -185,7 +185,7 @@ const UserProfile: React.FC = () => {
   return (
     <View style={{ flex: 1 }}>
       {/* Exibe o cabeçalho com título */}
-      <HeaderLayout title="Perfil" scrollable={false}>
+      <HeaderLayout title="Perfil">
         <ProfileLayout
           id={user._id}
           name={user.nome}

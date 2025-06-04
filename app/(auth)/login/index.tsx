@@ -152,7 +152,7 @@ const Login: React.FC = () => {
               </Text>
               {/* TODO: ajusar estilo e definir rota -> '/(auth)/register' */}
               <Pressable
-                onPress={() => router.push('/(legacy)/user/RegisterUser')}
+                onPress={() => router.push('/register')}
                 accessibilityLabel="Link para cadastrar uma nova conta"
                 accessibilityRole="link">
                 <Text
