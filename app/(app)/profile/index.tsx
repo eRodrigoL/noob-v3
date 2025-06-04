@@ -203,13 +203,15 @@ const UserProfile: React.FC = () => {
             ]}>
             Apelido:
           </Text>
-          <Text
+          <TextInput
             style={[
-              globalStyles.textJustified,
+              globalStyles.input,
               { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-            ]}>
-            {user.apelido}
-          </Text>
+            ]}
+            value={user.apelido}
+            editable={false}
+            selectTextOnFocus={false}
+          />
 
           {/* Email */}
           <Text
@@ -234,13 +236,15 @@ const UserProfile: React.FC = () => {
               }
             />
           ) : (
-            <Text
+            <TextInput
               style={[
-                globalStyles.textJustifiedBoldItalic,
+                globalStyles.input,
                 { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-              ]}>
-              {user.email}
-            </Text>
+              ]}
+              value={user.email}
+              editable={false}
+              selectTextOnFocus={false}
+            />
           )}
 
           {/* Data de Nascimento */}
@@ -260,13 +264,15 @@ const UserProfile: React.FC = () => {
               value={addOneDay(editedUser.nascimento)}
             />
           ) : (
-            <Text
+            <TextInput
               style={[
-                globalStyles.textJustifiedBoldItalic,
+                globalStyles.input,
                 { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-              ]}>
-              {addOneDay(user.nascimento)}
-            </Text>
+              ]}
+              value={addOneDay(user.nascimento)}
+              editable={false}
+              selectTextOnFocus={false}
+            />
           )}
 
           {/* Botão de Editar/Salvar */}
