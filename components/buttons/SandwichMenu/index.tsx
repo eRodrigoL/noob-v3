@@ -2,13 +2,13 @@
 import ButtonHighlight from '@components/buttons/ButtonHighlight';
 import { useTheme } from '@hooks/useTheme';
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import axios from 'axios';
 import { Href, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, Animated, Dimensions, Modal, Platform, Pressable, View } from 'react-native';
 import stylesSandwichMenu from './styles';
+import { storage } from '@store/storage';
 
 interface ModalProps {
   visible: boolean;
@@ -27,8 +27,8 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
   // Verifica se há usuário logado
   const checkAuthentication = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
       setIsAuthenticated(!!userId && !!token);
     } catch (error) {
       logger.warn('[SandwichMenu] Erro ao verificar autenticação:', error);
@@ -39,8 +39,8 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
   // Verifica se há partidas em aberto
   const checkOpenMatches = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       if (userId && token) {
         const config = {
@@ -73,12 +73,17 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
   // Logout do usuário
   const handleLogout = async () => {
     try {
-      await AsyncStorage.multiRemove(['token', 'userId']);
+      await Promise.all([
+        storage.removeItem('token'),
+        storage.removeItem('userId'),
+      ]);
+
       if (Platform.OS === 'web') {
         logger.log('[SandwichMenu] Logout realizado com sucesso.');
       } else {
         Alert.alert('Sucesso', 'Logout realizado com sucesso!');
       }
+
       setIsAuthenticated(false);
       onClose();
       router.push('/login');

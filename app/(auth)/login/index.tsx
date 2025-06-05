@@ -1,7 +1,6 @@
 // app/(auth)/login/index.tsx
 import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/index';
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import { globalStyles, useTheme } from '@theme/index';
 import { useRouter } from 'expo-router';
@@ -9,6 +8,7 @@ import React, { useState } from 'react';
 import { Pressable, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import stylesLogin from './styles';
+import { storage } from '@store/storage';
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -33,13 +33,12 @@ const Login: React.FC = () => {
       if (response.status === 200) {
         const { token, usuario, msg } = response.data;
 
-        await AsyncStorage.multiSet([
-          ['token', token],
-          ['userId', usuario.id],
-          ['fontOption', usuario.fontOption],
-          ['fontSize', String(usuario.fontSize)],
-          ['theme', usuario.theme],
-        ]);
+        await storage.setItem('token', token);
+        await storage.setItem('userId', usuario.id);
+        await storage.setItem('fontOption', usuario.fontOption);
+        await storage.setItem('fontSize', String(usuario.fontSize));
+        await storage.setItem('fontSize', String(usuario.fontSize));
+        await storage.setItem('theme', usuario.theme);
 
         Toast.show({ type: 'success', text1: msg });
 

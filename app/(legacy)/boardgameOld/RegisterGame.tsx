@@ -1,7 +1,6 @@
 // app/(legacy)/boardgameOld/RegisterGame.tsx
 import ButtonGoBack from '@components/ButtonGoBack';
 import ButtonHighlight from '@components/buttons/ButtonHighlight';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import styles from '@theme/themOld/globalStyle';
 import * as ImagePicker from 'expo-image-picker';
@@ -9,6 +8,7 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { storage } from '@store/storage';
 
 const RegisterGame: React.FC = () => {
   // Estados para armazenar os dados do jogo
@@ -65,8 +65,8 @@ const RegisterGame: React.FC = () => {
     }
 
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       if (!userId || !token) {
         Toast.show({

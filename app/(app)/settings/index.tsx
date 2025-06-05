@@ -6,7 +6,7 @@ import {
   HeaderLayout,
   UniversalSlider,
 } from '@components/index';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storage } from '@store/storage';
 import { Picker } from '@react-native-picker/picker';
 import { useSettingsStore } from '@store/useSettingsStore';
 import { globalStyles, theme, typography, useTheme } from '@theme/index';
@@ -35,7 +35,9 @@ function SettingsScreen() {
   const [localLoading, setLocalLoading] = useState(false);
 
   useEffect(() => {
-    AsyncStorage.getItem('userId').then((id) => setUserId(id));
+    storage.getItem('userId').then((id) => {
+      setUserId(id);
+    });
   }, []);
 
   if (!isLoaded || !userId) {
