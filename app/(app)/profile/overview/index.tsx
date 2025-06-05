@@ -1,16 +1,15 @@
-// app/(app)/Profile/index.tsx
+// app/(app)/profile/overview/index.tsx
 import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/index';
 import ProfileLayout from '@components/layouts/ProfileLayout';
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storage } from '@store/storage';
 import { apiClient } from '@services/apiClient';
 import { globalStyles, useTheme } from '@theme/index';
-import styles from '@theme/themOld/globalStyle';
 import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
-const UserProfile: React.FC = () => {
+const Overview: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -20,8 +19,8 @@ const UserProfile: React.FC = () => {
   // Função para buscar os dados do usuário
   const fetchUserData = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       if (!userId || !token) {
         Toast.show({
@@ -66,8 +65,8 @@ const UserProfile: React.FC = () => {
     }
 
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       if (!userId || !token) {
         Toast.show({
@@ -157,7 +156,7 @@ const UserProfile: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={styles.container}>
+      <View style={globalStyles.container}>
         <Text>Carregando dados do usuário...</Text>
       </View>
     );
@@ -165,7 +164,7 @@ const UserProfile: React.FC = () => {
 
   if (!user) {
     return (
-      <View style={styles.container}>
+      <View style={globalStyles.container}>
         <Text>Erro ao carregar os dados do usuário.</Text>
       </View>
     );
@@ -297,4 +296,4 @@ const UserProfile: React.FC = () => {
   );
 };
 
-export default UserProfile;
+export default Overview;
