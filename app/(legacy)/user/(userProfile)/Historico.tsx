@@ -1,9 +1,9 @@
 // app/(legacy)/user/(userProfile)/Historico.tsx
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { storage } from '@store/storage';
 
 interface Usuario {
   apelido: string;
@@ -35,8 +35,8 @@ export default function Historico() {
   useEffect(() => {
     async function fetchPartidas() {
       try {
-        const userId = await AsyncStorage.getItem('userId');
-        const token = await AsyncStorage.getItem('token');
+        const userId = await storage.getItem('userId');
+        const token = await storage.getItem('token');
 
         const config = {
           headers: {

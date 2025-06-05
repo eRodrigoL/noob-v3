@@ -1,12 +1,12 @@
 // app/(legacy)/user/(userProfile)/Descricao.tsx
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import styles from '@theme/themOld/globalStyle';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { storage } from '@store/storage';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -19,8 +19,8 @@ export default function Descricao() {
 
   const fetchUserData = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       if (!userId || !token) {
         Toast.show({

@@ -1,10 +1,10 @@
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Dimensions, Text, View } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
+import { storage } from '@store/storage';
 
 // Tipo para a estrutura de um vencedor
 type Vencedor = {
@@ -36,8 +36,8 @@ export default function Ranking() {
   useEffect(() => {
     const fetchPartidas = async () => {
       try {
-        const token = await AsyncStorage.getItem('token');
-        const userId = await AsyncStorage.getItem('userId');
+        const token = await storage.getItem('token');
+        const userId = await storage.getItem('userId');
 
         if (!token || !userId) {
           //console.error("Realize o login para consultar o ranking!");

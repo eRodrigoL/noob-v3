@@ -2,7 +2,6 @@
 import ButtonHighlight from '@components/buttons/ButtonHighlight';
 import { useTheme } from '@hooks/useTheme';
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { apiClient } from '@services/apiClient';
 import { useUiStore } from '@store/useUiStore';
@@ -11,6 +10,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { ScrollView, ScrollViewProps, Text, View, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import stylesHeaderLayout from './styles';
+import { storage } from '@store/storage';
 
 interface HeaderLayoutProps {
   title: string;
@@ -45,8 +45,8 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
   // Verifica se o usuário está autenticado com base no armazenamento local
   const checkAuthentication = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
       setIsAuthenticated(!!userId && !!token);
     } catch (error) {
       logger.warn('[Header] Erro ao verificar autenticação:', error);
@@ -57,8 +57,8 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
   // Verifica se o usuário possui partidas em aberto
   const checkOpenMatches = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       if (userId && token) {
         const config = {

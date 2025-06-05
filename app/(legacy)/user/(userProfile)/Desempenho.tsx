@@ -1,12 +1,12 @@
 // app/(legacy)/user/(userProfile)/Desempenho.tsx
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { Circle, G, Line, Polygon, Svg, Text as SvgText } from 'react-native-svg';
 import Toast from 'react-native-toast-message';
+import { storage } from '@store/storage';
 
 export default function Desempenho() {
   // Estados
@@ -20,8 +20,8 @@ export default function Desempenho() {
   const buscarApelido = async () => {
     try {
       setIsLoading(true); // Inicia carregamento
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       if (!userId || !token) {
         Toast.show({
@@ -64,7 +64,7 @@ export default function Desempenho() {
   const buscarPartidas = async (apelido: string) => {
     try {
       setIsLoading(true); // Inicia carregamento
-      const token = await AsyncStorage.getItem('token');
+      const token = await storage.getItem('token');
 
       if (!token) {
         Toast.show({
