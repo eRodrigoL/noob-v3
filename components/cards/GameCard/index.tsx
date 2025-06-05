@@ -42,7 +42,7 @@ const GameCard = ({ game, onPress, style }: GameCardProps) => {
         <Text
           style={[
             stylesGameCard.score,
-            { color: colors.border, fontFamily, fontSize: fontSizes.small },
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.small },
           ]}>
           {game.score}
         </Text>

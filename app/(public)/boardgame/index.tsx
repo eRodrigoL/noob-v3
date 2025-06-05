@@ -41,24 +41,15 @@ export default function List() {
       const avaliacoes = avaliacoesResponse.data;
 
       const produtosComScore = jogos.map((jogo: any) => {
-        // Pega todas as avaliações com o mesmo id de jogo
-        const avaliacoesDoJogo = avaliacoes.filter((a: any) => a.jogo === jogo._id);
-
-        // Calcula a média das notas, se houver alguma
-        const mediaNota =
-          avaliacoesDoJogo.length > 0
-            ? (
-              avaliacoesDoJogo.reduce((soma: number, a: any) => soma + (a.nota || 0), 0) /
-              avaliacoesDoJogo.length
-            ).toFixed(1)
-            : 'N/A';
+        const avaliacao = avaliacoes.find((a: any) => a.jogo === jogo._id);
+        const nota = avaliacao?.nota ?? 'N/A';
 
         return {
           id: jogo._id,
           titulo: jogo.titulo,
           ano: jogo.ano,
           capa: jogo.capa,
-          score: `${mediaNota} ⭐`,
+          score: `${nota} ⭐`,
         };
       });
 
@@ -76,87 +67,6 @@ export default function List() {
       }
     }
   };
-
-
-  // TENTATIVA 1
-  // const fetchData = async () => {
-  //   try {
-  //     const jogosResponse = await apiClient.get('/jogos');
-  //     const produtos = jogosResponse.data;
-
-  //     const produtosComScore = await Promise.all(
-  //       produtos.map(async (jogo: any) => {
-  //         try {
-  //           // Busca a avaliação usando o ID do jogo como parâmetro "jogo"
-  //           const avaliacoesResponse = await apiClient.get(`/avaliacoes?jogo=${jogo._id}`);
-
-  //           // Supondo que a API retorna um array de avaliações para o jogo
-  //           const avaliacaoDoJogo = avaliacoesResponse.data.find(
-  //             (avaliacao: any) => avaliacao.jogo === jogo._id
-  //           );
-
-  //           // Se existir avaliação, pega a nota, senão 0
-  //           const nota = avaliacaoDoJogo?.nota || 0;
-
-  //           return {
-  //             id: jogo._id,
-  //             titulo: jogo.titulo,
-  //             ano: jogo.ano,
-  //             capa: jogo.capa,
-  //             score: `${nota} ⭐`,
-  //           };
-  //         } catch (e) {
-  //           return {
-  //             id: jogo._id,
-  //             titulo: jogo.titulo,
-  //             ano: jogo.ano,
-  //             capa: jogo.capa,
-  //             score: '0 ⭐',
-  //           };
-  //         }
-  //       })
-  //     );
-
-  //     setProducts(produtosComScore);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     logger.error('[List] Erro ao buscar dados:', error);
-  //     if (retryCount < MAX_RETRY) {
-  //       setTimeout(() => {
-  //         setRetryCount(retryCount + 1);
-  //         fetchData();
-  //       }, 1000);
-  //     } else {
-  //       setLoading(false);
-  //     }
-  //   }
-  // };
-
-  // RANDÔMICO
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await apiClient.get('/jogos');
-  //     const updatedProducts = response.data.map((item: any) => ({
-  //       id: item._id,
-  //       titulo: item.titulo,
-  //       ano: item.ano,
-  //       capa: item.capa,
-  //       score: Math.floor(Math.random() * 101) + ' ⭐',
-  //     }));
-  //     setProducts(updatedProducts);
-  //     setLoading(false);
-  //   } catch (error: unknown) {
-  //     logger.error('Erro ao buscar os dados da API:', error);
-  //     if (retryCount < MAX_RETRY) {
-  //       setTimeout(() => {
-  //         setRetryCount(retryCount + 1);
-  //         fetchData();
-  //       }, 1000);
-  //     } else {
-  //       setLoading(false);
-  //     }
-  //   }
-  // };
 
   useEffect(() => {
     fetchData();

@@ -119,6 +119,12 @@ const globalStyles = StyleSheet.create({
   },
 
   // Texto justificado e em negrito (exp.: subtítulos, etc.)
+  textJustifiedBold: {
+    fontWeight: 'bold',
+    textAlign: 'justify',
+  },
+
+  // Texto justificado e em negrito (exp.: subtítulos, etc.)
   textJustifiedBoldItalic: {
     fontStyle: 'italic',
     fontWeight: 'bold',

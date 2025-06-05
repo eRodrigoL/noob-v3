@@ -1,12 +1,13 @@
-// app/(legacy)/user/index.tsx
-import { HeaderLayout } from '@components/index';
+// app/(app)/Profile/index.tsx
+import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/index';
 import ProfileLayout from '@components/layouts/ProfileLayout';
 import { logger } from '@lib/logger';
 import { storage } from '@store/storage';
 import { apiClient } from '@services/apiClient';
+import { globalStyles, useTheme } from '@theme/index';
 import styles from '@theme/themOld/globalStyle';
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 const UserProfile: React.FC = () => {
@@ -14,6 +15,7 @@ const UserProfile: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState<any>(null);
+  const { colors, fontSizes, fontFamily } = useTheme();
 
   // Função para buscar os dados do usuário
   const fetchUserData = async () => {
@@ -194,14 +196,37 @@ const UserProfile: React.FC = () => {
           isUser={true}
           setEdited={setEditedUser}>
           {/* Apelido */}
-          <Text style={styles.label}>Apelido:</Text>
-          <Text style={styles.label}>{user.apelido}</Text>
+          <Text
+            style={[
+              globalStyles.textJustifiedBoldItalic,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            Apelido:
+          </Text>
+          <TextInput
+            style={[
+              globalStyles.input,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}
+            value={user.apelido}
+            editable={false}
+            selectTextOnFocus={false}
+          />
 
           {/* Email */}
-          <Text style={styles.label}>Email:</Text>
+          <Text
+            style={[
+              globalStyles.textJustifiedBoldItalic,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            Email:
+          </Text>
           {isEditing ? (
             <TextInput
-              style={styles.input}
+              style={[
+                globalStyles.input,
+                { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+              ]}
               value={editedUser.email}
               onChangeText={(text) =>
                 setEditedUser((prevState: any) => ({
@@ -211,32 +236,60 @@ const UserProfile: React.FC = () => {
               }
             />
           ) : (
-            <Text style={styles.label}>{user.email}</Text>
+            <TextInput
+              style={[
+                globalStyles.input,
+                { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+              ]}
+              value={user.email}
+              editable={false}
+              selectTextOnFocus={false}
+            />
           )}
 
           {/* Data de Nascimento */}
-          <Text style={styles.label}>Data de Nascimento:</Text>
+          <Text
+            style={[
+              globalStyles.textJustifiedBoldItalic,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            Data de Nascimento:
+          </Text>
           {isEditing ? (
-            <TextInput style={styles.input} value={addOneDay(editedUser.nascimento)} />
+            <TextInput
+              style={[
+                globalStyles.input,
+                { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+              ]}
+              value={addOneDay(editedUser.nascimento)}
+            />
           ) : (
-            <Text style={styles.label}>{addOneDay(user.nascimento)}</Text>
+            <TextInput
+              style={[
+                globalStyles.input,
+                { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+              ]}
+              value={addOneDay(user.nascimento)}
+              editable={false}
+              selectTextOnFocus={false}
+            />
           )}
 
           {/* Botão de Editar/Salvar */}
-          <TouchableOpacity style={styles.buttonPrimary} onPress={handleEditToggle}>
-            <Text style={styles.buttonPrimaryText}>{isEditing ? 'Salvar' : 'Editar Perfil'}</Text>
-          </TouchableOpacity>
+          <ButtonHighlight
+            title={isEditing ? 'Salvar' : 'Editar Perfil'}
+            onPress={handleEditToggle}
+          />
 
           {/* Botão Cancelar visível apenas se isEditing for true */}
           {isEditing && (
-            <TouchableOpacity
-              style={styles.buttonSecondary}
+            <ButtonSemiHighlight
+              title="Cancelar"
               onPress={() => {
-                setIsEditing(false); // Sai do modo de edição
-                setEditedUser(user); // Reverte as mudanças, restaurando os dados originais
-              }}>
-              <Text style={styles.buttonSecondaryText}>Cancelar</Text>
-            </TouchableOpacity>
+                setIsEditing(false);
+                setEditedUser(user);
+              }}
+            />
           )}
         </ProfileLayout>
       </HeaderLayout>

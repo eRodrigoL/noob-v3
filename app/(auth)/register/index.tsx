@@ -1,18 +1,19 @@
-// app/(legacy)/user/RegisterUser.tsx
-import { Header } from '@components/index';
+// app/(auth)/register/index.tsx
+import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/index';
+import ProfileLayout from '@components/layouts/ProfileLayout';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
-import styles from '@theme/themOld/globalStyle';
+import { globalStyles, useTheme } from '@theme/index';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Toast from 'react-native-toast-message';
 
-const RegisterUser: React.FC = () => {
+const UserRegister: React.FC = () => {
   const router = useRouter();
-
+  const { colors, fontSizes, fontFamily } = useTheme();
   const [nome, setNome] = useState('');
   const [apelido, setApelido] = useState('');
   const [nascimento, setNascimento] = useState('');
@@ -119,43 +120,60 @@ const RegisterUser: React.FC = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header title="Registro de usuário" />
-      <ScrollView>
-        <View style={styles.container}>
-          <Text style={styles.title}>Crie sua conta:</Text>
-
-          <TouchableOpacity
-            onPress={() => pickImage(setImageUri)}
-            style={styles.profileImageContainer}>
-            {imageUri ? (
-              <Image source={{ uri: imageUri }} style={styles.profileImage} />
-            ) : (
-              <Text style={styles.profileImagePlaceholder}>Adicionar Foto</Text>
-            )}
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => pickImage(setCapaUri)}
-            style={styles.profileImageContainer}>
-            {capaUri ? (
-              <Image source={{ uri: capaUri }} style={styles.profileImage} />
-            ) : (
-              <Text style={styles.profileImagePlaceholder}>Adicionar Capa</Text>
-            )}
-          </TouchableOpacity>
-
-          <TextInput style={styles.input} placeholder="Nome" value={nome} onChangeText={setNome} />
-
+      {/* Exibe o cabeçalho com título */}
+      <HeaderLayout title="Criar sua conta">
+        <ProfileLayout initialIsRegisting={true} isUser={true}>
+          {/* Apelido */}
+          <Text
+            style={[
+              globalStyles.textJustifiedBoldItalic,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            Apelido:
+          </Text>
           <TextInput
-            style={styles.input}
+            style={[
+              globalStyles.input,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}
             placeholder="Apelido"
             value={`@${apelido}`}
             onChangeText={(text) => setApelido(text.replace('@', ''))}
             autoCapitalize="none"
           />
 
+          {/* Email */}
+          <Text
+            style={[
+              globalStyles.textJustifiedBoldItalic,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            Email:
+          </Text>
+          <TextInput
+            style={[
+              globalStyles.input,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}
+            placeholder="Email"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+          />
+
+          {/* Data de Nascimento */}
+          <Text
+            style={[
+              globalStyles.textJustifiedBoldItalic,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            Data de Nascimento:
+          </Text>
           <TextInputMask
-            style={styles.input}
+            style={[
+              globalStyles.input,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}
             type="datetime"
             options={{ format: 'DD/MM/YYYY' }}
             placeholder="Data de nascimento"
@@ -163,43 +181,52 @@ const RegisterUser: React.FC = () => {
             onChangeText={setNascimento}
           />
 
+          {/* Senha */}
+          <Text
+            style={[
+              globalStyles.textJustifiedBoldItalic,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            Senha:
+          </Text>
           <TextInput
-            style={styles.input}
-            placeholder="Email"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-          />
-
-          <TextInput
-            style={styles.input}
+            style={[
+              globalStyles.input,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}
             placeholder="Senha"
             secureTextEntry
             value={senha}
             onChangeText={setSenha}
           />
 
+          {/* Confirmaçãode senha */}
+          <Text
+            style={[
+              globalStyles.textJustifiedBoldItalic,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            Confirmaçãode senha:
+          </Text>
           <TextInput
-            style={styles.input}
+            style={[
+              globalStyles.input,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}
             placeholder="Confirmar senha"
             secureTextEntry
             value={confirmarSenha}
             onChangeText={setConfirmarSenha}
           />
 
-          <TouchableOpacity style={styles.buttonPrimary} onPress={handleRegister}>
-            <Text style={styles.buttonPrimaryText}>Cadastrar</Text>
-          </TouchableOpacity>
+          {/* Botão de Editar/Salvar */}
+          <ButtonHighlight title="Cadastrar" onPress={handleRegister} />
 
-          <TouchableOpacity
-            style={styles.buttonSecondary}
-            onPress={() => router.replace('/boardgame')}>
-            <Text style={styles.buttonPrimaryText}>Cancelar</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+          <ButtonSemiHighlight title="Cancelar" onPress={() => router.replace('/boardgame')} />
+        </ProfileLayout>
+      </HeaderLayout>
     </View>
   );
 };
 
-export default RegisterUser;
+export default UserRegister;

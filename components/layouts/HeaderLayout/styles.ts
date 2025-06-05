@@ -1,11 +1,13 @@
 // components/layouts/HeaderLayout/styles.ts
 import { StyleSheet } from 'react-native';
 
+export const HEADER_LAYOUT_HEIGHT = 70;
+
 const stylesHeaderLayout = StyleSheet.create({
   headerContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: 70,
+    height: HEADER_LAYOUT_HEIGHT,
     justifyContent: 'space-between',
     padding: 0,
   },
