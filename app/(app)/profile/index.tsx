@@ -1,6 +1,10 @@
 // app/(app)/Profile/index.tsx
-import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/index';
-import ProfileLayout from '@components/layouts/ProfileLayout';
+import {
+  ButtonHighlight,
+  ButtonSemiHighlight,
+  HeaderLayout,
+  ProfileLayout,
+} from '@components/index';
 import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';

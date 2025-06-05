@@ -8,6 +8,7 @@ export { default as LoadingIndicator } from '@components/feedbacks/LoadingIndica
 export { default as NoResults } from '@components/feedbacks/NoResults';
 export { default as Header } from '@components/Header'; // TODO:
 export { default as HeaderLayout } from '@components/layouts/HeaderLayout';
+export { default as ProfileLayout } from '@components/layouts/ProfileLayout';
 export { default as ParallaxProfile } from '@components/ParallaxProfile'; // TODO:
 export { default as SearchBar } from '@components/SearchBar'; // TODO:
 export { default as Splash } from '@components/Splash';
