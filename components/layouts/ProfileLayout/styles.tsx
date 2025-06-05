@@ -1,4 +1,3 @@
-// components/layout/ProfileLayout/styles.ts
 import { StyleSheet } from 'react-native';
 
 const heightCover = 200;
@@ -21,12 +20,10 @@ const stylesProfileLayout = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  coverTouchable: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    marginLeft: 170,
-    height: '100%',
+  coverInstructionText: {
+    padding: 6,
+    textAlign: 'center',
+    marginTop: 10,
   },
   containerHeaderProfileUser: {
     marginTop: heightCover,

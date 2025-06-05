@@ -1,46 +1,30 @@
-// app/(auth)/register/index.tsx
 import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/index';
 import ProfileLayout from '@components/layouts/ProfileLayout';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { globalStyles, useTheme } from '@theme/index';
-import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Toast from 'react-native-toast-message';
 
+interface User {
+  nome: string;
+  foto?: string | null;
+  capa?: string | null;
+}
+
 const UserRegister: React.FC = () => {
   const router = useRouter();
   const { colors, fontSizes, fontFamily } = useTheme();
-  const [nome, setNome] = useState('');
+
   const [apelido, setApelido] = useState('');
   const [nascimento, setNascimento] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [imageUri, setImageUri] = useState<string | null>(null);
-  const [capaUri, setCapaUri] = useState<string | null>(null);
-
-  const pickImage = async (setImage: (uri: string | null) => void) => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      Toast.show({ type: 'error', text1: 'Permissão necessária para acessar a galeria!' });
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!result.canceled && result.assets.length > 0) {
-      setImage(result.assets[0].uri);
-    }
-  };
+  const [editedUser, setEditedUser] = useState<User>({ nome: '', foto: null, capa: null });
 
   const isPasswordStrong = (password: string) => {
     const strongPasswordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -48,7 +32,7 @@ const UserRegister: React.FC = () => {
   };
 
   const handleRegister = async () => {
-    if (!nome || !apelido || !email || !senha || !confirmarSenha) {
+    if (!editedUser.nome || !apelido || !nascimento || !email || !senha || !confirmarSenha) {
       Toast.show({ type: 'error', text1: 'Preencha todos os campos obrigatórios.' });
       return;
     }
@@ -69,29 +53,29 @@ const UserRegister: React.FC = () => {
 
     try {
       const formData = new FormData();
-      formData.append('nome', nome);
+      formData.append('nome', editedUser.nome);
       formData.append('apelido', `@${apelido}`);
       formData.append('nascimento', nascimento);
       formData.append('email', email);
       formData.append('senha', senha);
 
-      if (imageUri) {
-        const filename = imageUri.split('/').pop();
+      if (editedUser.foto) {
+        const filename = editedUser.foto.split('/').pop();
         const match = /\.(\w+)$/.exec(filename ?? '');
         const fileType = match ? `image/${match[1]}` : 'image';
         formData.append('foto', {
-          uri: imageUri,
+          uri: editedUser.foto,
           name: filename,
           type: fileType,
         } as any);
       }
 
-      if (capaUri) {
-        const filename = capaUri.split('/').pop();
+      if (editedUser.capa) {
+        const filename = editedUser.capa.split('/').pop();
         const match = /\.(\w+)$/.exec(filename ?? '');
         const fileType = match ? `image/${match[1]}` : 'image';
         formData.append('capa', {
-          uri: capaUri,
+          uri: editedUser.capa,
           name: filename,
           type: fileType,
         } as any);
@@ -120,9 +104,8 @@ const UserRegister: React.FC = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Exibe o cabeçalho com título */}
       <HeaderLayout title="Criar sua conta">
-        <ProfileLayout initialIsRegisting={true} isUser={true}>
+        <ProfileLayout initialIsRegisting={true} isUser={true} setEdited={setEditedUser}>
           {/* Apelido */}
           <Text
             style={[
@@ -200,13 +183,13 @@ const UserRegister: React.FC = () => {
             onChangeText={setSenha}
           />
 
-          {/* Confirmaçãode senha */}
+          {/* Confirmação de Senha */}
           <Text
             style={[
               globalStyles.textJustifiedBoldItalic,
               { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
             ]}>
-            Confirmaçãode senha:
+            Confirmação de senha:
           </Text>
           <TextInput
             style={[
@@ -219,9 +202,7 @@ const UserRegister: React.FC = () => {
             onChangeText={setConfirmarSenha}
           />
 
-          {/* Botão de Editar/Salvar */}
           <ButtonHighlight title="Cadastrar" onPress={handleRegister} />
-
           <ButtonSemiHighlight title="Cancelar" onPress={() => router.replace('/boardgame')} />
         </ProfileLayout>
       </HeaderLayout>
