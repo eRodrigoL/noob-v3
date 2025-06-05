@@ -166,14 +166,14 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
           />
         ) : (
           <TextInput
-            editable={false}
-            selectTextOnFocus={false}
+            value={name || ''}
+            onChangeText={handleNomeChange}
             style={[
-              stylesProfileLayout.name,
+              stylesProfileLayout.nameInput,
               { color: colors.textOnBase, fontFamily, fontSize: fontSizes.giant },
-            ]}>
-            {name || 'Nome não informado'}
-          </TextInput>
+            ]}
+            placeholder="Digite o nome aqui..."
+          />
         )}
       </View>
 
