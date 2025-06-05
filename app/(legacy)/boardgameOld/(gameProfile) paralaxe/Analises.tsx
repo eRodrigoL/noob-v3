@@ -1,10 +1,10 @@
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { Circle, Line, Polygon, Svg, Text as SvgText } from 'react-native-svg';
+import { storage } from '@store/storage';
 
 export default function GameDashboard() {
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -40,8 +40,8 @@ export default function GameDashboard() {
   const fetchData = async () => {
     try {
       // Recuperar token e userId do AsyncStorage
-      const token = await AsyncStorage.getItem('token');
-      const userId = await AsyncStorage.getItem('userId');
+      const token = await storage.getItem('token');
+      const userId = await storage.getItem('userId');
 
       if (!token || !userId) {
         setError('Erro de autenticação: Token ou userId ausente.');

@@ -1,11 +1,11 @@
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import { Theme } from '@theme/themOld/theme';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { storage } from '@store/storage';
 
 interface Game {
   titulo: string;
@@ -111,8 +111,8 @@ export default function GameReview() {
 
   // Função para enviar a avaliação para o banco de dados
   const submitReview = async () => {
-    const userId = await AsyncStorage.getItem('userId');
-    const token = await AsyncStorage.getItem('token');
+    const userId = await storage.getItem('userId');
+    const token = await storage.getItem('token');
 
     if (!userId || !token) {
       Toast.show({

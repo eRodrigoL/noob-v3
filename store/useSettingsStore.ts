@@ -1,11 +1,11 @@
 // store/useSettingsStore.ts
 
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import theme from '@theme/global/theme';
 import typography from '@theme/global/typography';
 import { create } from 'zustand';
+import { storage } from './storage';
 
 export type ThemeName = keyof typeof theme;
 export type FontOption = keyof typeof typography.fonts;
@@ -56,7 +56,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   confirmChanges: async (userId: string) => {
     const { fontOption, fontSizeMultiplier, theme } = get();
     try {
-      const token = await AsyncStorage.getItem('token');
+      const token = await storage.getItem('token');
       if (!token) throw new Error('Token de autenticação não encontrado.');
 
       await apiClient.put(
@@ -75,10 +75,10 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       logger.log('✅ Preferências salvas com sucesso!');
 
       // Atualiza o localStorage
-      await AsyncStorage.multiSet([
-        ['fontOption', fontOption],
-        ['fontSize', String(fontSizeMultiplier)],
-        ['theme', theme],
+      await Promise.all([
+        storage.setItem('fontOption', fontOption),
+        storage.setItem('fontSize', String(fontSizeMultiplier)),
+        storage.setItem('theme', theme),
       ]);
     } catch (error) {
       logger.error('❌ Erro ao salvar preferências:', error);
@@ -88,40 +88,41 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 
   loadPreferences: async () => {
     try {
-      const entries = await AsyncStorage.multiGet(['fontOption', 'fontSize', 'theme']);
+          const [fontOptionValue, fontSizeValue, themeValue] = await Promise.all([
+      storage.getItem('fontOption'),
+      storage.getItem('fontSize'),
+      storage.getItem('theme'),
+    ]);
 
-      const fontOptionValue = entries[0][1];
-      const fontSizeValue = entries[1][1];
-      const themeValue = entries[2][1];
+    const validFontOptions = Object.keys(typography.fonts);
+    const validThemeOptions = Object.keys(theme);
 
-      const validFontOptions = Object.keys(typography.fonts);
-      const validThemeOptions = Object.keys(theme);
+    const fontOption: FontOption =
+      validFontOptions.includes(fontOptionValue ?? '')
+        ? (fontOptionValue as FontOption)
+        : DEFAULTS.fontOption;
 
-      const fontOption: FontOption =
-        validFontOptions.includes(fontOptionValue ?? '')
-          ? (fontOptionValue as FontOption)
-          : DEFAULTS.fontOption;
+    const themeName: ThemeName =
+      validThemeOptions.includes(themeValue ?? '')
+        ? (themeValue as ThemeName)
+        : DEFAULTS.theme;
 
-      const themeName: ThemeName =
-        validThemeOptions.includes(themeValue ?? '')
-          ? (themeValue as ThemeName)
-          : DEFAULTS.theme;
+    const fontSize = parseFloat(fontSizeValue ?? '');
+    const fontSizeMultiplier =
+      Math.min(
+        Math.max(fontSize, typography.sizes.min / typography.sizes.base),
+        typography.sizes.max / typography.sizes.base
+      ) || DEFAULTS.fontSizeMultiplier;
 
-      const fontSize = parseFloat(fontSizeValue ?? '');
-      const fontSizeMultiplier =
-        Math.min(
-          Math.max(fontSize, typography.sizes.min / typography.sizes.base),
-          typography.sizes.max / typography.sizes.base
-        ) || DEFAULTS.fontSizeMultiplier;
+    set({
+      fontOption,
+      fontSizeMultiplier,
+      theme: themeName,
+      isLoaded: true,
+    });
 
-      set({
-        fontOption,
-        fontSizeMultiplier,
-        theme: themeName,
-        isLoaded: true,
-      });
+    logger.log('📦 Preferências carregadas do armazenamento local.');
 
-      logger.log('📦 Preferências carregadas do armazenamento local.');
     } catch (error) {
       logger.warn('⚠️ Erro ao carregar preferências, usando padrão.', error);
       set({ ...DEFAULTS, isLoaded: true });

@@ -1,6 +1,5 @@
 // app/(legacy)/matches/MatchFinish.tsx
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { apiClient } from '@services/apiClient';
 import styles from '@theme/themOld/globalStyle';
@@ -11,6 +10,7 @@ import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 
 import { MaskedTextInput } from 'react-native-mask-text';
 import { RadioButton } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
+import { storage } from '@store/storage';
 
 const RegistroPartidaScreen = () => {
   const [victory, setVictory] = useState('');
@@ -35,8 +35,8 @@ const RegistroPartidaScreen = () => {
   useEffect(() => {
     const fetchPartidaEmAberto = async () => {
       try {
-        const userId = await AsyncStorage.getItem('userId');
-        const token = await AsyncStorage.getItem('token');
+        const userId = await storage.getItem('userId');
+        const token = await storage.getItem('token');
 
         if (userId && token) {
           const config = {
@@ -152,7 +152,7 @@ const RegistroPartidaScreen = () => {
     if (!partidaId) return;
 
     try {
-      const token = await AsyncStorage.getItem('token');
+      const token = await storage.getItem('token');
       if (!token) {
         Toast.show({
           type: 'error',

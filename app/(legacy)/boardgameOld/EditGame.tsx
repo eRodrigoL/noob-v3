@@ -2,13 +2,14 @@
 import Header from '@components/Header';
 import ParallaxProfile from '@components/ParallaxProfile';
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storage } from '@store/storage';
 import { apiClient } from '@services/apiClient';
 import styles from '@theme/themOld/globalStyle';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+
 
 // Define o tipo para os dados do jogo
 interface Game {
@@ -69,8 +70,8 @@ const EditGame: React.FC = () => {
     }
 
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       if (!userId || !token) {
         Toast.show({
