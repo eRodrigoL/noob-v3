@@ -1,4 +1,4 @@
-// app/(legacy)/user/(userProfile)/Desempenho.tsx
+// app/(app)/profile/performance/index.tsx
 import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';

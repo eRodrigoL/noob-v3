@@ -1,14 +1,14 @@
-// app/(app)/profile/performance/_layout.tsx
+// app/(public)/boardgame/[id]/_layout.tsx
 import { useTheme } from '@theme/index';
 import { Tabs } from 'expo-router';
 import React from 'react';
 
-export default function UserProfileTabs() {
+export default function GameProfileTabs() {
   const { colors } = useTheme();
 
   return (
     <Tabs
-      initialRouteName="overview/index"
+      initialRouteName="details/index"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.textOnSemiHighlight,
@@ -18,19 +18,25 @@ export default function UserProfileTabs() {
         },
       }}>
       <Tabs.Screen
-        name="overview/index"
+        name="details/index"
         options={{
           title: 'Informações',
         }}
       />
       <Tabs.Screen
-        name="performance/index"
+        name="review/index"
         options={{
           title: 'Desempenho',
         }}
       />
       <Tabs.Screen
-        name="history/index"
+        name="ranking/index"
+        options={{
+          title: 'Histórico',
+        }}
+      />
+      <Tabs.Screen
+        name="rate/index"
         options={{
           title: 'Histórico',
         }}
