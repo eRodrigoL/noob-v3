@@ -8,7 +8,7 @@ export default function UserProfileTabs() {
 
   return (
     <Tabs
-      initialRouteName="overview/index"
+      initialRouteName="index"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.textOnSemiHighlight,
@@ -18,19 +18,19 @@ export default function UserProfileTabs() {
         },
       }}>
       <Tabs.Screen
-        name="overview/index"
+        name="index"
         options={{
           title: 'Informações',
         }}
       />
       <Tabs.Screen
-        name="performance/index"
+        name="performance"
         options={{
           title: 'Desempenho',
         }}
       />
       <Tabs.Screen
-        name="history/index"
+        name="history"
         options={{
           title: 'Histórico',
         }}
