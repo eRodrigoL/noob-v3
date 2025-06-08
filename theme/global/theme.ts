@@ -1,84 +1,97 @@
 // theme/global/theme.ts
 
 // Definição da paleta de cores para a aplicação
+
+// Define o tema "ligth" (tema claro)
+
 const theme = {
-  // Tema claro
-   light: {
+
+  light: {
     name: 'Light',
-    backgroundBase: '#F8FFFE', // fundo do corpo da tela
-    backgroundSemiHighlight: '#FFFFFF', // fundo de componentes neutros (botões secundários, inputs, etc.)
-    backgroundHighlight: '#F35B04', // fundo de componentes em destaque (botões primários, cabeçalhos, etc.)
-    textHighlight: '#00004C', // texto em destaque no fundo padrão / (revisar) não identifiquei diferença ao altear a cor
-    textOnBase: '#00004C', // texto no fundo padrão
-    textOnSemiHighlight: '#5759B2', // texto no fundo semidestacado
-    textOnHighlight: '#FFFFFF', // texto no fundo destacado
-    border: '#00004C', // cor de bordas (inputs, cards, etc.)
-    shadow: 'rgba(0, 0, 0, 0.1)', // sombra suave
-    overlay: 'rgba(0, 0, 0, 0.5)', // novo: fundo para sobreposições
-    accentColor: '#00004C', // Adc: ícones ou pequenos detalhes
+    backgroundBase: '#FDF6E3', // Fundo bege claro e quente
+    backgroundSemiHighlight: '#FFE3B0', // Destaque secundário em tom pastel de laranja
+    backgroundHighlight: '#F35B04', // Cor principal vibrante
+    textHighlight: '#5759B2', // Texto com contraste em azul profundo
+    textOnBase: '#3D348B', // Texto sobre fundo claro em tom escuro
+    textOnSemiHighlight: '#00004C', // Texto sobre destaques secundários
+    textOnHighlight: '#FFFFFF', // Texto branco sobre destaque principal
+    border: '#FFA726', // Bordas em tom alegre de laranja
+    shadow: 'rgba(0, 0, 0, 0.1)', // Sombra leve
+    overlay: 'rgba(0, 0, 0, 0.5)', // Sobreposição semi-transparente
+    accentColor: '#FFA726', // Cor adicional vibrante
+},
+
+
+  
+  // Define o tema "dark" (tema escuro)
+
+  dark: {
+    name: 'Dark', // Nome do tema
+    backgroundBase: '#1E1E24', // Fundo escuro quente
+    backgroundSemiHighlight: '#FFB27A', // Destaque secundário laranja claro
+    backgroundHighlight: '#F35B04', // Destaque principal
+    textHighlight: '#FFFFFF', // Texto branco para contraste
+    textOnBase: '#FFEE93', // Texto vibrante em amarelo
+    textOnSemiHighlight: '#00004C', // Azul profundo para destaques
+    textOnHighlight: '#FFFFFF', // Texto branco sobre destaque
+    border: '#F18701', // Bordas laranja claro
+    shadow: 'rgba(0, 0, 0, 0.8)', // Sombra intensa
+    overlay: 'rgba(255, 255, 255, 0.1)', // Sobreposição clara
+    accentColor: '#FF6B6B', // Vermelho vibrante
   },
 
-  // Tema escuro com cores escolhidas
-dark: {
-  name: 'Dark',
-  backgroundBase: '#1C1C1E', // Fundo principal
-  backgroundSemiHighlight: '#3A3A3C', // Fundo neutro
-  backgroundHighlight: '#F35B04', // Destaque principal
-  textHighlight: '#F8FFFE', // Texto em destaque
-  textOnBase: '#FFFFFF', // Texto no fundo principal
-  textOnSemiHighlight: '#F7B801', // Texto no fundo semi-destacado
-  textOnHighlight: '#000000', // Texto no fundo destacado
-  border: '#F18701', // Bordas
-  shadow: 'rgba(0, 0, 0, 0.7)', // Sombra
-  overlay: 'rgba(255, 255, 255, 0.2)', // Sobreposições
-},
+  // Define o tema "daltonic" (daltônico 1)
 
-  // Tema para daltônicos
-daltonic: {
-  name: 'Daltonic 1',
-  backgroundBase: '#383428', // Fundo principal
-  backgroundSemiHighlight: '#3D7461', // Fundo neutro
-  backgroundHighlight: '#F14B1B', // Destaque principal
-  textHighlight: '#FFFFFF', // Texto em destaque
-  textOnBase: '#FFFFFF', // Texto no fundo principal
-  textOnSemiHighlight: '#83A279', // Texto no fundo semi-destacado
-  textOnHighlight: '#000000', // Texto no fundo destacado
-  border: '#FDFDFD', // Bordas claras para contraste
-  shadow: 'rgba(0, 0, 0, 0.7)', // Sombra
-  overlay: 'rgba(255, 255, 255, 0.2)', // Sobreposições
-},
+  daltonic: {
+      name: 'Daltonic 1',
+      backgroundBase: '#383428', // Fundo principal escuro
+      backgroundSemiHighlight: '#3D7461', // Fundo de destaque secundário (verde)
+      backgroundHighlight: '#F14B1B', // Destaque principal (vermelho queimado)
+      textHighlight: '#FFFFFF', // Texto destacado
+      textOnBase: '#FFFFFF', // Texto sobre o fundo principal
+      textOnSemiHighlight: '#83A279', // Texto sobre fundo secundário
+      textOnHighlight: '#000000', // Texto sobre destaque principal
+      border: '#B0B0B0', // Cor de borda neutra
+      shadow: 'rgba(0, 0, 0, 0.7)',
+      overlay: 'rgba(255, 255, 255, 0.2)',
+      accentColor: '#B0B0B0', // Cor de destaque adicional
+  },
 
-daltonic_2: {
-  name: 'Daltonic 2',
-  backgroundBase: '#242E3A', // Fundo principal
-  backgroundSemiHighlight: '#1B3C72', // Fundo neutro
-  backgroundHighlight: '#F5754E', // Destaque principal
-  textHighlight: '#FFFFFF', // Texto em destaque
-  textOnBase: '#FFFFFF', // Texto no fundo principal
-  textOnSemiHighlight: '#F6BC1D', // Texto no fundo semi-destacado
-  textOnHighlight: '#000000', // Texto no fundo destacado
-  border: '#A49F8C', // Bordas
-  shadow: 'rgba(0, 0, 0, 0.7)', // Sombra
-  overlay: 'rgba(255, 255, 255, 0.2)', // Sobreposições
-},
+  // Define o tema "daltonic_2" (daltônico 2)
 
-daltonic_3: {
-  name: 'Daltonic 3',
-  backgroundBase: '#2B3131', // Fundo principal
-  backgroundSemiHighlight: '#2857BF', // Fundo neutro
-  backgroundHighlight: '#3EA74B', // Destaque principal
-  textHighlight: '#FFFFFF', // Texto em destaque
-  textOnBase: '#FFFFFF', // Texto no fundo principal
-  textOnSemiHighlight: '#F5AC07', // Texto no fundo semi-destacado
-  textOnHighlight: '#000000', // Texto no fundo destacado
-  border: '#FBE3B5', // Bordas
-  shadow: 'rgba(0, 0, 0, 0.7)', // Sombra
-  overlay: 'rgba(255, 255, 255, 0.2)', // Sobreposições
+  daltonic_2: {
+    name: 'Daltonic 2', 
+    backgroundBase: '#1B3C72', // Azul profundo
+    backgroundSemiHighlight: '#F5754E', // Laranja enérgico
+    backgroundHighlight: '#F6BC1D', // Amarelo radiante
+    textHighlight: '#FFFFFF', // Branco para contraste
+    textOnBase: '#FFFFFF', // Texto claro
+    textOnSemiHighlight: '#1B3C72', // Azul sobre laranja
+    textOnHighlight: '#000000', // Preto sobre amarelo
+    border: '#A49F8C', // Bordas equilibradas
+    shadow: 'rgba(0, 0, 0, 0.4)', // Sombra discreta
+    overlay: 'rgba(255, 255, 255, 0.25)', // Sobreposição moderna
+    accentColor: '#F6BC1D', // Amarelo como destaque
 },
 
 
-
+  // Define o tema "daltonic_3" (daltônico 3)
+  
+  daltonic_3: {
+    name: 'Daltonic 3', // Nome do tema
+    backgroundBase: '#2B3131', // Cor de fundo principal
+    backgroundSemiHighlight: '#2857BF', // Cor para destaque secundário
+    backgroundHighlight: '#3EA74B', // Cor para destaque principal
+    textHighlight: '#FFFFFF', // Cor para texto destacado
+    textOnBase: '#FFFFFF', // Cor para texto sobre o fundo principal
+    textOnSemiHighlight: '#F5AC07', // Cor para texto sobre o destaque secundário
+    textOnHighlight: '#000000', // Cor para texto sobre o destaque principal
+    border: '#FBE3B5', // Cor para bordas
+    shadow: 'rgba(0, 0, 0, 0.7)', // Cor para sombras (mais escura)
+    overlay: 'rgba(255, 255, 255, 0.2)', // Cor para sobreposições (transparente clara)
+    accentColor: '#FBE3B5', // Cor de destaque adicional
+  },
 };
 
-// Exporta o objeto theme para ser usado em outros arquivos
+// Exporta o objeto "theme" para ser usado em outras partes do código
 export default theme;

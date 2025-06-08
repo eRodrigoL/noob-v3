@@ -5,7 +5,9 @@ const typography = {
   // Famílias de fontes disponíveis no app (devem corresponder ao nome no useFonts)
   fonts: {
     arial: 'Arial',
+    helvetica: 'Helvetica',
     roboto: 'Roboto',
+    serif: 'Serif',
     times: 'Times New Roman',
   },
 

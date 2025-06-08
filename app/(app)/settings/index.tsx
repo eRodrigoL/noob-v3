@@ -6,8 +6,8 @@ import {
   HeaderLayout,
   UniversalSlider,
 } from '@components/index';
-import { storage } from '@store/storage';
 import { Picker } from '@react-native-picker/picker';
+import { storage } from '@store/storage';
 import { useSettingsStore } from '@store/useSettingsStore';
 import { globalStyles, theme, typography, useTheme } from '@theme/index';
 import { typedKeys } from '@utils/typedKeys';
