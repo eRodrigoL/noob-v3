@@ -1,9 +1,13 @@
-// app/(app)/profile/overview/index.tsx
-import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/index';
-import ProfileLayout from '@components/layouts/ProfileLayout';
+// app/(app)/profile/index.tsx
+import {
+  ButtonHighlight,
+  ButtonSemiHighlight,
+  HeaderLayout,
+  ProfileLayout,
+} from '@components/index';
 import { logger } from '@lib/logger';
-import { storage } from '@store/storage';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
 import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
@@ -156,9 +160,9 @@ const Overview: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={globalStyles.container}>
-        <Text>Carregando dados do usuário...</Text>
-      </View>
+      <HeaderLayout title="Perfil">
+        <ProfileLayout isUser={true} isLoading />
+      </HeaderLayout>
     );
   }
 
@@ -179,120 +183,120 @@ const Overview: React.FC = () => {
       year: 'numeric',
     });
   };
-  // TRECHO API -- FIM
+
+  const renderField = (label: string, value: string, field: keyof typeof editedUser) => (
+    <>
+      <Text
+        style={[
+          globalStyles.textJustifiedBoldItalic,
+          {
+            color: colors.textOnBase,
+            fontFamily,
+            fontSize: fontSizes.base,
+          },
+        ]}>
+        {label}
+      </Text>
+      {isEditing ? (
+        <TextInput
+          style={[
+            globalStyles.input,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}
+          value={editedUser[field]}
+          onChangeText={(text) => setEditedUser((prev: any) => ({ ...prev, [field]: text }))}
+        />
+      ) : (
+        <Text
+          style={[
+            globalStyles.input,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}>
+          {value}
+        </Text>
+      )}
+    </>
+  );
 
   return (
-    <View style={{ flex: 1 }}>
-      {/* Exibe o cabeçalho com título */}
-      <HeaderLayout title="Perfil">
-        <ProfileLayout
-          id={user._id}
-          name={user.nome}
-          photo={user.foto}
-          cover={user.capa}
-          initialIsRegisting={false}
-          isEditing={isEditing}
-          isUser={true}
-          setEdited={setEditedUser}>
-          {/* Apelido */}
-          <Text
-            style={[
-              globalStyles.textJustifiedBoldItalic,
-              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-            ]}>
-            Apelido:
-          </Text>
+    <HeaderLayout title="Perfil">
+      <ProfileLayout
+        id={user._id}
+        name={user.nome}
+        photo={user.foto}
+        cover={user.capa}
+        initialIsRegisting={false}
+        isEditing={isEditing}
+        isUser={true}
+        isLoading={loading}
+        setEdited={setEditedUser}>
+        {/* Apelido */}
+        <Text
+          style={[
+            globalStyles.textJustifiedBoldItalic,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}>
+          Apelido:
+        </Text>
+        <TextInput
+          style={[
+            globalStyles.input,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}
+          value={user.apelido}
+          editable={false}
+          selectTextOnFocus={false}
+        />
+
+        {/* Email */}
+        {renderField('Email:', user.email, 'email')}
+
+        {/* Data de Nascimento */}
+        <Text
+          style={[
+            globalStyles.textJustifiedBoldItalic,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}>
+          Data de Nascimento:
+        </Text>
+        {isEditing ? (
           <TextInput
             style={[
               globalStyles.input,
               { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
             ]}
-            value={user.apelido}
+            value={addOneDay(editedUser.nascimento)}
+          />
+        ) : (
+          <TextInput
+            style={[
+              globalStyles.input,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}
+            value={addOneDay(user.nascimento)}
             editable={false}
             selectTextOnFocus={false}
           />
+        )}
 
-          {/* Email */}
-          <Text
-            style={[
-              globalStyles.textJustifiedBoldItalic,
-              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-            ]}>
-            Email:
-          </Text>
-          {isEditing ? (
-            <TextInput
-              style={[
-                globalStyles.input,
-                { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-              ]}
-              value={editedUser.email}
-              onChangeText={(text) =>
-                setEditedUser((prevState: any) => ({
-                  ...prevState,
-                  email: text,
-                }))
-              }
-            />
-          ) : (
-            <TextInput
-              style={[
-                globalStyles.input,
-                { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-              ]}
-              value={user.email}
-              editable={false}
-              selectTextOnFocus={false}
-            />
-          )}
+        {/* Botão de Editar/Salvar */}
+        <ButtonHighlight
+          title={isEditing ? 'Salvar' : 'Editar Perfil'}
+          onPress={handleEditToggle}
+        />
 
-          {/* Data de Nascimento */}
-          <Text
-            style={[
-              globalStyles.textJustifiedBoldItalic,
-              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-            ]}>
-            Data de Nascimento:
-          </Text>
-          {isEditing ? (
-            <TextInput
-              style={[
-                globalStyles.input,
-                { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-              ]}
-              value={addOneDay(editedUser.nascimento)}
-            />
-          ) : (
-            <TextInput
-              style={[
-                globalStyles.input,
-                { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-              ]}
-              value={addOneDay(user.nascimento)}
-              editable={false}
-              selectTextOnFocus={false}
-            />
-          )}
-
-          {/* Botão de Editar/Salvar */}
-          <ButtonHighlight
-            title={isEditing ? 'Salvar' : 'Editar Perfil'}
-            onPress={handleEditToggle}
+        {/* Botão Cancelar visível apenas se isEditing for true */}
+        {isEditing && (
+          <ButtonSemiHighlight
+            title="Cancelar"
+            onPress={() => {
+              setIsEditing(false);
+              setEditedUser(user);
+            }}
           />
-
-          {/* Botão Cancelar visível apenas se isEditing for true */}
-          {isEditing && (
-            <ButtonSemiHighlight
-              title="Cancelar"
-              onPress={() => {
-                setIsEditing(false);
-                setEditedUser(user);
-              }}
-            />
-          )}
-        </ProfileLayout>
-      </HeaderLayout>
-    </View>
+        )}
+      </ProfileLayout>
+    </HeaderLayout>
   );
 };
 

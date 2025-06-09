@@ -1,3 +1,4 @@
+// app/(app)/boardgame/[id]/rate.tsx
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { Theme } from '@theme/themOld/theme';
@@ -23,7 +24,7 @@ interface Avaliacao {
 }
 
 export default function GameReview() {
-  const { id: jogo } = useLocalSearchParams<{ id?: string }>();
+  const { id: jogo } = useLocalSearchParams<{ id: string }>();
   const [game, setGame] = useState<Game | null>(null);
   const [avaliacao, setAvaliacao] = useState<Avaliacao>({
     beleza: 0,
