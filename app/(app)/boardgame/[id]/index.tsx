@@ -9,6 +9,7 @@ import { useGameId } from '@hooks/useGameId';
 import { logger } from '@lib/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
 import React, { useEffect, useState } from 'react';
 import { Text, TextInput } from 'react-native';
@@ -29,7 +30,7 @@ const GameDetails: React.FC = () => {
   const fetchGameData = async () => {
     try {
       setLoading(true);
-      const token = await AsyncStorage.getItem('token');
+      const token = await storage.getItem('token');
       setIsLoggedIn(!!token); // define como true se houver token
 
       const response = await apiClient.get(`/jogos/${id}`);
