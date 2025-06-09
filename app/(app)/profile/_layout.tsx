@@ -1,14 +1,14 @@
-// app/(app)/profile/performance/index.tsx
+// app/(app)/profile/performance/_layout.tsx
 import { useTheme } from '@theme/index';
 import { Tabs } from 'expo-router';
 import React from 'react';
 
-export default function ProfileLayoutTabs() {
+export default function UserProfileTabs() {
   const { colors } = useTheme();
 
   return (
     <Tabs
-      initialRouteName="overview/index"
+      initialRouteName="index"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.textOnSemiHighlight,
@@ -18,19 +18,19 @@ export default function ProfileLayoutTabs() {
         },
       }}>
       <Tabs.Screen
-        name="overview/index"
+        name="index"
         options={{
           title: 'Informações',
         }}
       />
       <Tabs.Screen
-        name="performance/index"
+        name="performance"
         options={{
           title: 'Desempenho',
         }}
       />
       <Tabs.Screen
-        name="history/index"
+        name="history"
         options={{
           title: 'Histórico',
         }}

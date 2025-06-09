@@ -1,4 +1,4 @@
-//app/(app)/(public)/boardgame/styles.ts
+// app/(app)/boardgame/styles.ts
 import { StyleSheet } from 'react-native';
 
 const stylesListGame = StyleSheet.create({
