@@ -184,7 +184,40 @@ const Overview: React.FC = () => {
       year: 'numeric',
     });
   };
-  // TRECHO API -- FIM
+
+  const renderField = (label: string, value: string, field: keyof typeof editedUser) => (
+    <>
+      <Text
+        style={[
+          globalStyles.textJustifiedBoldItalic,
+          {
+            color: colors.textOnBase,
+            fontFamily,
+            fontSize: fontSizes.base,
+          },
+        ]}>
+        {label}
+      </Text>
+      {isEditing ? (
+        <TextInput
+          style={[
+            globalStyles.input,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}
+          value={editedUser[field]}
+          onChangeText={(text) => setEditedUser((prev: any) => ({ ...prev, [field]: text }))}
+        />
+      ) : (
+        <Text
+          style={[
+            globalStyles.input,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}>
+          {value}
+        </Text>
+      )}
+    </>
+  );
 
   return (
     <HeaderLayout title="Perfil">
@@ -217,38 +250,7 @@ const Overview: React.FC = () => {
         />
 
         {/* Email */}
-        <Text
-          style={[
-            globalStyles.textJustifiedBoldItalic,
-            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-          ]}>
-          Email:
-        </Text>
-        {isEditing ? (
-          <TextInput
-            style={[
-              globalStyles.input,
-              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-            ]}
-            value={editedUser.email}
-            onChangeText={(text) =>
-              setEditedUser((prevState: any) => ({
-                ...prevState,
-                email: text,
-              }))
-            }
-          />
-        ) : (
-          <TextInput
-            style={[
-              globalStyles.input,
-              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-            ]}
-            value={user.email}
-            editable={false}
-            selectTextOnFocus={false}
-          />
-        )}
+        {renderField('Email:', user.email, 'email')}
 
         {/* Data de Nascimento */}
         <Text

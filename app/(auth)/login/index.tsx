@@ -148,7 +148,7 @@ const Login: React.FC = () => {
                   globalStyles.textJustified,
                   { color: colors.textOnBase, fontFamily: fontFamily, fontSize: fontSizes.base },
                 ]}>
-                Ainda não tem uma conta?
+                {'Ainda não tem uma conta? '}
               </Text>
               <Pressable
                 onPress={() => router.push('/register')}
@@ -160,7 +160,6 @@ const Login: React.FC = () => {
                     fontFamily: fontFamily,
                     fontSize: fontSizes.base,
                   }}>
-                  {' '}
                   Cadastre-se
                 </Text>
               </Pressable>
