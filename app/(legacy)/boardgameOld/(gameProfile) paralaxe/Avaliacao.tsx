@@ -1,4 +1,3 @@
-// app/(app)/boardgame/[id]/rate.tsx
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { Theme } from '@theme/themOld/theme';
@@ -24,7 +23,7 @@ interface Avaliacao {
 }
 
 export default function GameReview() {
-  const { id: jogo } = useLocalSearchParams<{ id: string }>();
+  const { id: jogo } = useLocalSearchParams<{ id?: string }>();
   const [game, setGame] = useState<Game | null>(null);
   const [avaliacao, setAvaliacao] = useState<Avaliacao>({
     beleza: 0,
@@ -119,7 +118,7 @@ export default function GameReview() {
       Toast.show({
         type: 'error',
         text1: 'Erro',
-        text2: 'Realize o login para avaliar o jogo!',
+        text2: 'ID do usuário ou token não encontrados.',
       });
       return;
     }

@@ -6,8 +6,8 @@ import {
   ProfileLayout,
 } from '@components/index';
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
 import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
@@ -23,9 +23,8 @@ const Overview: React.FC = () => {
   // Função para buscar os dados do usuário
   const fetchUserData = async () => {
     try {
-      setLoading(true);
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       if (!userId || !token) {
         Toast.show({
@@ -70,8 +69,8 @@ const Overview: React.FC = () => {
     }
 
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       if (!userId || !token) {
         Toast.show({

@@ -1,10 +1,11 @@
 // src/services/apiClient.ts
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
+import { Section } from 'react-native-paper/lib/typescript/components/Drawer/Drawer';
+import { storage } from '@store/storage';
 
 // Recupera a URL base da API definida em app.config.js (extra.apiBaseUrl)
 const baseURL = process.env.EXPO_PUBLIC_API_BASE_URL;
@@ -48,7 +49,7 @@ apiClient.interceptors.response.use(
           text2: 'Faça login novamente.',
         });
 
-        await AsyncStorage.multiRemove(['token', 'userId']);
+        await storage.clear(['token', 'userId']);
         router.replace('/boardgame');
       }
     }

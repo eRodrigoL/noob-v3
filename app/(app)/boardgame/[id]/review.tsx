@@ -2,8 +2,8 @@
 import { HeaderLayout, ProfileLayout } from '@components/index';
 import { useGameId } from '@hooks/useGameId';
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
@@ -46,8 +46,8 @@ export default function GameReview() {
   const fetchGameAndData = async () => {
     try {
       setLoading(true);
-      const token = await AsyncStorage.getItem('token');
-      const userId = await AsyncStorage.getItem('userId');
+      const token = await storage.getItem('token');
+      const userId = await storage.getItem('userId');
       setIsLoggedIn(!!token);
 
       const gameResponse = await apiClient.get(`/jogos/${id}`);

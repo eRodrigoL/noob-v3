@@ -3,8 +3,6 @@ import styles from '@theme/themOld/globalStyle'; // TODO: substituir por estilos
 import React from 'react';
 import { TextInput } from 'react-native';
 
-// TODO: usar logger se necessário para debug
-
 interface SearchBarProps {
   placeholder: string;
   value: string;
@@ -14,13 +12,17 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({ placeholder, value, onChangeText }) => {
   return (
     <TextInput
-      style={styles.searchBar} // TODO: extrair para styles.ts ou aplicar tema com useTheme
+      style={styles.searchBar}
       placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
-      placeholderTextColor="#999" // TODO: adaptar dinamicamente com tema
+      placeholderTextColor="#999"
+      accessible
+      accessibilityLabel="Campo de busca de jogos"
+      accessibilityHint="Digite o nome do jogo que deseja encontrar"
     />
   );
 };
 
 export default SearchBar;
+

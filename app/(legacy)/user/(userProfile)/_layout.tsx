@@ -1,19 +1,20 @@
-// app/(legacy)/user/EditUser.tsx
+// app/(legacy)/user/(userProfile)/_layout.tsx
 import Header from '@components/Header';
 import ParallaxProfile from '@components/ParallaxProfile';
+import { Ionicons } from '@expo/vector-icons';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import styles from '@theme/themOld/globalStyle';
-import { router } from 'expo-router';
+import { Tabs } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { storage } from '@store/storage';
 
-const EditUser: React.FC = () => {
+const UserProfile: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState<any>(null);
 
   // Função para buscar os dados do usuário
@@ -102,19 +103,6 @@ const EditUser: React.FC = () => {
         } as any);
       }
 
-      if (editedUser.capa) {
-        const localUri = editedUser.capa;
-        const filename = localUri.split('/').pop();
-        const match = /\.(\w+)$/.exec(filename ?? '');
-        const fileType = match ? `image/${match[1]}` : `image`;
-
-        formData.append('capa', {
-          uri: localUri,
-          name: filename ?? 'profile.jpg',
-          type: fileType,
-        } as any);
-      }
-
       await apiClient.put(`/usuarios/${userId}`, formData, config);
 
       Toast.show({
@@ -161,22 +149,9 @@ const EditUser: React.FC = () => {
     );
   }
 
-  const addOneDay = (dateString: string) => {
-    const date = new Date(dateString);
-    date.setDate(date.getDate() + 1); // Adiciona 1 dia
-    return date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-  };
-  // TRECHO API -- FIM
-
   return (
     <View style={{ flex: 1 }}>
-      {/* Exibe o cabeçalho com título */}
       <Header title="Perfil" />
-
       <ParallaxProfile
         id={user._id}
         name={user.nome}
@@ -186,59 +161,56 @@ const EditUser: React.FC = () => {
         initialIsRegisting={false}
         isEditing={isEditing}
         setEdited={setEditedUser}>
-        {/* Apelido */}
-        <Text style={styles.label}>Apelido:</Text>
-        <Text style={styles.label}>{user.apelido}</Text>
-
-        {/* Email */}
-        <Text style={styles.label}>Email:</Text>
-        {isEditing ? (
-          <TextInput
-            style={styles.input}
-            value={editedUser.email}
-            onChangeText={(text) =>
-              setEditedUser((prevState: any) => ({
-                ...prevState,
-                email: text,
-              }))
-            }
-          />
-        ) : (
-          <Text style={styles.label}>{user.email}</Text>
-        )}
-
-        {/* Data de Nascimento */}
-        <Text style={styles.label}>Data de Nascimento:</Text>
-        {isEditing ? (
-          <TextInput style={styles.input} value={addOneDay(editedUser.nascimento)} />
-        ) : (
-          <Text style={styles.label}>{addOneDay(user.nascimento)}</Text>
-        )}
-
-        {/* Botão de Editar/Salvar */}
-        <TouchableOpacity
-          style={styles.buttonPrimary}
-          onPress={() => {
-            updateUserProfile();
-            router.back();
+        <Tabs
+          screenOptions={{
+            headerShown: false,
+            tabBarStyle: localStyles.tabBar,
+            tabBarActiveTintColor: '#000',
+            tabBarInactiveTintColor: '#8E8E93',
           }}>
-          <Text style={styles.buttonPrimaryText}>Salvar</Text>
-        </TouchableOpacity>
-
-        {/* Botão Cancelar visível apenas se isEditing for true */}
-        {isEditing && (
-          <TouchableOpacity
-            style={styles.buttonSecondary}
-            onPress={() => {
-              setEditedUser(user); // Reverte as mudanças, restaurando os dados originais
-              router.back();
-            }}>
-            <Text style={styles.buttonSecondaryText}>Cancelar</Text>
-          </TouchableOpacity>
-        )}
+          <Tabs.Screen
+            name="Descricao"
+            options={{
+              title: 'Descrição',
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="person-outline" size={size} color={color} />
+              ),
+            }}
+            initialParams={{ user: user }}
+          />
+          <Tabs.Screen
+            name="Desempenho"
+            options={{
+              title: 'Desempenho',
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="stats-chart-outline" size={size} color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name="Historico"
+            options={{
+              title: 'Histórico',
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="time-outline" size={size} color={color} />
+              ),
+            }}
+          />
+        </Tabs>
       </ParallaxProfile>
     </View>
   );
 };
 
-export default EditUser;
+const localStyles = StyleSheet.create({
+  tabBar: {
+    backgroundColor: '#ffffff',
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+  },
+  tabBarItemStyle: {
+    flex: 1,
+  },
+});
+
+export default UserProfile;

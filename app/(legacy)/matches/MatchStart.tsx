@@ -1,6 +1,5 @@
 // app/(legacy)/matches/MatchStart.tsx
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import styles from '@theme/themOld/globalStyle';
 import { Theme } from '@theme/themOld/theme';
@@ -17,6 +16,7 @@ import {
 } from 'react-native';
 import { MaskedTextInput } from 'react-native-mask-text';
 import Toast from 'react-native-toast-message';
+import { storage } from '@store/storage';
 
 const RegistroPartidaScreen = () => {
   const [explicacao, setExplicacao] = useState(false);
@@ -31,8 +31,8 @@ const RegistroPartidaScreen = () => {
   useEffect(() => {
     const fetchNicknames = async () => {
       try {
-        const userId = await AsyncStorage.getItem('userId');
-        const token = await AsyncStorage.getItem('token');
+        const userId = await storage.getItem('userId');
+        const token = await storage.getItem('token');
 
         const config = {
           headers: {
@@ -124,8 +124,8 @@ const RegistroPartidaScreen = () => {
     }
 
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       const config = {
         headers: {

@@ -1,6 +1,5 @@
 // components/Header/index.tsx
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
 import React, { useCallback, useState } from 'react';
@@ -11,6 +10,7 @@ import { apiClient } from '@services/apiClient';
 import { Theme } from '@theme/themOld/theme';
 import axios from 'axios';
 import SandwichMenu from '../buttons/SandwichMenu';
+import { storage } from '@store/storage';
 
 const Header = ({ title }: { title: string }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -20,8 +20,8 @@ const Header = ({ title }: { title: string }) => {
   // Função para verificar se o usuário está autenticado
   const checkAuthentication = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
       setIsAuthenticated(!!userId && !!token);
     } catch (error) {
       logger.error('Erro ao verificar autenticação:', error);
@@ -32,8 +32,8 @@ const Header = ({ title }: { title: string }) => {
   // Função para verificar se há partidas em aberto
   const checkOpenMatches = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       if (userId && token) {
         const config = {

@@ -52,3 +52,4 @@ const GameCard = ({ game, onPress, style }: GameCardProps) => {
 };
 
 export default GameCard;
+

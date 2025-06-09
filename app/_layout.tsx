@@ -1,6 +1,5 @@
 // app/_layout.tsx
 import SandwichMenu from '@components/buttons/SandwichMenu';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUiStore } from '@store/useUiStore';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -11,6 +10,7 @@ import Toast from 'react-native-toast-message';
 
 import { useKeepApiAwake } from '@hooks/useKeepApiAwke';
 import { useSettingsStore } from '@store/useSettingsStore';
+import { storage } from '@store/storage';
 
 SplashScreen.preventAutoHideAsync(); // impede que o splash desapareça automaticamente
 
@@ -23,7 +23,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     const prepare = async () => {
-      const userId = await AsyncStorage.getItem('userId');
+      const userId = await storage.getItem('userId');
       if (userId) {
         await loadPreferences(); // TODO: @motathais eu removi "userId" porque apresentava "0 argumentos eram esperados, mas 1 foram obtidos.ts(2554)" em "userId"
       } else {
