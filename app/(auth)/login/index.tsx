@@ -9,6 +9,7 @@ import { Pressable, Text, TextInput, useWindowDimensions, View } from 'react-nat
 import Toast from 'react-native-toast-message';
 import stylesLogin from './styles';
 import { storage } from '@store/storage';
+import { useSettingsStore } from '@store/useSettingsStore';
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -41,6 +42,8 @@ const Login: React.FC = () => {
         await storage.setItem('theme', usuario.theme);
 
         Toast.show({ type: 'success', text1: msg });
+
+        await useSettingsStore.getState().loadPreferences();
 
         router.replace('/boardgame');
       }
