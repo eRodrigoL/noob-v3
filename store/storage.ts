@@ -3,21 +3,24 @@
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import { encrypt, decrypt } from '../utils/cryptoUtils'; // ajuste o caminho conforme sua estrutura
 
 const isWeb = Platform.OS === 'web';
 
 export const storage = {
   async getItem(key: string): Promise<string | null> {
     if (isWeb) {
-      return await AsyncStorage.getItem(key);
+      const encrypted = await AsyncStorage.getItem(key);
+      return encrypted ? decrypt(encrypted) : null;
     } else {
-      return await SecureStore.getItemAsync(key); // ✅ Correção aqui
+      return await SecureStore.getItemAsync(key);
     }
   },
 
   async setItem(key: string, value: string): Promise<void> {
     if (isWeb) {
-      await AsyncStorage.setItem(key, value);
+      const encrypted = encrypt(value);
+      await AsyncStorage.setItem(key, encrypted);
     } else {
       await SecureStore.setItemAsync(key, value);
     }
@@ -34,7 +37,10 @@ export const storage = {
   async multiGet(keys: string[]): Promise<[string, string | null][]> {
     if (isWeb) {
       const readonlyResult = await AsyncStorage.multiGet(keys);
-      return readonlyResult.map(([key, value]) => [key, value] as [string, string | null]);
+      return readonlyResult.map(([key, value]) => [
+        key,
+        value ? decrypt(value) : null,
+      ]);
     } else {
       return await Promise.all(
         keys.map(async (key) => [key, await SecureStore.getItemAsync(key)] as [string, string | null])
@@ -44,7 +50,8 @@ export const storage = {
 
   async multiSet(pairs: [string, string][]): Promise<void> {
     if (isWeb) {
-      await AsyncStorage.multiSet(pairs);
+      const encryptedPairs = pairs.map(([key, value]) => [key, encrypt(value)] as [string, string]);
+      await AsyncStorage.multiSet(encryptedPairs);
     } else {
       await Promise.all(pairs.map(([key, value]) => SecureStore.setItemAsync(key, value)));
     }
