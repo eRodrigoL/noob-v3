@@ -1,8 +1,8 @@
 // app/(app)/profile/history.tsx
 import { HeaderLayout, ProfileLayout } from '@components/index';
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
 import { useTheme } from '@theme/index';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
@@ -39,8 +39,8 @@ export default function History() {
   useEffect(() => {
     async function fetchPartidas() {
       try {
-        const userId = await AsyncStorage.getItem('userId');
-        const token = await AsyncStorage.getItem('token');
+        const userId = await storage.getItem('userId');
+        const token = await storage.getItem('token');
         const config = {
           headers: { Authorization: `Bearer ${token}` },
         };
