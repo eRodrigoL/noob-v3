@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Toast from 'react-native-toast-message';
+import { sanitizeInput } from '@utils/sanitize';
 
 interface User {
   nome: string;
@@ -51,13 +52,26 @@ const UserRegister: React.FC = () => {
       return;
     }
 
+    const nomeSanitizado = sanitizeInput(editedUser.nome);
+    const apelidoSanitizado = sanitizeInput(apelido);
+    const nascimentoSanitizado = sanitizeInput(nascimento);
+    const emailSanitizado = sanitizeInput(email);
+    const senhaSanitizada = sanitizeInput(senha);
+
     try {
-      const formData = new FormData();
+      /*const formData = new FormData();
       formData.append('nome', editedUser.nome);
       formData.append('apelido', `@${apelido}`);
       formData.append('nascimento', nascimento);
       formData.append('email', email);
-      formData.append('senha', senha);
+      formData.append('senha', senha);*/
+
+      const formData = new FormData();
+      formData.append('nome', nomeSanitizado);
+      formData.append('apelido', `@${apelidoSanitizado}`);
+      formData.append('nascimento', nascimentoSanitizado);
+      formData.append('email', emailSanitizado);
+      formData.append('senha', senhaSanitizada);
 
       if (editedUser.foto) {
         const filename = editedUser.foto.split('/').pop();
