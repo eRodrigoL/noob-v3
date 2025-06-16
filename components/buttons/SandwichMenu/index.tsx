@@ -3,12 +3,15 @@ import ButtonHighlight from '@components/buttons/ButtonHighlight';
 import { useTheme } from '@hooks/useTheme';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
 import axios from 'axios';
 import { Href, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Animated, Dimensions, Modal, Platform, Pressable, View } from 'react-native';
 import stylesSandwichMenu from './styles';
-import { storage } from '@store/storage';
+
+// ⚙️ Ambiente
+const APP_MODE = process.env.EXPO_PUBLIC_APP_MODE;
 
 interface ModalProps {
   visible: boolean;
@@ -19,7 +22,7 @@ const { width } = Dimensions.get('window');
 
 const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
   const { colors } = useTheme();
-  const slideAnim = React.useRef(new Animated.Value(-width)).current;
+  const slideAnim = useRef(new Animated.Value(-width)).current;
   const [hasOpenMatch, setHasOpenMatch] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
@@ -73,10 +76,7 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
   // Logout do usuário
   const handleLogout = async () => {
     try {
-      await Promise.all([
-        storage.removeItem('token'),
-        storage.removeItem('userId'),
-      ]);
+      await Promise.all([storage.removeItem('token'), storage.removeItem('userId')]);
 
       if (Platform.OS === 'web') {
         logger.log('[SandwichMenu] Logout realizado com sucesso.');
@@ -161,22 +161,21 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
               <ButtonHighlight title="Login" onPress={() => handleNavigate('/login')} />
             ) : (
               <>
-                <ButtonHighlight
-                  title="Perfil"
-                  onPress={() => {
-                    handleNavigate('/profile');
-                  }}
-                />
+                <ButtonHighlight title="Perfil" onPress={() => handleNavigate('/profile')} />
                 <ButtonHighlight
                   title="Configurações"
                   onPress={() => handleNavigate('/settings')}
                 />
                 <ButtonHighlight title="Jogar" onPress={handlePlayPress} />
 
-                <ButtonHighlight
-                  title="testando telas"
-                  onPress={() => handleNavigate('/boardgame')}
-                />
+                <ButtonHighlight title="Feedback" onPress={() => handleNavigate('/feedback')} />
+
+                {APP_MODE !== 'development' && (
+                  <ButtonHighlight
+                    title="testando telas"
+                    onPress={() => handleNavigate('/boardgame')}
+                  />
+                )}
 
                 <ButtonHighlight title="Sair" onPress={handleLogout} />
               </>
