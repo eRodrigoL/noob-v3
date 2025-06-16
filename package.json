@@ -23,6 +23,7 @@
     "axios": "^1.9.0",
     "axios-retry": "^4.5.0",
     "crypto-js": "^4.2.0",
+    "dompurify": "^3.2.6",
     "expo": "~53.0.9",
     "expo-blur": "~14.1.4",
     "expo-constants": "~17.1.6",

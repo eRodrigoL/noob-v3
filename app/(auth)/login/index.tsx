@@ -10,6 +10,7 @@ import Toast from 'react-native-toast-message';
 import stylesLogin from './styles';
 import { storage } from '@store/storage';
 import { useSettingsStore } from '@store/useSettingsStore';
+import { sanitizeInput } from '@utils/sanitize';
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -26,10 +27,13 @@ const Login: React.FC = () => {
       return;
     }
 
-    const apelidoCorrigido = `@${apelido}`;
+    const apelidoSanitizado = sanitizeInput(apelido);
+    const senhaSanitizada = sanitizeInput(senha);
+
+    const apelidoCorrigido = `@${apelidoSanitizado}`;
 
     try {
-      const response = await apiClient.post('/login', { apelido: apelidoCorrigido, senha });
+      const response = await apiClient.post('/login', { apelido: apelidoCorrigido, senha: senhaSanitizada });
 
       if (response.status === 200) {
         const { token, usuario, msg } = response.data;
