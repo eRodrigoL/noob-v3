@@ -5,13 +5,13 @@ import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
 import axios from 'axios';
+import Constants from 'expo-constants';
 import { Href, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Animated, Dimensions, Modal, Platform, Pressable, View } from 'react-native';
 import stylesSandwichMenu from './styles';
 
-// ⚙️ Ambiente
-const APP_MODE = process.env.EXPO_PUBLIC_APP_MODE;
+const isDev = Constants.expoConfig?.extra?.EXPO_PUBLIC_APP_MODE === 'development';
 
 interface ModalProps {
   visible: boolean;
@@ -162,15 +162,17 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
             ) : (
               <>
                 <ButtonHighlight title="Perfil" onPress={() => handleNavigate('/profile')} />
+
                 <ButtonHighlight
                   title="Configurações"
                   onPress={() => handleNavigate('/settings')}
                 />
+
                 <ButtonHighlight title="Jogar" onPress={handlePlayPress} />
 
                 <ButtonHighlight title="Feedback" onPress={() => handleNavigate('/feedback')} />
 
-                {APP_MODE !== 'development' && (
+                {isDev && (
                   <ButtonHighlight
                     title="testando telas"
                     onPress={() => handleNavigate('/boardgame')}
