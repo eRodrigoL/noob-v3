@@ -4,6 +4,7 @@ import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
+import { sanitizeInput } from '@utils/sanitize';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Text, TextInput, View, useWindowDimensions } from 'react-native';
@@ -24,6 +25,9 @@ const FeedbackScreen: React.FC = () => {
       return;
     }
 
+    const assuntoSanitizado = sanitizeInput(assunto);
+    const descricaoSanitizada = sanitizeInput(descricao);
+
     try {
       setLoading(true);
       const token = await storage.getItem('token');
@@ -34,7 +38,7 @@ const FeedbackScreen: React.FC = () => {
         return;
       }
 
-      const payload = { idUsuario: userId, assunto, descricao };
+      const payload = { idUsuario: userId, assunto: assuntoSanitizado, descricao: descricaoSanitizada };
 
       await apiClient.post('/feedbacks', payload, {
         headers: { Authorization: `Bearer ${token}` },
@@ -74,6 +78,7 @@ const FeedbackScreen: React.FC = () => {
           Assunto:
         </Text>
         <TextInput
+          accessibilityLabel="Campo de Assunto"
           style={[
             globalStyles.input,
             { fontSize: fontSizes.base, fontFamily, color: colors.textOnBase },
@@ -96,6 +101,7 @@ const FeedbackScreen: React.FC = () => {
           Descrição:
         </Text>
         <TextInput
+          accessibilityLabel="Campo de Descrição do Feedback"
           multiline
           style={[
             globalStyles.input,
@@ -114,11 +120,16 @@ const FeedbackScreen: React.FC = () => {
 
         <View style={{ marginTop: 24 }}>
           <ButtonHighlight
+            accessibilityLabel="Botão Enviar Feedback"
             title={loading ? 'Enviando...' : 'Enviar Feedback'}
             onPress={handleSubmit}
             disabled={loading}
           />
-          <ButtonSemiHighlight title="Cancelar" onPress={() => router.back()} />
+          <ButtonSemiHighlight
+            accessibilityLabel="Botão Cancelar envio de feedback"
+            title="Cancelar"
+            onPress={() => router.back()}
+          />
         </View>
       </View>
     </HeaderLayout>
