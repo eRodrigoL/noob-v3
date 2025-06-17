@@ -109,7 +109,11 @@ export default function History() {
                 fontFamily,
                 fontSize: fontSizes.base,
                 textAlign: 'center',
-              }}>
+              }}
+              accessible
+              accessibilityLabel="Mensagem informativa"
+              accessibilityHint="Informa que nenhuma partida foi encontrada para este usuário"
+            >
               Nenhuma partida encontrada.
             </Text>
           ) : (
@@ -121,6 +125,9 @@ export default function History() {
               return (
                 <View
                   key={partida._id}
+                  accessible
+                  accessibilityLabel={`Partida de ${partida.tituloJogo}`}
+                  accessibilityHint={`Realizada em ${dataConclusao}, participantes: ${participantes}, duração: ${partida.duracao * 60} minutos, explicação: ${partida.explicacao} minutos, vencedor: ${vencedorNome || 'nenhum'}`}
                   style={{
                     backgroundColor: colors.backgroundSemiHighlight,
                     marginVertical: 6,
