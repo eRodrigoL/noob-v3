@@ -137,6 +137,9 @@ const UserRegister: React.FC = () => {
             value={`@${apelido}`}
             onChangeText={(text) => setApelido(text.replace('@', ''))}
             autoCapitalize="none"
+            accessible
+            accessibilityLabel="Campo de apelido"
+            accessibilityHint="Digite um apelido para seu perfil"
           />
 
           {/* Email */}
@@ -156,6 +159,9 @@ const UserRegister: React.FC = () => {
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}
+            accessible
+            accessibilityLabel="Campo de email"
+            accessibilityHint="Digite seu endereço de email"
           />
 
           {/* Data de Nascimento */}
@@ -176,6 +182,9 @@ const UserRegister: React.FC = () => {
             placeholder="Data de nascimento"
             value={nascimento}
             onChangeText={setNascimento}
+            accessible
+            accessibilityLabel="Campo de data de nascimento"
+            accessibilityHint="Informe sua data de nascimento no formato dia, mês e ano"
           />
 
           {/* Senha */}
@@ -195,6 +204,9 @@ const UserRegister: React.FC = () => {
             secureTextEntry
             value={senha}
             onChangeText={setSenha}
+            accessible
+            accessibilityLabel="Campo de senha"
+            accessibilityHint="Crie uma senha com no mínimo 8 caracteres, uma letra maiúscula e um caractere especial"
           />
 
           {/* Confirmação de Senha */}
@@ -214,10 +226,21 @@ const UserRegister: React.FC = () => {
             secureTextEntry
             value={confirmarSenha}
             onChangeText={setConfirmarSenha}
+            accessible
+            accessibilityLabel="Campo de confirmação de senha"
+            accessibilityHint="Repita a senha que você digitou acima para confirmação"
           />
 
-          <ButtonHighlight title="Cadastrar" onPress={handleRegister} />
-          <ButtonSemiHighlight title="Cancelar" onPress={() => router.replace('/boardgame')} />
+          <ButtonHighlight
+            title="Cadastrar" onPress={handleRegister}
+            accessibilityLabel="Botão cadastrar"
+            accessibilityHint="Envia o formulário de cadastro"
+          />
+          <ButtonSemiHighlight
+            title="Cancelar" onPress={() => router.replace('/boardgame')}
+            accessibilityLabel="Botão cancelar"
+            accessibilityHint="Cancela o cadastro e retorna para a lista de jogos"
+          />
         </ProfileLayout>
       </HeaderLayout>
     </View>
