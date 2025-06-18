@@ -7,9 +7,9 @@ import stylesGameCard from './styles';
 interface GameCardProps {
   game: {
     id: string;
-    titulo: string;
+    nome: string;
     ano?: number;
-    capa?: string;
+    foto?: string;
     score: string;
   };
   onPress?: () => void;
@@ -28,7 +28,7 @@ const GameCard = ({ game, onPress, style }: GameCardProps) => {
         style,
       ]}>
       <Image
-        source={game.capa ? { uri: game.capa } : images.unavailable}
+        source={game.foto ? { uri: game.foto } : images.unavailable}
         style={stylesGameCard.image}
       />
       <View style={stylesGameCard.textContainer}>
@@ -37,7 +37,7 @@ const GameCard = ({ game, onPress, style }: GameCardProps) => {
             stylesGameCard.title,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
           ]}>
-          {game.titulo} {game.ano ? `(${game.ano})` : ''}
+          {game.nome} {game.ano ? `(${game.ano})` : ''}
         </Text>
         <Text
           style={[
@@ -52,4 +52,3 @@ const GameCard = ({ game, onPress, style }: GameCardProps) => {
 };
 
 export default GameCard;
-

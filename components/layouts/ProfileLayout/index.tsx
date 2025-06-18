@@ -17,6 +17,13 @@ import {
 import Toast from 'react-native-toast-message';
 import stylesProfileLayout from './styles';
 
+interface ProfileEntity {
+  id?: string;
+  nome: string;
+  foto?: string | null;
+  capa?: string | null;
+}
+
 export interface ProfileLayoutProps {
   id?: string | null;
   name?: string | null;
@@ -28,14 +35,7 @@ export interface ProfileLayoutProps {
   isEditing?: boolean;
   isUser?: boolean;
   isLoading?: boolean;
-  setEdited?: React.Dispatch<React.SetStateAction<User>>;
-}
-
-interface User {
-  id?: string;
-  nome: string;
-  foto?: string | null;
-  capa?: string | null;
+  setEdited?: React.Dispatch<React.SetStateAction<ProfileEntity>>;
 }
 
 const ProfileLayout: React.FC<ProfileLayoutProps> = ({
@@ -51,9 +51,9 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
   setEdited,
 }) => {
   const [isRegisting, setIsRegisting] = useState<boolean>(!id || initialIsRegisting);
-  const [selectedCoverImage, setSelectedCoverImage] = useState<string | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [name, setName] = useState<string | null>(null);
+  const [selectedCoverImage, setSelectedCoverImage] = useState<string | null>(cover || null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(photo || null);
+  const [name, setName] = useState<string | null>(initialName);
   const { colors, fontSizes, fontFamily } = useTheme();
 
   // Recarrega os valores quando loading finaliza
@@ -173,17 +173,27 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
           />
         )}
 
-        <TextInput
-          value={name || ''}
-          onChangeText={handleNomeChange}
-          editable={isEditing || isRegisting}
-          selectTextOnFocus={isEditing || isRegisting}
-          placeholder="Digite o nome aqui..."
-          style={[
-            stylesProfileLayout.nameInput,
-            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.giant },
-          ]}
-        />
+        {isEditing || isRegisting ? (
+          <TextInput
+            style={[
+              stylesProfileLayout.nameInput,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.giant },
+            ]}
+            placeholder={isUser ? 'Digite o nome aqui...' : 'Digite o nome do jogo aqui...'}
+            value={name || ''}
+            onChangeText={handleNomeChange}
+          />
+        ) : (
+          <TextInput
+            editable={false}
+            selectTextOnFocus={false}
+            style={[
+              stylesProfileLayout.name,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.giant },
+            ]}>
+            {name || 'Nome não informado'}
+          </TextInput>
+        )}
       </View>
 
       <View

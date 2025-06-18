@@ -151,8 +151,8 @@ const GameDetails: React.FC = () => {
     <HeaderLayout title="Jogo">
       <ProfileLayout
         id={game._id}
-        name={game.titulo}
-        photo={game.capa}
+        name={game.nome}
+        photo={game.foto}
         cover={null}
         initialIsRegisting={false}
         isEditing={isEditing}
