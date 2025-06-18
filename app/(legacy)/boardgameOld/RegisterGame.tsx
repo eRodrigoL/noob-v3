@@ -2,13 +2,13 @@
 import ButtonGoBack from '@components/ButtonGoBack';
 import ButtonHighlight from '@components/buttons/ButtonHighlight';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
 import styles from '@theme/themOld/globalStyle';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
-import { storage } from '@store/storage';
 
 const RegisterGame: React.FC = () => {
   // Estados para armazenar os dados do jogo
@@ -18,10 +18,10 @@ const RegisterGame: React.FC = () => {
   const [designer, setDesigner] = useState('');
   const [artista, setArtista] = useState('');
   const [editora, setEditora] = useState('');
-  const [digital, setDigital] = useState('');
   const [categoria, setCategoria] = useState('');
   const [componentes, setComponentes] = useState('');
   const [descricao, setDescricao] = useState('');
+  const [digital, setDigital] = useState('');
   const [idOriginal, setIdOriginal] = useState('');
   const [imageUri, setImageUri] = useState<string | null>(null); // Foto
   const [capaUri, setCapaUri] = useState<string | null>(null); // Capa
