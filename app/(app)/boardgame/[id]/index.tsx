@@ -23,7 +23,7 @@ const GameDetails: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [editedGame, setEditedGame] = useState<any>(null);
+  const [editedData, seteditedData] = useState<any>(null);
   const { colors, fontFamily, fontSizes } = useTheme();
 
   // Função para buscar os dados do usuário
@@ -35,7 +35,7 @@ const GameDetails: React.FC = () => {
 
       const response = await apiClient.get(`/jogos/${id}`);
       setGame(response.data);
-      setEditedGame(response.data);
+      seteditedData(response.data);
     } catch (error) {
       logger.error('Erro ao buscar os dados do jogo:', error);
       Toast.show({
@@ -50,7 +50,7 @@ const GameDetails: React.FC = () => {
 
   // Função para enviar os dados atualizados
   const updateGameProfile = async () => {
-    if (!editedGame || !editedGame.nome) {
+    if (!editedData || !editedData.nome) {
       Toast.show({
         type: 'error',
         text1: '⛔ Nome é obrigatório',
@@ -77,7 +77,7 @@ const GameDetails: React.FC = () => {
         },
       };
 
-      await apiClient.put(`/jogos/${id}`, editedGame, config);
+      await apiClient.put(`/jogos/${id}`, editedData, config);
 
       Toast.show({
         type: 'success',
@@ -113,7 +113,7 @@ const GameDetails: React.FC = () => {
     );
   }
 
-  const renderField = (label: string, value: string, field: keyof typeof editedGame) => (
+  const renderField = (label: string, value: string, field: keyof typeof editedData) => (
     <>
       <Text
         style={[
@@ -132,8 +132,8 @@ const GameDetails: React.FC = () => {
             globalStyles.input,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
           ]}
-          value={editedGame[field]}
-          onChangeText={(text) => setEditedGame((prev: any) => ({ ...prev, [field]: text }))}
+          value={editedData[field]}
+          onChangeText={(text) => seteditedData((prev: any) => ({ ...prev, [field]: text }))}
         />
       ) : (
         <Text
@@ -154,11 +154,10 @@ const GameDetails: React.FC = () => {
         name={game.nome}
         photo={game.foto}
         cover={null}
-        initialIsRegisting={false}
         isEditing={isEditing}
         isUser={false}
         isLoading={loading}
-        setEdited={setEditedGame}>
+        setEdited={seteditedData}>
         {renderField('Idade:', game.idade, 'idade')}
         {renderField('Designer:', game.designer, 'designer')}
         {renderField('Editora:', game.editora, 'editora')}
@@ -177,7 +176,7 @@ const GameDetails: React.FC = () => {
             title="Cancelar"
             onPress={() => {
               setIsEditing(false);
-              setEditedGame(game);
+              seteditedData(game);
             }}
           />
         )}

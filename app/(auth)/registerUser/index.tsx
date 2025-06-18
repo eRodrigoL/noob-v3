@@ -60,23 +60,29 @@ const UserRegister: React.FC = () => {
       formData.append('email', email);
       formData.append('senha', senha);
 
-      if (editedData.foto) {
-        const filename = editedData.foto.split('/').pop();
-        const match = /\.(\w+)$/.exec(filename ?? '');
+      const isLocalUri = (uri?: string | null) => uri?.startsWith('file://');
+
+      if (isLocalUri(editedData.foto)) {
+        const localUri = editedData.foto!;
+        const filename = localUri.split('/').pop()!;
+        const match = /\.(\w+)$/.exec(filename);
         const fileType = match ? `image/${match[1]}` : 'image';
+
         formData.append('foto', {
-          uri: editedData.foto,
+          uri: localUri,
           name: filename,
           type: fileType,
         } as any);
       }
 
-      if (editedData.capa) {
-        const filename = editedData.capa.split('/').pop();
-        const match = /\.(\w+)$/.exec(filename ?? '');
+      if (isLocalUri(editedData.capa)) {
+        const localUri = editedData.capa!;
+        const filename = localUri.split('/').pop()!;
+        const match = /\.(\w+)$/.exec(filename);
         const fileType = match ? `image/${match[1]}` : 'image';
+
         formData.append('capa', {
-          uri: editedData.capa,
+          uri: localUri,
           name: filename,
           type: fileType,
         } as any);
@@ -106,7 +112,7 @@ const UserRegister: React.FC = () => {
   return (
     <View style={{ flex: 1 }}>
       <HeaderLayout title="Criar sua conta">
-        <ProfileLayout initialIsRegisting={true} isUser={true} setEdited={setEditedData}>
+        <ProfileLayout isRegisting={true} setEdited={setEditedData} isUser={true}>
           {/* Apelido */}
           <Text
             style={[

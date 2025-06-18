@@ -95,7 +95,6 @@ export default function History() {
         name={user?.nome}
         photo={user?.foto}
         cover={user?.capa}
-        initialIsRegisting={false}
         isEditing={false}
         isUser={true}
         isLoading={loading}>

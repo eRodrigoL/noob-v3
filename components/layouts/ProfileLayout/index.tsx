@@ -29,10 +29,9 @@ export interface ProfileLayoutProps {
   name?: string | null;
   photo?: string | null;
   cover?: string | null;
-  initialIsEditing?: boolean;
-  initialIsRegisting?: boolean;
   children?: React.ReactNode;
   isEditing?: boolean;
+  isRegisting?: boolean;
   isUser?: boolean;
   isLoading?: boolean;
   setEdited?: React.Dispatch<React.SetStateAction<ProfileEntity>>;
@@ -44,13 +43,12 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
   photo,
   cover,
   isEditing = false,
-  initialIsRegisting = false,
+  isRegisting = false,
   children,
   isUser = false,
   isLoading = false,
   setEdited,
 }) => {
-  const [isRegisting, setIsRegisting] = useState<boolean>(!id || initialIsRegisting);
   const [selectedCoverImage, setSelectedCoverImage] = useState<string | null>(cover || null);
   const [selectedImage, setSelectedImage] = useState<string | null>(photo || null);
   const [name, setName] = useState<string | null>(initialName);
@@ -64,10 +62,6 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
       setName(initialName ?? null);
     }
   }, [isLoading, photo, cover, initialName]);
-
-  useEffect(() => {
-    if (!id) setIsRegisting(true);
-  }, [id]);
 
   const pickBackgroundImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -85,10 +79,7 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
 
     if (!result.canceled) {
       setSelectedCoverImage(result.assets[0].uri);
-      setEdited?.((prev) => ({
-        ...prev,
-        capa: result.assets[0].uri,
-      }));
+      setEdited?.((prev) => ({ ...prev, capa: result.assets[0].uri }));
     }
   };
 
@@ -108,20 +99,16 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
-      setEdited?.((prev) => ({
-        ...prev,
-        foto: result.assets[0].uri,
-      }));
+      setEdited?.((prev) => ({ ...prev, foto: result.assets[0].uri }));
     }
   };
 
   const handleNomeChange = (value: string) => {
     setName(value);
-    setEdited?.((prev) => ({
-      ...prev,
-      nome: value,
-    }));
+    setEdited?.((prev) => ({ ...prev, nome: value }));
   };
+
+  const canEdit = isEditing || isRegisting;
 
   return (
     <View style={globalStyles.container}>
@@ -132,7 +119,7 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
             style={stylesProfileLayout.coverImage}
             imageStyle={{ resizeMode: 'cover' }}
           />
-          {(isEditing || isRegisting) && (
+          {canEdit && (
             <>
               <Text
                 style={[
@@ -159,7 +146,7 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
             : stylesProfileLayout.containerHeaderProfileGame,
           { backgroundColor: colors.backgroundBase },
         ]}>
-        {isEditing || isRegisting ? (
+        {canEdit ? (
           <Pressable onPress={pickImage} style={stylesProfileLayout.photoContainer}>
             <Image
               source={getImageSource(selectedImage, images.userUnavailable)}
@@ -173,7 +160,7 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
           />
         )}
 
-        {isEditing || isRegisting ? (
+        {canEdit ? (
           <TextInput
             style={[
               stylesProfileLayout.nameInput,
@@ -184,15 +171,13 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
             onChangeText={handleNomeChange}
           />
         ) : (
-          <TextInput
-            editable={false}
-            selectTextOnFocus={false}
+          <Text
             style={[
               stylesProfileLayout.name,
               { color: colors.textOnBase, fontFamily, fontSize: fontSizes.giant },
             ]}>
             {name || 'Nome não informado'}
-          </TextInput>
+          </Text>
         )}
       </View>
 

@@ -14,7 +14,7 @@ export default function Desempenho() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedUser, setEditedUser] = useState<any>(null);
+  const [editedData, seteditedData] = useState<any>(null);
   const { colors, fontSizes, fontFamily } = useTheme();
   // Estados
   const [apelido, setApelido] = useState<string | null>(null);
@@ -39,7 +39,7 @@ export default function Desempenho() {
       });
 
       setUser(response.data);
-      setEditedUser(response.data);
+      seteditedData(response.data);
       setApelido(response.data.apelido);
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -161,11 +161,10 @@ export default function Desempenho() {
         name={user?.nome}
         photo={user?.foto}
         cover={user?.capa}
-        initialIsRegisting={false}
         isEditing={isEditing}
         isUser={true}
         isLoading={loading}
-        setEdited={setEditedUser}>
+        setEdited={seteditedData}>
         <View style={{ alignItems: 'center', paddingVertical: 20 }}>
           <Text
             style={[
