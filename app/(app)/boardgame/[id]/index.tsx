@@ -70,14 +70,49 @@ const GameDetails: React.FC = () => {
         return;
       }
 
-      const config = {
+      const formData = new FormData();
+      formData.append('nome', editedData.nome);
+      formData.append('idade', editedData.idade);
+      formData.append('designer', editedData.designer);
+      formData.append('editora', editedData.editora);
+      formData.append('categoria', editedData.categoria);
+      formData.append('componentes', editedData.componentes);
+      formData.append('descricao', editedData.descricao);
+
+      const isLocalUri = (uri?: string | null) => uri?.startsWith('file://');
+
+      if (isLocalUri(editedData.foto)) {
+        const localUri = editedData.foto;
+        const filename = localUri.split('/').pop()!;
+        const match = /\.(\w+)$/.exec(filename);
+        const fileType = match ? `image/${match[1]}` : 'image';
+
+        formData.append('foto', {
+          uri: localUri,
+          name: filename,
+          type: fileType,
+        } as any);
+      }
+
+      if (isLocalUri(editedData.capa)) {
+        const localUri = editedData.capa;
+        const filename = localUri.split('/').pop()!;
+        const match = /\.(\w+)$/.exec(filename);
+        const fileType = match ? `image/${match[1]}` : 'image';
+
+        formData.append('capa', {
+          uri: localUri,
+          name: filename,
+          type: fileType,
+        } as any);
+      }
+
+      await apiClient.put(`/jogos/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
         },
-      };
-
-      await apiClient.put(`/jogos/${id}`, editedData, config);
+      });
 
       Toast.show({
         type: 'success',
