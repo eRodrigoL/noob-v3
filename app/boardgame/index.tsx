@@ -9,7 +9,7 @@ import { FlatList, useWindowDimensions, View } from 'react-native';
 
 interface Product {
   id: string;
-  titulo: string;
+  nome: string;
   ano?: number;
   capa?: string;
   score: string;
@@ -46,7 +46,7 @@ export default function List() {
 
         return {
           id: jogo._id,
-          titulo: jogo.titulo,
+          nome: jogo.nome,
           ano: jogo.ano,
           capa: jogo.capa,
           score: `${nota} ⭐`,
@@ -73,7 +73,7 @@ export default function List() {
   }, []);
 
   const filteredProducts = products.filter((product) =>
-    product.titulo.toLowerCase().includes(searchQuery.toLowerCase())
+    product.nome.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Agora GameCard é um componente reutilizável!

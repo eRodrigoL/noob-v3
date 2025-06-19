@@ -25,7 +25,7 @@ interface Partida {
   registrador: string;
   vencedor: Vencedor[];
   duracao: number;
-  tituloJogo?: string;
+  nomeJogo?: string;
 }
 
 export default function Historico() {
@@ -60,17 +60,17 @@ export default function Historico() {
         );
 
         // Adiciona títulos aos jogos
-        const partidasComTitulos: Partida[] = await Promise.all(
+        const partidasComNomes: Partida[] = await Promise.all(
           partidasFiltradas.map(async (partida) => {
-            const jogoResponse = await apiClient.get<{ titulo: string }>(`/jogos/${partida.jogo}`);
+            const jogoResponse = await apiClient.get<{ nome: string }>(`/jogos/${partida.jogo}`);
             return {
               ...partida,
-              tituloJogo: jogoResponse.data.titulo || 'Título não disponível',
+              nomeJogo: jogoResponse.data.nome || 'Título não disponível',
             };
           })
         );
 
-        setPartidas(partidasComTitulos);
+        setPartidas(partidasComNomes);
       } catch (error) {
         logger.error('Erro ao buscar partidas:', error);
       } finally {
@@ -104,14 +104,14 @@ export default function Historico() {
       <Text style={styles.header}>Histórico de Partidas</Text>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {partidas.map((partida) => {
-          const { tituloJogo, usuarios, vencedor, duracao, fim, explicacao } = partida;
+          const { nomeJogo, usuarios, vencedor, duracao, fim, explicacao } = partida;
           const dataConclusao = formatarData(fim);
           const participantes = usuarios.map((u) => u.apelido).join(', ');
           const vencedorNome = vencedor.map((v) => v.apelido).join(', ');
 
           return (
             <View key={partida._id} style={styles.item}>
-              <Text style={styles.title}>Jogo: {tituloJogo}</Text>
+              <Text style={styles.title}>Jogo: {nomeJogo}</Text>
               <Text>Data de conclusão: {dataConclusao}</Text>
               <Text>Participantes: {participantes}</Text>
               <Text>Duração: {duracao * 60 || 0} minutos</Text>

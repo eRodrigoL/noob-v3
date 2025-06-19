@@ -125,7 +125,7 @@ export default function History() {
                 <View
                   key={partida._id}
                   accessible
-                  accessibilityLabel={`Partida de ${partida.tituloJogo}`}
+                  accessibilityLabel={`Partida de ${partida.nomeJogo}`}
                   accessibilityHint={`Realizada em ${dataConclusao}, participantes: ${participantes}, duração: ${partida.duracao * 60} minutos, explicação: ${partida.explicacao} minutos, vencedor: ${vencedorNome || 'nenhum'}`}
                   style={{
                     backgroundColor: colors.backgroundSemiHighlight,

@@ -14,7 +14,7 @@ import Toast from 'react-native-toast-message';
 // Define o tipo para os dados do jogo
 interface Game {
   capa: string;
-  titulo: string;
+  nome: string;
   ano: string; // Ajustado para string, conforme o modelo da API
   idade: number;
   designer: string;
@@ -60,7 +60,7 @@ const EditGame: React.FC = () => {
 
   // Função para enviar os dados atualizados do jogo
   const updateGameProfile = async () => {
-    if (!editedGame || !editedGame.titulo) {
+    if (!editedGame || !editedGame.nome) {
       Toast.show({
         type: 'error',
         text1: 'Erro',
@@ -90,7 +90,7 @@ const EditGame: React.FC = () => {
       };
 
       const formData = new FormData();
-      formData.append('titulo', editedGame.titulo);
+      formData.append('nome', editedGame.nome);
       formData.append('ano', editedGame.ano);
       formData.append('idade', editedGame.idade);
       formData.append('designer', editedGame.designer);
@@ -176,7 +176,7 @@ const EditGame: React.FC = () => {
 
       <ParallaxProfile
         id={id}
-        name={`${game.titulo}`}
+        name={`${game.nome}`}
         photo={game.capa}
         cover={null}
         initialIsEditing={false}
