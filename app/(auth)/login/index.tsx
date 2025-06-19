@@ -2,13 +2,13 @@
 import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/index';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import stylesLogin from './styles';
-import { storage } from '@store/storage';
 import { useSettingsStore } from '@store/useSettingsStore';
 import { sanitizeInput } from '@utils/sanitize';
 
@@ -157,7 +157,7 @@ const Login: React.FC = () => {
                 {'Ainda não tem uma conta? '}
               </Text>
               <Pressable
-                onPress={() => router.push('/register')}
+                onPress={() => router.push('/registerUser')}
                 accessibilityLabel="Link para cadastrar uma nova conta"
                 accessibilityRole="link">
                 <Text

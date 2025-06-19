@@ -27,7 +27,7 @@ interface Partida {
   registrador: string;
   vencedor: Vencedor[];
   duracao: number;
-  tituloJogo?: string;
+  nomeJogo?: string;
 }
 
 export default function History() {
@@ -61,17 +61,17 @@ export default function History() {
         );
 
         // Adiciona títulos aos jogos
-        const partidasComTitulos: Partida[] = await Promise.all(
+        const partidasComNomes: Partida[] = await Promise.all(
           partidasFiltradas.map(async (partida) => {
-            const jogoResponse = await apiClient.get<{ titulo: string }>(`/jogos/${partida.jogo}`);
+            const jogoResponse = await apiClient.get<{ nome: string }>(`/jogos/${partida.jogo}`);
             return {
               ...partida,
-              tituloJogo: jogoResponse.data.titulo || 'Título não disponível',
+              nomeJogo: jogoResponse.data.nome || 'Título não disponível',
             };
           })
         );
 
-        setPartidas(partidasComTitulos);
+        setPartidas(partidasComNomes);
       } catch (error) {
         logger.error('Erro ao buscar partidas:', error);
       } finally {
@@ -95,7 +95,6 @@ export default function History() {
         name={user?.nome}
         photo={user?.foto}
         cover={user?.capa}
-        initialIsRegisting={false}
         isEditing={false}
         isUser={true}
         isLoading={loading}>
@@ -135,7 +134,7 @@ export default function History() {
                     padding: 12,
                   }}>
                   <Text style={{ color: colors.textOnHighlight, fontWeight: 'bold' }}>
-                    {partida.tituloJogo}
+                    {partida.nomeJogo}
                   </Text>
                   <Text style={{ color: colors.textOnHighlight }}>Data: {dataConclusao}</Text>
                   <Text style={{ color: colors.textOnHighlight }}>

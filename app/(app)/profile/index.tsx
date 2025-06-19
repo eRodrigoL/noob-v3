@@ -17,7 +17,7 @@ const Overview: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedUser, setEditedUser] = useState<any>(null);
+  const [editedData, seteditedData] = useState<any>(null);
   const { colors, fontSizes, fontFamily } = useTheme();
 
   // Função para buscar os dados do usuário
@@ -44,7 +44,7 @@ const Overview: React.FC = () => {
       const response = await apiClient.get(`/usuarios/${userId}`, config);
 
       setUser(response.data);
-      setEditedUser(response.data);
+      seteditedData(response.data);
     } catch (error) {
       logger.error('Erro ao buscar os dados do usuário:', error);
       Toast.show({
@@ -59,7 +59,7 @@ const Overview: React.FC = () => {
 
   // Função para enviar os dados atualizados
   const updateUserProfile = async () => {
-    if (!editedUser || !editedUser.nome || !editedUser.email) {
+    if (!editedData || !editedData.nome || !editedData.email) {
       Toast.show({
         type: 'error',
         text1: '⛔ Nome e e-mail são obrigatórios',
@@ -89,32 +89,34 @@ const Overview: React.FC = () => {
       };
 
       const formData = new FormData();
-      formData.append('nome', editedUser.nome);
-      formData.append('email', editedUser.email);
-      formData.append('nascimento', editedUser.nascimento);
+      formData.append('nome', editedData.nome);
+      formData.append('email', editedData.email);
+      formData.append('nascimento', editedData.nascimento);
 
-      if (editedUser.foto) {
-        const localUri = editedUser.foto;
-        const filename = localUri.split('/').pop();
-        const match = /\.(\w+)$/.exec(filename ?? '');
-        const fileType = match ? `image/${match[1]}` : `image`;
+      const isLocalUri = (uri?: string | null) => uri?.startsWith('file://');
+
+      if (isLocalUri(editedData.foto)) {
+        const localUri = editedData.foto!;
+        const filename = localUri.split('/').pop()!;
+        const match = /\.(\w+)$/.exec(filename);
+        const fileType = match ? `image/${match[1]}` : 'image';
 
         formData.append('foto', {
           uri: localUri,
-          name: filename ?? 'profile.jpg',
+          name: filename,
           type: fileType,
         } as any);
       }
 
-      if (editedUser.capa) {
-        const localUri = editedUser.capa;
-        const filename = localUri.split('/').pop();
-        const match = /\.(\w+)$/.exec(filename ?? '');
-        const fileType = match ? `image/${match[1]}` : `image`;
+      if (isLocalUri(editedData.capa)) {
+        const localUri = editedData.capa!;
+        const filename = localUri.split('/').pop()!;
+        const match = /\.(\w+)$/.exec(filename);
+        const fileType = match ? `image/${match[1]}` : 'image';
 
         formData.append('capa', {
           uri: localUri,
-          name: filename ?? 'profile.jpg',
+          name: filename,
           type: fileType,
         } as any);
       }
@@ -184,7 +186,7 @@ const Overview: React.FC = () => {
     });
   };
 
-  const renderField = (label: string, value: string, field: keyof typeof editedUser) => (
+  const renderField = (label: string, value: string, field: keyof typeof editedData) => (
     <>
       <Text
         style={[
@@ -203,8 +205,8 @@ const Overview: React.FC = () => {
             globalStyles.input,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
           ]}
-          value={editedUser[field]}
-          onChangeText={(text) => setEditedUser((prev: any) => ({ ...prev, [field]: text }))}
+          value={editedData[field]}
+          onChangeText={(text) => seteditedData((prev: any) => ({ ...prev, [field]: text }))}
         />
       ) : (
         <Text
@@ -225,11 +227,10 @@ const Overview: React.FC = () => {
         name={user.nome}
         photo={user.foto}
         cover={user.capa}
-        initialIsRegisting={false}
         isEditing={isEditing}
         isUser={true}
         isLoading={loading}
-        setEdited={setEditedUser}>
+        setEdited={seteditedData}>
         {/* Apelido */}
         <Text
           style={[
@@ -267,7 +268,7 @@ const Overview: React.FC = () => {
               globalStyles.input,
               { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
             ]}
-            value={addOneDay(editedUser.nascimento)}
+            value={addOneDay(editedData.nascimento)}
           />
         ) : (
           <TextInput
@@ -295,7 +296,7 @@ const Overview: React.FC = () => {
             title="Cancelar"
             onPress={() => {
               setIsEditing(false);
-              setEditedUser(user);
+              seteditedData(user);
             }}
           />
         )}

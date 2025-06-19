@@ -117,7 +117,7 @@ export default function GameReview() {
 
   return (
     <HeaderLayout title="Desempenho">
-      <ProfileLayout id={game?._id} name={game?.titulo} photo={game?.capa} isUser={false}>
+      <ProfileLayout id={game?._id} name={game?.nome} photo={game?.foto} isUser={false}>
         {loading ? (
           <ActivityIndicator size="large" color={colors.backgroundHighlight} />
         ) : error ? (

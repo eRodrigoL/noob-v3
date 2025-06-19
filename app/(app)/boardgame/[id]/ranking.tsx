@@ -102,10 +102,10 @@ const GameRanking = () => {
     if (id) fetchData();
   }, [id]);
 
-  const renderRanking = (lista: RankingItem[], titulo: string) => (
+  const renderRanking = (lista: RankingItem[], nome: string) => (
     <>
       <Text style={[globalStyles.textCenteredBold, { fontSize: fontSizes.large, fontFamily }]}>
-        {titulo}
+        {nome}
       </Text>
       {lista.map((item, index) => (
         <Text
@@ -122,10 +122,10 @@ const GameRanking = () => {
     </>
   );
 
-  const renderScores = (lista: ScoreItem[], titulo: string) => (
+  const renderScores = (lista: ScoreItem[], nome: string) => (
     <>
       <Text style={[globalStyles.textCenteredBold, { fontSize: fontSizes.large, fontFamily }]}>
-        {titulo}
+        {nome}
       </Text>
       {lista.map((item, index) => (
         <Text
@@ -146,8 +146,8 @@ const GameRanking = () => {
     <HeaderLayout title="Ranking">
       <ProfileLayout
         id={game?._id}
-        name={game?.titulo}
-        photo={game?.capa}
+        name={game?.nome}
+        photo={game?.foto}
         isLoading={loading}
         isUser={false}>
         {loading ? (
