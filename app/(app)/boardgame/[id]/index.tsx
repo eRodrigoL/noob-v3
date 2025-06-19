@@ -23,7 +23,7 @@ const GameDetails: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [editedGame, setEditedGame] = useState<any>(null);
+  const [editedData, seteditedData] = useState<any>(null);
   const { colors, fontFamily, fontSizes } = useTheme();
 
   // Função para buscar os dados do usuário
@@ -35,7 +35,7 @@ const GameDetails: React.FC = () => {
 
       const response = await apiClient.get(`/jogos/${id}`);
       setGame(response.data);
-      setEditedGame(response.data);
+      seteditedData(response.data);
     } catch (error) {
       logger.error('Erro ao buscar os dados do jogo:', error);
       Toast.show({
@@ -50,7 +50,7 @@ const GameDetails: React.FC = () => {
 
   // Função para enviar os dados atualizados
   const updateGameProfile = async () => {
-    if (!editedGame || !editedGame.nome) {
+    if (!editedData || !editedData.nome) {
       Toast.show({
         type: 'error',
         text1: '⛔ Nome é obrigatório',
@@ -70,14 +70,49 @@ const GameDetails: React.FC = () => {
         return;
       }
 
-      const config = {
+      const formData = new FormData();
+      formData.append('nome', editedData.nome);
+      formData.append('idade', editedData.idade);
+      formData.append('designer', editedData.designer);
+      formData.append('editora', editedData.editora);
+      formData.append('categoria', editedData.categoria);
+      formData.append('componentes', editedData.componentes);
+      formData.append('descricao', editedData.descricao);
+
+      const isLocalUri = (uri?: string | null) => uri?.startsWith('file://');
+
+      if (isLocalUri(editedData.foto)) {
+        const localUri = editedData.foto;
+        const filename = localUri.split('/').pop()!;
+        const match = /\.(\w+)$/.exec(filename);
+        const fileType = match ? `image/${match[1]}` : 'image';
+
+        formData.append('foto', {
+          uri: localUri,
+          name: filename,
+          type: fileType,
+        } as any);
+      }
+
+      if (isLocalUri(editedData.capa)) {
+        const localUri = editedData.capa;
+        const filename = localUri.split('/').pop()!;
+        const match = /\.(\w+)$/.exec(filename);
+        const fileType = match ? `image/${match[1]}` : 'image';
+
+        formData.append('capa', {
+          uri: localUri,
+          name: filename,
+          type: fileType,
+        } as any);
+      }
+
+      await apiClient.put(`/jogos/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
         },
-      };
-
-      await apiClient.put(`/jogos/${id}`, editedGame, config);
+      });
 
       Toast.show({
         type: 'success',
@@ -113,7 +148,7 @@ const GameDetails: React.FC = () => {
     );
   }
 
-  const renderField = (label: string, value: string, field: keyof typeof editedGame) => (
+  const renderField = (label: string, value: string, field: keyof typeof editedData) => (
     <>
       <Text
         style={[
@@ -132,8 +167,8 @@ const GameDetails: React.FC = () => {
             globalStyles.input,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
           ]}
-          value={editedGame[field]}
-          onChangeText={(text) => setEditedGame((prev: any) => ({ ...prev, [field]: text }))}
+          value={editedData[field]}
+          onChangeText={(text) => seteditedData((prev: any) => ({ ...prev, [field]: text }))}
         />
       ) : (
         <Text
@@ -151,14 +186,13 @@ const GameDetails: React.FC = () => {
     <HeaderLayout title="Jogo">
       <ProfileLayout
         id={game._id}
-        name={game.titulo}
-        photo={game.capa}
+        name={game.nome}
+        photo={game.foto}
         cover={null}
-        initialIsRegisting={false}
         isEditing={isEditing}
         isUser={false}
         isLoading={loading}
-        setEdited={setEditedGame}>
+        setEdited={seteditedData}>
         {renderField('Idade:', game.idade, 'idade')}
         {renderField('Designer:', game.designer, 'designer')}
         {renderField('Editora:', game.editora, 'editora')}
@@ -177,7 +211,7 @@ const GameDetails: React.FC = () => {
             title="Cancelar"
             onPress={() => {
               setIsEditing(false);
-              setEditedGame(game);
+              seteditedData(game);
             }}
           />
         )}

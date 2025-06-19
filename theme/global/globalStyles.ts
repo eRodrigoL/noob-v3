@@ -43,6 +43,11 @@ const globalStyles = StyleSheet.create({
     flex: 1, // Ocupa todo o espaço disponível na tela
   },
 
+  containerPadding: {
+    flex: 1,
+    padding: 20,
+  },
+
   containerCentered: {
     flex: 1,
     justifyContent: 'center',

@@ -1,3 +1,4 @@
+// app/(auth)/registerUser/index.tsx
 import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/index';
 import ProfileLayout from '@components/layouts/ProfileLayout';
 import { logger } from '@lib/logger';
@@ -9,7 +10,7 @@ import { Text, TextInput, View } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Toast from 'react-native-toast-message';
 
-interface User {
+interface ProfileEntity {
   nome: string;
   foto?: string | null;
   capa?: string | null;
@@ -24,7 +25,7 @@ const UserRegister: React.FC = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [editedUser, setEditedUser] = useState<User>({ nome: '', foto: null, capa: null });
+  const [editedData, setEditedData] = useState<ProfileEntity>({ nome: '', foto: null, capa: null });
 
   const isPasswordStrong = (password: string) => {
     const strongPasswordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -32,7 +33,7 @@ const UserRegister: React.FC = () => {
   };
 
   const handleRegister = async () => {
-    if (!editedUser.nome || !apelido || !nascimento || !email || !senha || !confirmarSenha) {
+    if (!editedData.nome || !apelido || !nascimento || !email || !senha || !confirmarSenha) {
       Toast.show({ type: 'error', text1: 'Preencha todos os campos obrigatórios.' });
       return;
     }
@@ -53,29 +54,35 @@ const UserRegister: React.FC = () => {
 
     try {
       const formData = new FormData();
-      formData.append('nome', editedUser.nome);
+      formData.append('nome', editedData.nome);
       formData.append('apelido', `@${apelido}`);
       formData.append('nascimento', nascimento);
       formData.append('email', email);
       formData.append('senha', senha);
 
-      if (editedUser.foto) {
-        const filename = editedUser.foto.split('/').pop();
-        const match = /\.(\w+)$/.exec(filename ?? '');
+      const isLocalUri = (uri?: string | null) => uri?.startsWith('file://');
+
+      if (isLocalUri(editedData.foto)) {
+        const localUri = editedData.foto!;
+        const filename = localUri.split('/').pop()!;
+        const match = /\.(\w+)$/.exec(filename);
         const fileType = match ? `image/${match[1]}` : 'image';
+
         formData.append('foto', {
-          uri: editedUser.foto,
+          uri: localUri,
           name: filename,
           type: fileType,
         } as any);
       }
 
-      if (editedUser.capa) {
-        const filename = editedUser.capa.split('/').pop();
-        const match = /\.(\w+)$/.exec(filename ?? '');
+      if (isLocalUri(editedData.capa)) {
+        const localUri = editedData.capa!;
+        const filename = localUri.split('/').pop()!;
+        const match = /\.(\w+)$/.exec(filename);
         const fileType = match ? `image/${match[1]}` : 'image';
+
         formData.append('capa', {
-          uri: editedUser.capa,
+          uri: localUri,
           name: filename,
           type: fileType,
         } as any);
@@ -105,7 +112,7 @@ const UserRegister: React.FC = () => {
   return (
     <View style={{ flex: 1 }}>
       <HeaderLayout title="Criar sua conta">
-        <ProfileLayout initialIsRegisting={true} isUser={true} setEdited={setEditedUser}>
+        <ProfileLayout isRegisting={true} setEdited={setEditedData} isUser={true}>
           {/* Apelido */}
           <Text
             style={[
