@@ -240,6 +240,7 @@ const Overview: React.FC = () => {
           Apelido:
         </Text>
         <TextInput
+         accessibilityLabel="Campo de apelido. Este campo não pode ser editado"
           style={[
             globalStyles.input,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
@@ -254,6 +255,7 @@ const Overview: React.FC = () => {
 
         {/* Data de Nascimento */}
         <Text
+         accessibilityLabel="Campo de data de nascimento"
           style={[
             globalStyles.textJustifiedBoldItalic,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
@@ -282,6 +284,7 @@ const Overview: React.FC = () => {
 
         {/* Botão de Editar/Salvar */}
         <ButtonHighlight
+          accessibilityLabel={isEditing ? 'Botão para salvar alterações no perfil' : 'Botão para editar o perfil'}
           title={isEditing ? 'Salvar' : 'Editar Perfil'}
           onPress={handleEditToggle}
         />
@@ -289,6 +292,7 @@ const Overview: React.FC = () => {
         {/* Botão Cancelar visível apenas se isEditing for true */}
         {isEditing && (
           <ButtonSemiHighlight
+            accessibilityLabel="Botão para cancelar edição do perfil"
             title="Cancelar"
             onPress={() => {
               setIsEditing(false);

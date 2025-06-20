@@ -26,7 +26,7 @@ const RegistroPartidaScreen = () => {
   const [inicioPartida, setInicioPartida] = useState('');
   const [participants, setParticipants] = useState<string[]>([]);
   const [validNicknames, setValidNicknames] = useState<string[]>([]);
-  const [validGames, setValidGames] = useState<{ id: string; titulo: string }[]>([]);
+  const [validGames, setValidGames] = useState<{ id: string; nome: string }[]>([]);
 
   useEffect(() => {
     const fetchNicknames = async () => {
@@ -54,7 +54,7 @@ const RegistroPartidaScreen = () => {
         const response = await apiClient.get('/jogos');
         const games = response.data.map((jogo: any) => ({
           id: jogo._id,
-          titulo: jogo.titulo,
+          nome: jogo.nome,
         }));
         setValidGames(games);
       } catch (error) {
@@ -89,7 +89,7 @@ const RegistroPartidaScreen = () => {
   };
 
   const validateGame = () => {
-    const selectedGame = validGames.find((game) => game.titulo === inputJogo.trim());
+    const selectedGame = validGames.find((game) => game.nome === inputJogo.trim());
     if (!selectedGame) {
       Toast.show({
         type: 'error',
@@ -113,7 +113,7 @@ const RegistroPartidaScreen = () => {
       return;
     }
 
-    const selectedGame = validGames.find((game) => game.titulo === inputJogo.trim());
+    const selectedGame = validGames.find((game) => game.nome === inputJogo.trim());
     if (!selectedGame) {
       Toast.show({
         type: 'error',

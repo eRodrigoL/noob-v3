@@ -66,6 +66,9 @@ export default ({ config }) => ({
   extra: {
     EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL, // URL base da sua API (deve começar com EXPO_PUBLIC_)
     EXPO_PUBLIC_APP_MODE: process.env.EXPO_PUBLIC_APP_MODE || "development", // Modo do app: development / production
+
+    // 🔐 Variável secreta de criptografia
+    APP_SECRET: process.env.APP_SECRET, // Adicionada aqui
   },
 
   // 📦 Define quais arquivos serão empacotados no build

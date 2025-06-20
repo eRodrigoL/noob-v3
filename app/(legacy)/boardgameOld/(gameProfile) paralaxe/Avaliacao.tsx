@@ -8,7 +8,7 @@ import Toast from 'react-native-toast-message';
 import { storage } from '@store/storage';
 
 interface Game {
-  titulo: string;
+  nome: string;
   ano: string;
 }
 
@@ -170,7 +170,7 @@ export default function GameReview() {
   return (
     <View style={localStyles.container}>
       <Text style={localStyles.title}>
-        Avalie o Jogo <Text style={{ fontWeight: 'bold' }}>{game.titulo}</Text> de
+        Avalie o Jogo <Text style={{ fontWeight: 'bold' }}>{game.nome}</Text> de
         {game.ano && game.ano !== '' && <Text style={{ fontWeight: 'bold' }}> ({game.ano})</Text>}
       </Text>
       <Text>Beleza:</Text>

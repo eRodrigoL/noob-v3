@@ -7,7 +7,6 @@ import {
 } from '@components/index';
 import { useGameId } from '@hooks/useGameId';
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
@@ -60,7 +59,7 @@ const GameDetails: React.FC = () => {
     }
 
     try {
-      const token = await AsyncStorage.getItem('token');
+      const token = await storage.getItem('token');
       if (!token) {
         Toast.show({
           type: 'error',

@@ -85,6 +85,7 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica√
    ```env
    EXPO_PUBLIC_API_BASE_URL=trocar-pelo-link-da-api
    EXPO_PUBLIC_APP_MODE=development
+   APP_SECRET=trocar-pela-chave
    ```
 
 4. **Execute o projeto:**

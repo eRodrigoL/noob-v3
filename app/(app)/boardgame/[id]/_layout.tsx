@@ -36,10 +36,11 @@ export default function GameProfileTabs() {
           backgroundColor: colors.backgroundSemiHighlight,
         },
       }}>
-      <Tabs.Screen name="index" options={{ title: 'Informações' }} />
-      <Tabs.Screen name="review" options={{ title: 'Análises' }} />
-      <Tabs.Screen name="ranking" options={{ title: 'Ranking' }} />
-      <Tabs.Screen name="rate" options={{ title: 'Avaliar' }} />
+      <Tabs.Screen name="index" options={{ title: 'Informações' }} initialParams={{ id }} />
+      <Tabs.Screen name="review" options={{ title: 'Análises' }} initialParams={{ id }} />
+      <Tabs.Screen name="ranking" options={{ title: 'Ranking' }} initialParams={{ id }} />
+      <Tabs.Screen name="rate" options={{ title: 'Avaliar' }} initialParams={{ id }} />
+
     </Tabs>
   );
 }

@@ -12,7 +12,7 @@ import Toast from 'react-native-toast-message';
 
 const RegisterGame: React.FC = () => {
   // Estados para armazenar os dados do jogo
-  const [titulo, setTitulo] = useState('');
+  const [nome, setNome] = useState('');
   const [ano, setAno] = useState('');
   const [idade, setIdade] = useState('');
   const [designer, setDesigner] = useState('');
@@ -55,7 +55,7 @@ const RegisterGame: React.FC = () => {
 
   // Função que lida com o cadastro do jogo
   const gameRegister = async () => {
-    if (!titulo) {
+    if (!nome) {
       Toast.show({
         type: 'error',
         text1: 'Erro',
@@ -79,7 +79,7 @@ const RegisterGame: React.FC = () => {
 
       // Cria um FormData para o envio dos dados
       const formData = new FormData();
-      formData.append('titulo', titulo);
+      formData.append('nome', nome);
       formData.append('ano', ano);
       formData.append('idade', idade);
       formData.append('designer', designer);
@@ -174,8 +174,8 @@ const RegisterGame: React.FC = () => {
           <TextInput
             style={styles.input}
             placeholder="Título (obrigatório)"
-            value={titulo}
-            onChangeText={setTitulo}
+            value={nome}
+            onChangeText={setNome}
           />
           <TextInput style={styles.input} placeholder="Ano" value={ano} onChangeText={setAno} />
           <TextInput
