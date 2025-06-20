@@ -7,6 +7,7 @@ import { useGameId } from '@hooks/useGameId';
 import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+import ButtonHighlight from '@components/buttons/ButtonHighlight';
 
 interface Game {
   nome: string;
@@ -219,7 +220,13 @@ export default function GameReview() {
       <Text style={localStyles.label}>Nota Geral:</Text>
       <Text style={localStyles.input}>{avaliacao.nota.toString()}</Text>
 
-      <Button color="#FF8C00" title="Enviar Avaliação" onPress={submitReview} disabled={loading} />
+      <ButtonHighlight
+        title="Enviar Avaliação"
+        onPress={submitReview}
+        disabled={loading}
+        accessibilityLabel="Salvar avaliação do jogo"
+        accessibilityHint="Confirma e e envia as notas atribuídas as todos os aspectos do jogo."
+      />
     </View>
   );
 }
