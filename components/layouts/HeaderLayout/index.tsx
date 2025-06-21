@@ -11,6 +11,7 @@ import { ScrollView, ScrollViewProps, Text, View, ViewStyle } from 'react-native
 import { SafeAreaView } from 'react-native-safe-area-context';
 import stylesHeaderLayout from './styles';
 import { storage } from '@store/storage';
+import { useSettingsStore } from '@store/useSettingsStore';
 
 interface HeaderLayoutProps {
   title: string;
@@ -126,7 +127,20 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
           { backgroundColor: backgroundColorOverride || colors.backgroundHighlight },
         ]}>
         {/* Botão de menu sanduíche à esquerda */}
-        <ButtonHighlight title="☰" onPress={useUiStore.getState().showMenu} />
+        <ButtonHighlight
+          title="☰"
+          onPress={async () => {
+            console.log('🔍 Menu sanduíche clicado');
+            try {
+              await useSettingsStore.getState().loadPreferences();
+              console.log('🎨 Preferências visuais carregadas');
+            } catch (error) {
+              logger.error('[HeaderLayout] Erro ao carregar preferências visuais:', error);
+            } finally {
+              useUiStore.getState().showMenu();
+            }
+          }}
+        />
 
         {/* Modal de navegação lateral
         <SandwichMenu visible={modalVisible} onClose={handleCloseModal} /> */}
