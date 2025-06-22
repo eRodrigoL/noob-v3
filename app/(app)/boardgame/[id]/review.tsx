@@ -55,11 +55,6 @@ export default function GameReview() {
       const gameResponse = await apiClient.get(`/jogos/${id}`);
       setGame(gameResponse.data);
 
-      if (!token || !userId) {
-        setError('Realize o login para ver os gráficos de avaliação.');
-        return;
-      }
-
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
@@ -123,15 +118,7 @@ export default function GameReview() {
         {loading ? (
           <ActivityIndicator size="large" color={colors.backgroundHighlight} />
         ) : error ? (
-          <View style={styles.alertContainer}>
-            <Text style={styles.alertIcon}>🔒</Text>
-            <Text style={[
-                globalStyles.textCentered,
-                { color: colors.textOnBase, fontFamily, fontSize: fontSizes.large },
-              ]}>{error}</Text>
-            <ButtonHighlight title={'Fazer Login'} onPress={() => router.push("/login")}>
-            </ButtonHighlight>
-          </View>
+          <Text style={styles.error}>{error}</Text>
         ) : (
           <>
             <View style={styles.cardsContainer}>
@@ -239,38 +226,38 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   alertContainer: {
-  //: '#FFF4E5',
-  borderRadius: 12,
-  padding: 16,
-  margin: 20,
-  alignItems: 'center',
-  justifyContent: 'center',
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.1,
-  shadowRadius: 4,
-  elevation: 2,
-},
-alertIcon: {
-  fontSize: 32,
-  marginBottom: 8,
-},
-alertText: {
-  fontSize: 16,
-  color: '#8A6D3B',
-  textAlign: 'center',
-  marginBottom: 12,
-  fontWeight: '500',
-},
-alertButton: {
-  backgroundColor: '#FFA726',
-  paddingHorizontal: 20,
-  paddingVertical: 8,
-  borderRadius: 8,
-},
-alertButtonText: {
-  color: '#fff',
-  fontWeight: 'bold',
-  fontSize: 14,
-}
+    //: '#FFF4E5',
+    borderRadius: 12,
+    padding: 16,
+    margin: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  alertIcon: {
+    fontSize: 32,
+    marginBottom: 8,
+  },
+  alertText: {
+    fontSize: 16,
+    color: '#8A6D3B',
+    textAlign: 'center',
+    marginBottom: 12,
+    fontWeight: '500',
+  },
+  alertButton: {
+    backgroundColor: '#FFA726',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  alertButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
+  }
 });
