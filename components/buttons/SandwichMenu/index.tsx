@@ -137,10 +137,10 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
     handleClose();
     if (hasOpenMatch) {
       // TODO: Adicionar rota para finalizar partida
-      // TODO: router.push('/matches/finish');
+      router.push('/matches/MatchFinish');
     } else {
       // TODO: Adicionar rota para finalizar partida
-      // TODO: router.push('/matches/play');
+      router.push('/matches/MatchStart');
     }
   };
 
