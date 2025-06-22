@@ -1,5 +1,5 @@
 // app/(app)/profile/performance.tsx
-import { HeaderLayout, ProfileLayout } from '@components/index';
+import { ButtonHighlight, HeaderLayout, ProfileLayout } from '@components/index';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
@@ -188,7 +188,7 @@ export default function Desempenho() {
                 style={[
                   globalStyles.textCenteredBold,
                   {
-                    fontSize: 48, // 👈 Tamanho grande só para o emoji
+                    fontSize: 48,
                     fontFamily,
                     marginBottom: 12,
                   },
@@ -205,16 +205,9 @@ export default function Desempenho() {
                 }}>
                 Você ainda não possui partidas registradas. Comece agora para acompanhar seu desempenho!
               </Text>
-              <TouchableOpacity
-                //onPress={() => router.push('/matches')}
-                style={{
-                  backgroundColor: colors.backgroundHighlight,
-                  paddingHorizontal: 24,
-                  paddingVertical: 10,
-                  borderRadius: 8,
-                }}>
-                <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>Ir para Partidas</Text>
-              </TouchableOpacity>
+
+              <ButtonHighlight title={'Ir para Partidas'} onPress={() => router.push("/login")}>
+              </ButtonHighlight>
             </View>
           ) : (
             <>
