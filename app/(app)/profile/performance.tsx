@@ -1,8 +1,8 @@
 // app/(app)/profile/performance.tsx
 import { HeaderLayout, ProfileLayout } from '@components/index';
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -26,8 +26,8 @@ export default function Desempenho() {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-      const userId = await AsyncStorage.getItem('userId');
-      const token = await AsyncStorage.getItem('token');
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
       if (!userId || !token) {
         Toast.show({ type: 'error', text1: 'Erro', text2: 'Usuário não autenticado.' });
@@ -57,7 +57,7 @@ export default function Desempenho() {
   const buscarPartidas = async (apelido: string) => {
     try {
       setLoading(true); // Inicia carregamento
-      const token = await AsyncStorage.getItem('token');
+      const token = await storage.getItem('token');
 
       if (!token) {
         Toast.show({

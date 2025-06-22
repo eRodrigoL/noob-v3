@@ -1,8 +1,8 @@
 // app/(app)/profile/history.tsx
 import { HeaderLayout, ProfileLayout } from '@components/index';
 import { logger } from '@lib/logger';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
 import { useTheme } from '@theme/index';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
@@ -39,8 +39,8 @@ export default function History() {
   useEffect(() => {
     async function fetchPartidas() {
       try {
-        const userId = await AsyncStorage.getItem('userId');
-        const token = await AsyncStorage.getItem('token');
+        const userId = await storage.getItem('userId');
+        const token = await storage.getItem('token');
         const config = {
           headers: { Authorization: `Bearer ${token}` },
         };
@@ -108,7 +108,11 @@ export default function History() {
                 fontFamily,
                 fontSize: fontSizes.base,
                 textAlign: 'center',
-              }}>
+              }}
+              accessible
+              accessibilityLabel="Mensagem informativa"
+              accessibilityHint="Informa que nenhuma partida foi encontrada para este usuário"
+            >
               Nenhuma partida encontrada.
             </Text>
           ) : (
@@ -120,6 +124,9 @@ export default function History() {
               return (
                 <View
                   key={partida._id}
+                  accessible
+                  accessibilityLabel={`Partida de ${partida.nomeJogo}`}
+                  accessibilityHint={`Realizada em ${dataConclusao}, participantes: ${participantes}, duração: ${partida.duracao * 60} minutos, explicação: ${partida.explicacao} minutos, vencedor: ${vencedorNome || 'nenhum'}`}
                   style={{
                     backgroundColor: colors.backgroundSemiHighlight,
                     marginVertical: 6,

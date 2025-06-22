@@ -271,7 +271,7 @@ const ParallaxProfile: React.FC<ParallaxProfileProps> = ({
                 onChangeText={handleNomeChange}
               />
             ) : (
-              <Text style={localStyles.headerTitle}>{name || 'Nome não informado'}</Text>
+              <Text style={localStyles.headerTitle}>{name || 'Título não informado'}</Text>
             )}
           </Animated.View>
 
