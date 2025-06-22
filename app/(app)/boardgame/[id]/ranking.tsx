@@ -172,7 +172,7 @@ const GameRanking = () => {
                   color: colors.textOnBase,
                   fontFamily,
                   fontSize: fontSizes.large,
-                  marginBottom: 12, // 👈 espaçamento abaixo do texto
+                  marginBottom: 12, 
                 },
               ]}>
               {error}
