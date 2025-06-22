@@ -7,6 +7,9 @@ import { useGameId } from '@hooks/useGameId';
 import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+import ButtonHighlight from '@components/buttons/ButtonHighlight';
+import { globalStyles, useTheme } from '@theme/index';
+import { router } from 'expo-router';
 
 interface Game {
   nome: string;
@@ -34,6 +37,10 @@ export default function GameReview() {
     nota: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { colors, fontFamily, fontSizes } = useTheme();
+
 
   const calculateAverage = (avaliacao: Avaliacao) => {
     const { beleza, divertimento, duracao, preco, armazenamento } = avaliacao;
@@ -98,10 +105,23 @@ export default function GameReview() {
   };
 
   useEffect(() => {
+    const checkLogin = async () => {
+      const token = await storage.getItem('token');
+      if (!token) {
+        setIsLoggedIn(false);
+        setError('Realize o login para avaliar o jogo.');
+        setLoading(false);
+      } else {
+        setIsLoggedIn(true);
+        fetchGameDetails(); // carrega o jogo apenas se logado
+      }
+    };
+
     if (id) {
-      fetchGameDetails();
+      checkLogin();
     }
   }, [id]);
+
 
   const submitReview = async () => {
     const userId = await storage.getItem('userId');
@@ -157,6 +177,21 @@ export default function GameReview() {
       setLoading(false);
     }
   };
+
+
+  if (error) {
+    return (
+      <View style={localStyles.alertContainer}>
+        <Text style={localStyles.alertIcon}>🔒</Text>
+        <Text style={[
+          globalStyles.textCentered,
+          { color: colors.textOnBase, fontFamily, fontSize: fontSizes.large },
+        ]}>{error}</Text>
+        <ButtonHighlight title={'Fazer Login'} onPress={() => router.push("/login")}>
+        </ButtonHighlight>
+      </View>
+    );
+  }
 
   if (loading) {
     return <Text style={localStyles.label}>Carregando jogo...</Text>;
@@ -219,7 +254,13 @@ export default function GameReview() {
       <Text style={localStyles.label}>Nota Geral:</Text>
       <Text style={localStyles.input}>{avaliacao.nota.toString()}</Text>
 
-      <Button color="#FF8C00" title="Enviar Avaliação" onPress={submitReview} disabled={loading} />
+      <ButtonHighlight
+        title="Enviar Avaliação"
+        onPress={submitReview}
+        disabled={loading}
+        accessibilityLabel="Salvar avaliação do jogo"
+        accessibilityHint="Confirma e e envia as notas atribuídas as todos os aspectos do jogo."
+      />
     </View>
   );
 }
@@ -248,6 +289,53 @@ const localStyles = StyleSheet.create({
     fontSize: 18,
     color: Theme.light.text,
     marginVertical: 10,
+  },
+  cardsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+  },
+  card: {
+    padding: 12,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    alignItems: 'center',
+    minWidth: 100,
+  },
+  alertContainer: {
+    //: '#FFF4E5',
+    borderRadius: 12,
+    padding: 16,
+    margin: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  alertIcon: {
+    fontSize: 32,
+    marginBottom: 8,
+  },
+  alertText: {
+    fontSize: 16,
+    color: '#8A6D3B',
+    textAlign: 'center',
+    marginBottom: 12,
+    fontWeight: '500',
+  },
+  alertButton: {
+    backgroundColor: '#FFA726',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  alertButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
   },
 });
 

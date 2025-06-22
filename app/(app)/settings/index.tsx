@@ -160,7 +160,13 @@ function SettingsScreen() {
           accessibilityHint="Restaura o tema, fonte e tamanho da fonte para os valores originais"
         />
 
-        <ButtonSemiHighlight title="Cancelar" onPress={() => router.back()} />
+        <ButtonSemiHighlight
+          title="Cancelar"
+          onPress={async () => {
+            await useSettingsStore.getState().loadPreferences();
+            router.back();
+          }}
+        />
       </HeaderLayout>
     </View>
   );
