@@ -183,10 +183,18 @@ export default function GameReview() {
     return (
       <View style={localStyles.alertContainer}>
         <Text style={localStyles.alertIcon}>🔒</Text>
-        <Text style={[
-          globalStyles.textCentered,
-          { color: colors.textOnBase, fontFamily, fontSize: fontSizes.large },
-        ]}>{error}</Text>
+        <Text
+          style={[
+            globalStyles.textCentered,
+            {
+              color: colors.textOnBase,
+              fontFamily,
+              fontSize: fontSizes.large,
+              marginBottom: 12,
+            },
+          ]}>
+          {error}
+        </Text>
         <ButtonHighlight title={'Fazer Login'} onPress={() => router.push("/login")}>
         </ButtonHighlight>
       </View>
