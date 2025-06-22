@@ -165,10 +165,18 @@ const GameRanking = () => {
         ) : error ? (
           <View style={styles.alertContainer}>
             <Text style={styles.alertIcon}>🔒</Text>
-            <Text style={[
-              globalStyles.textCentered,
-              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.large },
-            ]}>{error}</Text>
+            <Text
+              style={[
+                globalStyles.textCentered,
+                {
+                  color: colors.textOnBase,
+                  fontFamily,
+                  fontSize: fontSizes.large,
+                  marginBottom: 12, // 👈 espaçamento abaixo do texto
+                },
+              ]}>
+              {error}
+            </Text>
             <ButtonHighlight title={'Fazer Login'} onPress={() => router.push("/login")}>
             </ButtonHighlight>
           </View>
