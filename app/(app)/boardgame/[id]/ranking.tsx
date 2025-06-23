@@ -172,13 +172,29 @@ const GameRanking = () => {
                   color: colors.textOnBase,
                   fontFamily,
                   fontSize: fontSizes.large,
-                  marginBottom: 12, // 👈 espaçamento abaixo do texto
+                  marginBottom: 12,
                 },
               ]}>
               {error}
             </Text>
-            <ButtonHighlight title={'Fazer Login'} onPress={() => router.push("/login")}>
-            </ButtonHighlight>
+            <ButtonHighlight title={'Fazer Login'} onPress={() => router.push("/login")} />
+          </View>
+        ) : mostPlayed.length === 0 && mostWins.length === 0 && topScores.length === 0 ? (
+          <View style={styles.alertContainer}>
+            <Text style={[globalStyles.textCenteredBold, { fontSize: 48, fontFamily, marginBottom: 12 }]}>
+              📉
+            </Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 16,
+                color: colors.textOnBase,
+                fontFamily,
+                marginBottom: 16,
+              }}>
+              Ainda não há dados suficientes para gerar um ranking. Registre partidas para começar!
+            </Text>
+            <ButtonHighlight title="Ir para partidas" onPress={() => router.push('/(app)/matches/matchStart')} />
           </View>
         ) : (
           <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
@@ -187,6 +203,7 @@ const GameRanking = () => {
             {renderScores(topScores, 'Maiores pontuações únicas')}
           </ScrollView>
         )}
+
       </ProfileLayout>
     </HeaderLayout>
   );

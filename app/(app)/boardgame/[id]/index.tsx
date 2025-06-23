@@ -78,32 +78,42 @@ const GameDetails: React.FC = () => {
       formData.append('componentes', editedData.componentes);
       formData.append('descricao', editedData.descricao);
 
-      const isLocalUri = (uri?: string | null) => uri?.startsWith('file://');
+      // Helper: é URI local?
+      const isLocalUri = (uri: any): uri is string =>
+        typeof uri === 'string' && uri.startsWith('file://');
 
-      if (isLocalUri(editedData.foto)) {
-        const localUri = editedData.foto;
-        const filename = localUri.split('/').pop()!;
-        const match = /\.(\w+)$/.exec(filename);
-        const fileType = match ? `image/${match[1]}` : 'image';
+      // Adiciona imagem de perfil (foto)
+      if (editedData.foto) {
+        if (isLocalUri(editedData.foto)) {
+          const filename = editedData.foto.split('/').pop()!;
+          const match = /\.(\w+)$/.exec(filename);
+          const fileType = match ? `image/${match[1]}` : 'image';
 
-        formData.append('foto', {
-          uri: localUri,
-          name: filename,
-          type: fileType,
-        } as any);
+          formData.append('foto', {
+            uri: editedData.foto,
+            name: filename,
+            type: fileType,
+          } as any);
+        } else {
+          formData.append('foto', editedData.foto as any); // File no navegador ou objeto { uri, name, type }
+        }
       }
 
-      if (isLocalUri(editedData.capa)) {
-        const localUri = editedData.capa;
-        const filename = localUri.split('/').pop()!;
-        const match = /\.(\w+)$/.exec(filename);
-        const fileType = match ? `image/${match[1]}` : 'image';
+      // Adiciona imagem de capa
+      if (editedData.capa) {
+        if (isLocalUri(editedData.capa)) {
+          const filename = editedData.capa.split('/').pop()!;
+          const match = /\.(\w+)$/.exec(filename);
+          const fileType = match ? `image/${match[1]}` : 'image';
 
-        formData.append('capa', {
-          uri: localUri,
-          name: filename,
-          type: fileType,
-        } as any);
+          formData.append('capa', {
+            uri: editedData.capa,
+            name: filename,
+            type: fileType,
+          } as any);
+        } else {
+          formData.append('capa', editedData.capa as any);
+        }
       }
 
       await apiClient.put(`/jogos/${id}`, formData, {
@@ -192,6 +202,7 @@ const GameDetails: React.FC = () => {
         isUser={false}
         isLoading={loading}
         setEdited={seteditedData}>
+        {renderField('Lançamento:', game.ano, 'ano')}
         {renderField('Idade:', game.idade, 'idade')}
         {renderField('Designer:', game.designer, 'designer')}
         {renderField('Editora:', game.editora, 'editora')}

@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import stylesHeaderLayout from './styles';
 import { storage } from '@store/storage';
 import { useSettingsStore } from '@store/useSettingsStore';
+import { router } from 'expo-router';
 
 interface HeaderLayoutProps {
   title: string;
@@ -112,10 +113,10 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
   const handleSettingsPress = () => {
     if (hasOpenMatch) {
       // TODO: Adicionar rota para finalizar partida
-      // router.push('/matches/finish');
+      router.push('/(app)/matches/matchFinish');
     } else {
       // TODO: Adicionar rota para iniciar nova partida
-      // router.push('/matches/play');
+      router.push('/(app)/matches/matchStart');
     }
   };
 
@@ -130,10 +131,8 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
         <ButtonHighlight
           title="☰"
           onPress={async () => {
-            console.log('🔍 Menu sanduíche clicado');
             try {
               await useSettingsStore.getState().loadPreferences();
-              console.log('🎨 Preferências visuais carregadas');
             } catch (error) {
               logger.error('[HeaderLayout] Erro ao carregar preferências visuais:', error);
             } finally {
