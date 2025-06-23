@@ -3,11 +3,12 @@ import { images } from '@constants/images';
 import { getImageSource } from '@lib/getImageSource';
 import { globalStyles, useTheme } from '@theme/index';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
   ImageBackground,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -52,6 +53,8 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
   const [selectedCoverImage, setSelectedCoverImage] = useState<string | null>(cover || null);
   const [selectedImage, setSelectedImage] = useState<string | null>(photo || null);
   const [name, setName] = useState<string | null>(initialName);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const coverInputRef = useRef<HTMLInputElement | null>(null);
   const { colors, fontSizes, fontFamily } = useTheme();
 
   // Recarrega os valores quando loading finaliza
@@ -63,9 +66,19 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
     }
   }, [isLoading, photo, cover, initialName]);
 
-  const pickBackgroundImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
+  const pickImageGeneric = async (
+    aspect: [number, number],
+    onSuccess: (uri: string, file: File | { uri: string; name: string; type: string }) => void,
+    isCover: boolean = false
+  ) => {
+    if (Platform.OS === 'web') {
+      const ref = isCover ? coverInputRef.current : fileInputRef.current;
+      ref?.click();
+      return;
+    }
+
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
       Toast.show({ type: 'error', text1: 'Permissão necessária para acessar a galeria!' });
       return;
     }
@@ -73,33 +86,58 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [16, 9],
+      aspect,
       quality: 1,
     });
 
     if (!result.canceled) {
-      setSelectedCoverImage(result.assets[0].uri);
-      setEdited?.((prev) => ({ ...prev, capa: result.assets[0].uri }));
+      const uri = result.assets[0].uri;
+      const filename = uri.split('/').pop()!;
+      const match = /\.(\w+)$/.exec(filename);
+      const fileType = match ? `image/${match[1]}` : `image`;
+
+      const pseudoFile = {
+        uri,
+        name: filename,
+        type: fileType,
+      };
+
+      onSuccess(uri, pseudoFile);
     }
   };
 
-  const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      Toast.show({ type: 'error', text1: 'Permissão necessária para acessar a galeria!' });
-      return;
-    }
+  const pickImage = () => {
+    pickImageGeneric(
+      [1, 1],
+      (uri, file) => {
+        setSelectedImage(uri);
+        setEdited?.((prev) => ({ ...prev, foto: file as any }));
+      },
+      false
+    );
+  };
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
+  const pickBackgroundImage = () => {
+    pickImageGeneric(
+      [16, 9],
+      (uri, file) => {
+        setSelectedCoverImage(uri);
+        setEdited?.((prev) => ({ ...prev, capa: file as any }));
+      },
+      true
+    );
+  };
 
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
-      setEdited?.((prev) => ({ ...prev, foto: result.assets[0].uri }));
+  const handleFileInput = (event: React.ChangeEvent<HTMLInputElement>, isCover = false) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const uri = URL.createObjectURL(file);
+    if (isCover) {
+      setSelectedCoverImage(uri);
+      setEdited?.((prev) => ({ ...prev, capa: file as any }));
+    } else {
+      setSelectedImage(uri);
+      setEdited?.((prev) => ({ ...prev, foto: file as any }));
     }
   };
 
@@ -112,6 +150,25 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
 
   return (
     <View style={globalStyles.container}>
+      {Platform.OS === 'web' && (
+        <>
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            style={{ display: 'none' }}
+            onChange={(e) => handleFileInput(e, false)}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            ref={coverInputRef}
+            style={{ display: 'none' }}
+            onChange={(e) => handleFileInput(e, true)}
+          />
+        </>
+      )}
+
       {isUser && (
         <View style={stylesProfileLayout.containerCover}>
           <ImageBackground
@@ -176,7 +233,7 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
               stylesProfileLayout.name,
               { color: colors.textOnBase, fontFamily, fontSize: fontSizes.giant },
             ]}>
-            {name || 'Nome não informado'}
+            {name || 'Título não informado'}
           </Text>
         )}
       </View>

@@ -1,13 +1,15 @@
 // app/(app)/boardgame/[id]/review.tsx
-import { HeaderLayout, ProfileLayout } from '@components/index';
+import { ButtonHighlight, HeaderLayout, ProfileLayout } from '@components/index';
 import { useGameId } from '@hooks/useGameId';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
+import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Circle, Line, Polygon, Svg, Text as SvgText } from 'react-native-svg';
+
 
 export default function GameReview() {
   const id = useGameId();
@@ -54,7 +56,7 @@ export default function GameReview() {
       setGame(gameResponse.data);
 
       if (!token || !userId) {
-        setError('Realize o login para ver os gráficos de avaliação.');
+        //('Realize o login para ver os gráficos de avaliação.');
         return;
       }
 
@@ -71,9 +73,12 @@ export default function GameReview() {
       const matches = matchesResponse.data.filter((m: any) => m.jogo === id);
 
       if (evaluations.length === 0) {
+        setData([]);
         setError('Nenhuma avaliação encontrada para este jogo.');
+        setLoading(false);
         return;
       }
+
 
       const mapKey: { [k: string]: keyof (typeof evaluations)[0] } = {
         Beleza: 'beleza',
@@ -86,8 +91,9 @@ export default function GameReview() {
       const averages = categories.map((cat) => {
         const field = mapKey[cat];
         const sum = evaluations.reduce((acc: number, cur: any) => acc + (cur[field] || 0), 0);
-        return sum / evaluations.length;
+        return evaluations.length ? sum / evaluations.length : 0;
       });
+
 
       const avgScore =
         evaluations.reduce((acc: number, cur: any) => acc + (cur.nota || 0), 0) /
@@ -120,8 +126,34 @@ export default function GameReview() {
       <ProfileLayout id={game?._id} name={game?.nome} photo={game?.foto} isUser={false}>
         {loading ? (
           <ActivityIndicator size="large" color={colors.backgroundHighlight} />
+        ) : !data.length || averageRating === null ? (
+          <View style={styles.alertContainer}>
+            <Text style={[globalStyles.textCenteredBold, { fontSize: 48, fontFamily, marginBottom: 12 }]}>
+              📊
+            </Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 16,
+                color: colors.textOnBase,
+                fontFamily,
+                marginBottom: 16,
+              }}>
+              Ainda não há avaliações registradas para este jogo. 
+            </Text>
+          </View>
         ) : error ? (
-          <Text style={styles.error}>{error}</Text>
+          <View style={styles.alertContainer}>
+            <Text style={styles.alertIcon}>🔒</Text>
+            <Text
+              style={[
+                globalStyles.textCentered,
+                { color: colors.textOnBase, fontFamily, fontSize: fontSizes.large, marginBottom: 12 },
+              ]}>
+              {error}
+            </Text>
+            <ButtonHighlight title={'Fazer Login'} onPress={() => router.push("/login")} />
+          </View>
         ) : (
           <>
             <View style={styles.cardsContainer}>
@@ -228,4 +260,39 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
   },
+  alertContainer: {
+    //: '#FFF4E5',
+    borderRadius: 12,
+    padding: 16,
+    margin: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  alertIcon: {
+    fontSize: 32,
+    marginBottom: 8,
+  },
+  alertText: {
+    fontSize: 16,
+    color: '#8A6D3B',
+    textAlign: 'center',
+    marginBottom: 12,
+    fontWeight: '500',
+  },
+  alertButton: {
+    backgroundColor: '#FFA726',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  alertButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
+  }
 });

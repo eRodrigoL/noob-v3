@@ -3,7 +3,7 @@ import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import styles from '@theme/themOld/globalStyle';
 import { Theme } from '@theme/themOld/theme';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
   ScrollView,
@@ -18,6 +18,7 @@ import { MaskedTextInput } from 'react-native-mask-text';
 import Toast from 'react-native-toast-message';
 import { storage } from '@store/storage';
 
+
 const RegistroPartidaScreen = () => {
   const [explicacao, setExplicacao] = useState(false);
   const [tempoExplicacao, setTempoExplicacao] = useState('');
@@ -27,6 +28,8 @@ const RegistroPartidaScreen = () => {
   const [participants, setParticipants] = useState<string[]>([]);
   const [validNicknames, setValidNicknames] = useState<string[]>([]);
   const [validGames, setValidGames] = useState<{ id: string; nome: string }[]>([]);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchNicknames = async () => {
@@ -170,7 +173,7 @@ const RegistroPartidaScreen = () => {
         setInicioPartida('');
         setExplicacao(false);
 
-        router.push('/(legacy)/matches/MatchFinish');
+        router.push('/(app)/matches/matchFinish');
       }
     } catch (error) {
       if (error instanceof Error) {

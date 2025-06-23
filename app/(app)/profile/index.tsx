@@ -93,32 +93,42 @@ const Overview: React.FC = () => {
       formData.append('email', editedData.email);
       formData.append('nascimento', editedData.nascimento);
 
-      const isLocalUri = (uri?: string | null) => uri?.startsWith('file://');
+      // Helper: é URI local?
+      const isLocalUri = (uri: any): uri is string =>
+        typeof uri === 'string' && uri.startsWith('file://');
 
-      if (isLocalUri(editedData.foto)) {
-        const localUri = editedData.foto!;
-        const filename = localUri.split('/').pop()!;
-        const match = /\.(\w+)$/.exec(filename);
-        const fileType = match ? `image/${match[1]}` : 'image';
+      // Adiciona imagem de perfil (foto)
+      if (editedData.foto) {
+        if (isLocalUri(editedData.foto)) {
+          const filename = editedData.foto.split('/').pop()!;
+          const match = /\.(\w+)$/.exec(filename);
+          const fileType = match ? `image/${match[1]}` : 'image';
 
-        formData.append('foto', {
-          uri: localUri,
-          name: filename,
-          type: fileType,
-        } as any);
+          formData.append('foto', {
+            uri: editedData.foto,
+            name: filename,
+            type: fileType,
+          } as any);
+        } else {
+          formData.append('foto', editedData.foto as any); // File no navegador ou objeto { uri, name, type }
+        }
       }
 
-      if (isLocalUri(editedData.capa)) {
-        const localUri = editedData.capa!;
-        const filename = localUri.split('/').pop()!;
-        const match = /\.(\w+)$/.exec(filename);
-        const fileType = match ? `image/${match[1]}` : 'image';
+      // Adiciona imagem de capa
+      if (editedData.capa) {
+        if (isLocalUri(editedData.capa)) {
+          const filename = editedData.capa.split('/').pop()!;
+          const match = /\.(\w+)$/.exec(filename);
+          const fileType = match ? `image/${match[1]}` : 'image';
 
-        formData.append('capa', {
-          uri: localUri,
-          name: filename,
-          type: fileType,
-        } as any);
+          formData.append('capa', {
+            uri: editedData.capa,
+            name: filename,
+            type: fileType,
+          } as any);
+        } else {
+          formData.append('capa', editedData.capa as any);
+        }
       }
 
       await apiClient.put(`/usuarios/${userId}`, formData, config);
@@ -240,6 +250,7 @@ const Overview: React.FC = () => {
           Apelido:
         </Text>
         <TextInput
+         accessibilityLabel="Campo de apelido. Este campo não pode ser editado"
           style={[
             globalStyles.input,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
@@ -254,6 +265,7 @@ const Overview: React.FC = () => {
 
         {/* Data de Nascimento */}
         <Text
+         accessibilityLabel="Campo de data de nascimento"
           style={[
             globalStyles.textJustifiedBoldItalic,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
@@ -282,6 +294,7 @@ const Overview: React.FC = () => {
 
         {/* Botão de Editar/Salvar */}
         <ButtonHighlight
+          accessibilityLabel={isEditing ? 'Botão para salvar alterações no perfil' : 'Botão para editar o perfil'}
           title={isEditing ? 'Salvar' : 'Editar Perfil'}
           onPress={handleEditToggle}
         />
@@ -289,6 +302,7 @@ const Overview: React.FC = () => {
         {/* Botão Cancelar visível apenas se isEditing for true */}
         {isEditing && (
           <ButtonSemiHighlight
+            accessibilityLabel="Botão para cancelar edição do perfil"
             title="Cancelar"
             onPress={() => {
               setIsEditing(false);

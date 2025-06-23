@@ -193,7 +193,7 @@ const ParallaxLayout: React.FC<ParallaxLayoutProps> = ({
               styles.name,
               { color: colors.textOnBase, fontFamily, fontSize: fontSizes.giant },
             ]}>
-            {name || 'Nome não informado'}
+            {name || 'Título não informado'}
           </Text>
         )}
       </Animated.View>

@@ -3,17 +3,19 @@ import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
 import { Theme } from '@theme/themOld/theme';
-import { useLocalSearchParams } from 'expo-router';
+import { useGameId } from '@hooks/useGameId';
 import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+import ButtonHighlight from '@components/buttons/ButtonHighlight';
+import { globalStyles, useTheme } from '@theme/index';
+import { router, useRouter } from 'expo-router';
 
 interface Game {
   nome: string;
   ano: string;
 }
 
-// Define o tipo para os dados da avaliação
 interface Avaliacao {
   beleza: number;
   divertimento: number;
@@ -24,7 +26,7 @@ interface Avaliacao {
 }
 
 export default function GameReview() {
-  const { id: jogo } = useLocalSearchParams<{ id: string }>();
+  const id = useGameId(); // ✅ uso padronizado
   const [game, setGame] = useState<Game | null>(null);
   const [avaliacao, setAvaliacao] = useState<Avaliacao>({
     beleza: 0,
@@ -34,23 +36,25 @@ export default function GameReview() {
     armazenamento: 0,
     nota: 0,
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { colors, fontFamily, fontSizes } = useTheme();
+  const router = useRouter();
 
-  // Função para calcular a média
+
   const calculateAverage = (avaliacao: Avaliacao) => {
     const { beleza, divertimento, duracao, preco, armazenamento } = avaliacao;
     const totalNotas = beleza + divertimento + duracao + preco + armazenamento;
-    const numberOfFields = 5; // Número de campos que estão sendo avaliados
-    return Math.floor(totalNotas / numberOfFields); // Retorna a média inteira
+    return Math.floor(totalNotas / 5);
   };
 
   const validateInput = (text: string, setState: (arg0: string) => void, min = 0, max = 10) => {
     const numericValue = parseInt(text, 10);
-
     if (!isNaN(numericValue) && numericValue >= min && numericValue <= max) {
-      setState(text); // Atualiza o estado se o valor for válido
+      setState(text);
     } else if (text === '') {
-      setState(''); // Permite limpar o campo
+      setState('');
     } else {
       Toast.show({
         type: 'error',
@@ -63,54 +67,63 @@ export default function GameReview() {
   const handleInputChange = (field: keyof Avaliacao, value: string) => {
     validateInput(value, (validValue) => {
       setAvaliacao((prev) => {
-        const updatedAvaliacao = {
+        const updated = {
           ...prev,
           [field]: Number(validValue),
         };
-
-        // Atualiza a nota geral ao calcular a média
         return {
-          ...updatedAvaliacao,
-          nota: calculateAverage(updatedAvaliacao),
+          ...updated,
+          nota: calculateAverage(updated),
         };
       });
     });
   };
-  // Função para buscar os dados completos do jogo usando o ID
+
   const fetchGameDetails = async () => {
-    if (!jogo) {
-      logger.warn('ID não fornecido!'); // Aviso para id ausente
+    if (!id) {
+      logger.warn('ID não fornecido');
       return;
     }
 
     try {
-      const response = await apiClient.get(`/jogos/${jogo}`);
-
+      setLoading(true);
+      const response = await apiClient.get(`/jogos/${id}`);
       if (response.data) {
         setGame(response.data);
       } else {
-        logger.warn('Nenhum dado encontrado para este ID.');
+        logger.warn('Jogo não encontrado');
       }
     } catch (error) {
-      logger.error('Erro ao buscar os dados do jogo:', error);
+      logger.error('Erro ao buscar o jogo:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Erro ao buscar jogo',
+        text2: 'Verifique sua conexão.',
+      });
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchGameDetails();
-  }, [jogo]);
+    const checkLogin = async () => {
+      const token = await storage.getItem('token');
+      if (!token) {
+        setIsLoggedIn(false);
+        setError('Realize o login para avaliar o jogo.');
+        setLoading(false);
+      } else {
+        setIsLoggedIn(true);
+        fetchGameDetails(); // carrega o jogo apenas se logado
+      }
+    };
 
-  if (loading) {
-    return <Text>Carregando...</Text>;
-  }
+    if (id) {
+      checkLogin();
+    }
+  }, [id]);
 
-  if (!game) {
-    return <Text>Jogo não encontrado.</Text>;
-  }
 
-  // Função para enviar a avaliação para o banco de dados
   const submitReview = async () => {
     const userId = await storage.getItem('userId');
     const token = await storage.getItem('token');
@@ -124,23 +137,21 @@ export default function GameReview() {
       return;
     }
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    };
-
     const data = {
       usuario: userId,
-      jogo,
+      jogo: id, // ✅ Envio correto do id
       ...avaliacao,
     };
 
-    setLoading(true);
-
     try {
-      const response = await apiClient.post('/avaliacoes/', data, config);
+      setLoading(true);
+      const response = await apiClient.post('/avaliacoes/', data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
       if (response.status === 201) {
         Toast.show({
           type: 'success',
@@ -157,7 +168,7 @@ export default function GameReview() {
         });
       }
     } catch (error) {
-      logger.error('Erro ao enviar a avaliação:', error);
+      logger.error('Erro ao enviar avaliação:', error);
       Toast.show({
         type: 'error',
         text1: 'Erro',
@@ -168,63 +179,101 @@ export default function GameReview() {
     }
   };
 
+
+  if (error) {
+    return (
+      <View style={localStyles.alertContainer}>
+        <Text style={localStyles.alertIcon}>🔒</Text>
+        <Text
+          style={[
+            globalStyles.textCentered,
+            {
+              color: colors.textOnBase,
+              fontFamily,
+              fontSize: fontSizes.large,
+              marginBottom: 12,
+            },
+          ]}>
+          {error}
+        </Text>
+        <ButtonHighlight title={'Fazer Login'} onPress={() => router.push("/login")}>
+        </ButtonHighlight>
+      </View>
+    );
+  }
+
+  if (loading) {
+    return <Text style={localStyles.label}>Carregando jogo...</Text>;
+  }
+
+  if (!game) {
+    return <Text style={localStyles.label}>Jogo não encontrado.</Text>;
+  }
+
   return (
     <View style={localStyles.container}>
       <Text style={localStyles.title}>
-        Avalie o Jogo <Text style={{ fontWeight: 'bold' }}>{game.nome}</Text> de
-        {game.ano && game.ano !== '' && <Text style={{ fontWeight: 'bold' }}> ({game.ano})</Text>}
+        Avalie o Jogo{' '}
+        <Text style={{ fontWeight: 'bold' }}>
+          {game.nome}
+          {game.ano && ` (${game.ano})`}
+        </Text>
       </Text>
+
       <Text>Beleza:</Text>
       <TextInput
         style={localStyles.input}
-        placeholder="Beleza"
         keyboardType="numeric"
         value={avaliacao.beleza.toString()}
         onChangeText={(value) => handleInputChange('beleza', value)}
       />
+
       <Text>Divertimento:</Text>
       <TextInput
         style={localStyles.input}
-        placeholder="Divertimento"
         keyboardType="numeric"
         value={avaliacao.divertimento.toString()}
         onChangeText={(value) => handleInputChange('divertimento', value)}
       />
+
       <Text>Duração:</Text>
       <TextInput
         style={localStyles.input}
-        placeholder="Duração"
         keyboardType="numeric"
         value={avaliacao.duracao.toString()}
         onChangeText={(value) => handleInputChange('duracao', value)}
       />
+
       <Text>Preço:</Text>
       <TextInput
         style={localStyles.input}
-        placeholder="Preço"
         keyboardType="numeric"
         value={avaliacao.preco.toString()}
         onChangeText={(value) => handleInputChange('preco', value)}
       />
+
       <Text>Tamanho da caixa:</Text>
       <TextInput
         style={localStyles.input}
-        placeholder="Armazenamento"
         keyboardType="numeric"
         value={avaliacao.armazenamento.toString()}
         onChangeText={(value) => handleInputChange('armazenamento', value)}
       />
 
-      {/* Campo para mostrar a Nota Geral */}
       <Text style={localStyles.label}>Nota Geral:</Text>
       <Text style={localStyles.input}>{avaliacao.nota.toString()}</Text>
 
-      <Button color="#FF8C00" title="Enviar Avaliação" onPress={submitReview} disabled={loading} />
+      <ButtonHighlight
+        title="Enviar Avaliação"
+        onPress={submitReview}
+        disabled={loading}
+        accessibilityLabel="Salvar avaliação do jogo"
+        accessibilityHint="Confirma e e envia as notas atribuídas as todos os aspectos do jogo."
+      />
     </View>
   );
 }
 
-// Estilos para a página de avaliação
 const localStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -248,6 +297,54 @@ const localStyles = StyleSheet.create({
   label: {
     fontSize: 18,
     color: Theme.light.text,
-    marginVertical: 5,
+    marginVertical: 10,
+  },
+  cardsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+  },
+  card: {
+    padding: 12,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    alignItems: 'center',
+    minWidth: 100,
+  },
+  alertContainer: {
+    //: '#FFF4E5',
+    borderRadius: 12,
+    padding: 16,
+    margin: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  alertIcon: {
+    fontSize: 32,
+    marginBottom: 8,
+  },
+  alertText: {
+    fontSize: 16,
+    color: '#8A6D3B',
+    textAlign: 'center',
+    marginBottom: 12,
+    fontWeight: '500',
+  },
+  alertButton: {
+    backgroundColor: '#FFA726',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  alertButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
   },
 });
+

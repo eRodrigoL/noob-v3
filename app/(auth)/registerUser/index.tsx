@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Toast from 'react-native-toast-message';
+import { sanitizeInput } from '@utils/sanitize';
 
 interface ProfileEntity {
   nome: string;
@@ -52,40 +53,56 @@ const UserRegister: React.FC = () => {
       return;
     }
 
+    const nomeSanitizado = sanitizeInput(editedData.nome);
+    const apelidoSanitizado = sanitizeInput(apelido);
+    const nascimentoSanitizado = sanitizeInput(nascimento);
+    const emailSanitizado = sanitizeInput(email);
+    const senhaSanitizada = sanitizeInput(senha);
+
     try {
       const formData = new FormData();
-      formData.append('nome', editedData.nome);
-      formData.append('apelido', `@${apelido}`);
-      formData.append('nascimento', nascimento);
-      formData.append('email', email);
-      formData.append('senha', senha);
+      formData.append('nome', nomeSanitizado);
+      formData.append('apelido', `@${apelidoSanitizado}`);
+      formData.append('nascimento', nascimentoSanitizado);
+      formData.append('email', emailSanitizado);
+      formData.append('senha', senhaSanitizada);
 
-      const isLocalUri = (uri?: string | null) => uri?.startsWith('file://');
+      // Helper: é URI local?
+      const isLocalUri = (uri: any): uri is string =>
+        typeof uri === 'string' && uri.startsWith('file://');
 
-      if (isLocalUri(editedData.foto)) {
-        const localUri = editedData.foto!;
-        const filename = localUri.split('/').pop()!;
-        const match = /\.(\w+)$/.exec(filename);
-        const fileType = match ? `image/${match[1]}` : 'image';
+      // Adiciona imagem de perfil (foto)
+      if (editedData.foto) {
+        if (isLocalUri(editedData.foto)) {
+          const filename = editedData.foto.split('/').pop()!;
+          const match = /\.(\w+)$/.exec(filename);
+          const fileType = match ? `image/${match[1]}` : 'image';
 
-        formData.append('foto', {
-          uri: localUri,
-          name: filename,
-          type: fileType,
-        } as any);
+          formData.append('foto', {
+            uri: editedData.foto,
+            name: filename,
+            type: fileType,
+          } as any);
+        } else {
+          formData.append('foto', editedData.foto as any); // File no navegador ou objeto { uri, name, type }
+        }
       }
 
-      if (isLocalUri(editedData.capa)) {
-        const localUri = editedData.capa!;
-        const filename = localUri.split('/').pop()!;
-        const match = /\.(\w+)$/.exec(filename);
-        const fileType = match ? `image/${match[1]}` : 'image';
+      // Adiciona imagem de capa
+      if (editedData.capa) {
+        if (isLocalUri(editedData.capa)) {
+          const filename = editedData.capa.split('/').pop()!;
+          const match = /\.(\w+)$/.exec(filename);
+          const fileType = match ? `image/${match[1]}` : 'image';
 
-        formData.append('capa', {
-          uri: localUri,
-          name: filename,
-          type: fileType,
-        } as any);
+          formData.append('capa', {
+            uri: editedData.capa,
+            name: filename,
+            type: fileType,
+          } as any);
+        } else {
+          formData.append('capa', editedData.capa as any);
+        }
       }
 
       const response = await apiClient.post('/usuarios', formData, {
