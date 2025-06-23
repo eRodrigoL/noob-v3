@@ -139,9 +139,8 @@ export default function GameReview() {
                 fontFamily,
                 marginBottom: 16,
               }}>
-              Ainda não há avaliações registradas para este jogo. Avalie para gerar estatísticas!
+              Ainda não há avaliações registradas para este jogo. 
             </Text>
-            <ButtonHighlight title="Registrar Partida" onPress={() => router.push('/login')} />
           </View>
         ) : error ? (
           <View style={styles.alertContainer}>

@@ -194,7 +194,7 @@ const GameRanking = () => {
               }}>
               Ainda não há dados suficientes para gerar um ranking. Registre partidas para começar!
             </Text>
-            <ButtonHighlight title="Ir para partidas" onPress={() => router.push('/login')} />
+            <ButtonHighlight title="Ir para partidas" onPress={() => router.push('/(app)/matches/matchStart')} />
           </View>
         ) : (
           <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>

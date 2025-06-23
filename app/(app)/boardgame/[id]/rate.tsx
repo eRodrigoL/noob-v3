@@ -9,7 +9,7 @@ import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import ButtonHighlight from '@components/buttons/ButtonHighlight';
 import { globalStyles, useTheme } from '@theme/index';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 
 interface Game {
   nome: string;
@@ -40,6 +40,7 @@ export default function GameReview() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { colors, fontFamily, fontSizes } = useTheme();
+  const router = useRouter();
 
 
   const calculateAverage = (avaliacao: Avaliacao) => {
