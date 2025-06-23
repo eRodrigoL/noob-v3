@@ -131,10 +131,8 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
         <ButtonHighlight
           title="☰"
           onPress={async () => {
-            console.log('🔍 Menu sanduíche clicado');
             try {
               await useSettingsStore.getState().loadPreferences();
-              console.log('🎨 Preferências visuais carregadas');
             } catch (error) {
               logger.error('[HeaderLayout] Erro ao carregar preferências visuais:', error);
             } finally {
