@@ -176,7 +176,10 @@ const UserRegister: React.FC = () => {
             style={styleInput(apelido)}
             placeholder="Apelido"
             value={`@${apelido}`}
-            onChangeText={(text) => setApelido(text.replace('@', ''))}
+            onChangeText={(text) => {
+              const somenteLetrasENumeros = text.replace(/[^a-zA-Z0-9]/g, '');
+              setApelido(somenteLetrasENumeros);
+            }}
             autoCapitalize="none"
           />
 
