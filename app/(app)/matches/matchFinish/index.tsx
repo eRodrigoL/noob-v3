@@ -1,16 +1,15 @@
 // app/(legacy)/matches/MatchFinish.tsx
 import { logger } from '@lib/logger';
-import { useNavigation } from '@react-navigation/native';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
 import styles from '@theme/themOld/globalStyle';
 import { Theme } from '@theme/themOld/theme';
-import { router, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { MaskedTextInput } from 'react-native-mask-text';
 import { RadioButton } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
-import { storage } from '@store/storage';
 
 const RegistroPartidaScreen = () => {
   const [victory, setVictory] = useState('');

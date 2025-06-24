@@ -4,13 +4,12 @@ import ProfileLayout from '@components/layouts/ProfileLayout';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { globalStyles, useTheme } from '@theme/index';
+import { sanitizeInput } from '@utils/sanitize';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Toast from 'react-native-toast-message';
-import { sanitizeInput } from '@utils/sanitize';
-import axios from 'axios';
 
 interface ProfileEntity {
   nome: string;
@@ -29,14 +28,37 @@ const UserRegister: React.FC = () => {
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [editedData, setEditedData] = useState<ProfileEntity>({ nome: '', foto: null, capa: null });
 
-  const isPasswordStrong = (password: string) => {
-    const strongPasswordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return strongPasswordRegex.test(password);
-  };
+  const [tentouEnviar, setTentouEnviar] = useState(false);
+  const isEmailValid = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isPasswordStrong = (password: string) =>
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+
+  const isCampoInvalido = (valor: string) => tentouEnviar && !valor;
+  const isEmailInvalido = tentouEnviar && !isEmailValid(email);
+  const isSenhaInvalida = tentouEnviar && !isPasswordStrong(senha);
+  const isConfirmacaoInvalida = tentouEnviar && senha !== confirmarSenha;
+
+  const styleInput = (valor: string, condExtra = false) => [
+    globalStyles.input,
+    {
+      color: colors.textOnBase,
+      fontFamily,
+      fontSize: fontSizes.base,
+      backgroundColor:
+        isCampoInvalido(valor) || condExtra ? colors.inputError : colors.backgroundSemiHighlight,
+    },
+  ];
 
   const handleRegister = async () => {
+    setTentouEnviar(true);
+
     if (!editedData.nome || !apelido || !nascimento || !email || !senha || !confirmarSenha) {
       Toast.show({ type: 'error', text1: 'Preencha todos os campos obrigatórios.' });
+      return;
+    }
+
+    if (!isEmailValid(email)) {
+      Toast.show({ type: 'error', text1: 'Email inválido.' });
       return;
     }
 
@@ -49,7 +71,7 @@ const UserRegister: React.FC = () => {
       Toast.show({
         type: 'error',
         text1: 'Senha fraca',
-        text2: 'Use pelo menos 8 caracteres, uma letra maiúscula e um caractere especial.',
+        text2: 'Siga os critérios exigidos abaixo do campo.',
       });
       return;
     }
@@ -90,14 +112,11 @@ const UserRegister: React.FC = () => {
     };
 
     // tentativa padrão (web ou arquivo bem formado)
-    // tentativa padrão (web ou arquivo bem formado)
     try {
       const formDataWeb = montarFormData(editedData.foto, editedData.capa);
-
       const response = await apiClient.post('/usuarios', formDataWeb, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
       if (response.status === 201) {
         Toast.show({
           type: 'success',
@@ -105,19 +124,16 @@ const UserRegister: React.FC = () => {
         });
         router.replace('/login');
       }
-    } catch (error1: unknown) {
+    } catch (error1: any) {
       logger.warn(
-        'Tentativa padrão falhou, tentando fallback Android:',
-        error1
+        'Tentativa web falhou, tentando fallback Android:',
+        error1?.response?.data || error1
       );
 
       // fallback forçado (mobile com file://)
       try {
         const getUri = (imagem: any) =>
-          typeof imagem === 'object' && imagem !== null && 'uri' in imagem
-            ? imagem.uri
-            : imagem;
-
+          typeof imagem === 'object' && imagem !== null && 'uri' in imagem ? imagem.uri : imagem;
         const foto = getUri(editedData.foto);
         const capa = getUri(editedData.capa);
         const formDataMobile = montarFormData(foto, capa);
@@ -133,25 +149,16 @@ const UserRegister: React.FC = () => {
           });
           router.replace('/login');
         }
-      } catch (error2: unknown) {
-        if (axios.isAxiosError(error2) && error2.response?.data?.message) {
-          Toast.show({
-            type: 'error',
-            text1: 'Erro ao registrar',
-            text2: error2.response.data.message,
-          });
-        } else {
-          logger.error('Erro definitivo ao registrar usuário:', error2);
-          Toast.show({
-            type: 'error',
-            text1: 'Erro ao registrar',
-            text2: 'Verifique os dados e tente novamente.',
-          });
-        }
+      } catch (error2: any) {
+        logger.error('Erro definitivo ao registrar usuário:', error2?.response?.data || error2);
+        Toast.show({
+          type: 'error',
+          text1: 'Erro ao registrar',
+          text2: 'Verifique os dados e tente novamente.',
+        });
       }
     }
-  }
-
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -166,10 +173,7 @@ const UserRegister: React.FC = () => {
             Apelido:
           </Text>
           <TextInput
-            style={[
-              globalStyles.input,
-              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-            ]}
+            style={styleInput(apelido)}
             placeholder="Apelido"
             value={`@${apelido}`}
             onChangeText={(text) => setApelido(text.replace('@', ''))}
@@ -185,10 +189,7 @@ const UserRegister: React.FC = () => {
             Email:
           </Text>
           <TextInput
-            style={[
-              globalStyles.input,
-              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-            ]}
+            style={styleInput(email, isEmailInvalido)}
             placeholder="Email"
             keyboardType="email-address"
             value={email}
@@ -204,10 +205,7 @@ const UserRegister: React.FC = () => {
             Data de Nascimento:
           </Text>
           <TextInputMask
-            style={[
-              globalStyles.input,
-              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-            ]}
+            style={styleInput(nascimento)}
             type="datetime"
             options={{ format: 'DD/MM/YYYY' }}
             placeholder="Data de nascimento"
@@ -224,29 +222,49 @@ const UserRegister: React.FC = () => {
             Senha:
           </Text>
           <TextInput
-            style={[
-              globalStyles.input,
-              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-            ]}
+            style={styleInput(senha, isSenhaInvalida)}
             placeholder="Senha"
             secureTextEntry
             value={senha}
             onChangeText={setSenha}
           />
 
-          {/* Confirmação de Senha */}
+          <Text
+            style={{
+              color: colors.textOnBase,
+              fontSize: fontSizes.small,
+              fontStyle: 'italic',
+              marginBottom: 3,
+            }}>
+            A senha deve conter pelo menos:
+          </Text>
+          {[
+            '- 8 caracteres',
+            '- 1 letra maiúscula',
+            '- 1 letra minúscula',
+            '- 1 caracteres especial (@ $ ! % * ? &)',
+          ].map((item, index) => (
+            <Text
+              key={index}
+              style={{
+                color: colors.textOnBase,
+                fontSize: fontSizes.small,
+                fontStyle: 'italic',
+                marginBottom: index === 3 ? 10 : 0,
+              }}>
+              {item}
+            </Text>
+          ))}
+
           <Text
             style={[
               globalStyles.textJustifiedBoldItalic,
               { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
             ]}>
-            Confirmação de senha:
+            Confirmar senha:
           </Text>
           <TextInput
-            style={[
-              globalStyles.input,
-              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-            ]}
+            style={styleInput(confirmarSenha, isConfirmacaoInvalida)}
             placeholder="Confirmar senha"
             secureTextEntry
             value={confirmarSenha}
