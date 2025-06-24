@@ -50,35 +50,21 @@ export default function GameReview() {
       setLoading(true);
       const token = await storage.getItem('token');
       const userId = await storage.getItem('userId');
-      setIsLoggedIn(!!token);
+      const loggedIn = !!token;
+      setIsLoggedIn(loggedIn);
 
       const gameResponse = await apiClient.get(`/jogos/${id}`);
       setGame(gameResponse.data);
 
-      if (!token || !userId) {
-        //('Realize o login para ver os gráficos de avaliação.');
-        return;
-      }
-
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-
-      const [evaluationsResponse, matchesResponse] = await Promise.all([
-        apiClient.get(`/avaliacoes/`, config),
-        apiClient.get(`/partidas/`, config),
-      ]);
-
+      // 🔓 Requisição pública (avaliacoes)
+      const evaluationsResponse = await apiClient.get(`/avaliacoes/`);
       const evaluations = evaluationsResponse.data.filter((e: any) => e.jogo === id);
-      const matches = matchesResponse.data.filter((m: any) => m.jogo === id);
 
       if (evaluations.length === 0) {
         setData([]);
         setError('Nenhuma avaliação encontrada para este jogo.');
-        setLoading(false);
         return;
       }
-
 
       const mapKey: { [k: string]: keyof (typeof evaluations)[0] } = {
         Beleza: 'beleza',
@@ -94,21 +80,31 @@ export default function GameReview() {
         return evaluations.length ? sum / evaluations.length : 0;
       });
 
-
       const avgScore =
-        evaluations.reduce((acc: number, cur: any) => acc + (cur.nota || 0), 0) /
-        evaluations.length;
-
-      const matchDates: Record<string, number> = {};
-      matches.forEach((m: any) => {
-        const date = new Date(m.inicio).toLocaleDateString('pt-BR');
-        matchDates[date] = (matchDates[date] || 0) + 1;
-      });
+        evaluations.reduce((acc: number, cur: any) => acc + (cur.nota || 0), 0) / evaluations.length;
 
       setData(averages);
       setAverageRating(avgScore);
-      setPlayCount(matches.length);
-      setMatchesByDate(matchDates);
+
+      // 🔐 Requisição privada (partidas)
+      if (loggedIn) {
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
+
+        const matchesResponse = await apiClient.get(`/partidas/`, config);
+        const matches = matchesResponse.data.filter((m: any) => m.jogo === id);
+
+        const matchDates: Record<string, number> = {};
+        matches.forEach((m: any) => {
+          const date = new Date(m.inicio).toLocaleDateString('pt-BR');
+          matchDates[date] = (matchDates[date] || 0) + 1;
+        });
+
+        setPlayCount(matches.length);
+        setMatchesByDate(matchDates);
+      }
+
     } catch (err) {
       logger.error('Erro ao buscar dados:', err);
       setError('Erro ao buscar dados da API.');
@@ -116,6 +112,7 @@ export default function GameReview() {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     if (id) fetchGameAndData();
@@ -126,6 +123,23 @@ export default function GameReview() {
       <ProfileLayout id={game?._id} name={game?.nome} photo={game?.foto} isUser={false}>
         {loading ? (
           <ActivityIndicator size="large" color={colors.backgroundHighlight} />
+        ) : error ? (
+          <View style={styles.alertContainer}>
+            <Text style={styles.alertIcon}>🔒</Text>
+            <Text
+              style={[
+                globalStyles.textCentered,
+                {
+                  color: colors.textOnBase,
+                  fontFamily,
+                  fontSize: fontSizes.large,
+                  marginBottom: 12,
+                },
+              ]}>
+              {error}
+            </Text>
+            <ButtonHighlight title="Fazer Login" onPress={() => router.push('/login')} />
+          </View>
         ) : !data.length || averageRating === null ? (
           <View style={styles.alertContainer}>
             <Text style={[globalStyles.textCenteredBold, { fontSize: 48, fontFamily, marginBottom: 12 }]}>
@@ -139,34 +153,27 @@ export default function GameReview() {
                 fontFamily,
                 marginBottom: 16,
               }}>
-              Ainda não há avaliações registradas para este jogo. 
+              Ainda não há avaliações registradas para este jogo.
             </Text>
-          </View>
-        ) : error ? (
-          <View style={styles.alertContainer}>
-            <Text style={styles.alertIcon}>🔒</Text>
-            <Text
-              style={[
-                globalStyles.textCentered,
-                { color: colors.textOnBase, fontFamily, fontSize: fontSizes.large, marginBottom: 12 },
-              ]}>
-              {error}
-            </Text>
-            <ButtonHighlight title={'Fazer Login'} onPress={() => router.push("/login")} />
           </View>
         ) : (
           <>
+            {/* Avaliação geral (visível sempre) */}
             <View style={styles.cardsContainer}>
               <View style={styles.card}>
-                <Text>Média Geral</Text>
-                <Text>{averageRating?.toFixed(1)}</Text>
+                <Text style={styles.cardTitle}>Média Geral</Text>
+                <Text style={styles.cardValue}>{averageRating?.toFixed(1)}</Text>
               </View>
-              <View style={styles.card}>
-                <Text>Vezes Jogadas</Text>
-                <Text>{playCount}</Text>
-              </View>
+
+              {isLoggedIn && (
+                <View style={styles.card}>
+                  <Text style={styles.cardTitle}>Vezes Jogadas</Text>
+                  <Text style={styles.cardValue}>{playCount}</Text>
+                </View>
+              )}
             </View>
 
+            {/* Gráfico de categorias */}
             <Text
               style={[
                 globalStyles.textCenteredBold,
@@ -174,65 +181,96 @@ export default function GameReview() {
               ]}>
               Avaliação por Categoria
             </Text>
-            <Svg width={svgSize} height={svgSize}>
-              {[1, 0.75, 0.5, 0.25].map((f, i) => (
-                <Polygon
-                  key={i}
-                  points={categories
-                    .map((_, idx) => {
-                      const { x, y } = calculateCoordinates(f * maxValue, idx, categories.length);
-                      return `${x},${y}`;
-                    })
-                    .join(' ')}
-                  stroke="gray"
-                  strokeWidth="0.5"
-                  fill="none"
-                />
-              ))}
-              {categories.map((_, idx) => {
-                const { x, y } = calculateCoordinates(maxValue, idx, categories.length);
-                return (
-                  <Line
-                    key={idx}
-                    x1={margin + radius}
-                    y1={margin + radius}
-                    x2={x}
-                    y2={y}
+            <View style={styles.chartContainer}>
+              <Svg width={svgSize} height={svgSize}>
+                {[1, 0.75, 0.5, 0.25].map((f, i) => (
+                  <Polygon
+                    key={i}
+                    points={categories
+                      .map((_, idx) => {
+                        const { x, y } = calculateCoordinates(f * maxValue, idx, categories.length);
+                        return `${x},${y}`;
+                      })
+                      .join(' ')}
                     stroke="gray"
                     strokeWidth="0.5"
+                    fill="none"
                   />
-                );
-              })}
-              <Polygon points={points} fill="rgba(255, 160, 122, 0.3)" stroke="orange" />
-              <Circle cx={margin + radius} cy={margin + radius} r="3" fill="black" />
-              {categories.map((cat, idx) => {
-                const { x, y } = calculateCoordinates(maxValue + 20, idx, categories.length);
-                return (
-                  <SvgText
-                    key={idx}
-                    x={x}
-                    y={y}
-                    fontSize="12"
-                    textAnchor="middle"
-                    fill={colors.textOnBase}>
-                    {cat}
-                  </SvgText>
-                );
-              })}
-            </Svg>
+                ))}
+                {categories.map((_, idx) => {
+                  const { x, y } = calculateCoordinates(maxValue, idx, categories.length);
+                  return (
+                    <Line
+                      key={idx}
+                      x1={margin + radius}
+                      y1={margin + radius}
+                      x2={x}
+                      y2={y}
+                      stroke="gray"
+                      strokeWidth="0.5"
+                    />
+                  );
+                })}
+                <Polygon points={points} fill="rgba(255, 160, 122, 0.3)" stroke="orange" />
+                <Circle cx={margin + radius} cy={margin + radius} r="3" fill="black" />
+                {categories.map((cat, idx) => {
+                  const { x, y } = calculateCoordinates(maxValue + 20, idx, categories.length);
+                  return (
+                    <SvgText
+                      key={idx}
+                      x={x}
+                      y={y}
+                      fontSize="12"
+                      textAnchor="middle"
+                      fill={colors.textOnBase}>
+                      {cat}
+                    </SvgText>
+                  );
+                })}
+              </Svg>
+            </View>
 
-            <Text
-              style={[
-                globalStyles.textCenteredBold,
-                { color: colors.textOnBase, fontFamily, fontSize: fontSizes.large },
-              ]}>
-              Partidas por Dia
-            </Text>
-            {Object.entries(matchesByDate).map(([date, count], i) => (
-              <Text key={i}>
-                {date}: {count} partida(s)
-              </Text>
-            ))}
+            {/* Partidas por Dia – somente se logado */}
+            {isLoggedIn ? (
+              <>
+                <Text
+                  style={[
+                    globalStyles.textCenteredBold,
+                    {
+                      color: colors.textOnBase,
+                      fontFamily,
+                      fontSize: fontSizes.large,
+                      marginTop: 24,
+                      marginBottom: 12,
+                    },
+                  ]}>
+                  Partidas por Dia
+                </Text>
+
+                <View style={styles.matchList}>
+                  {Object.entries(matchesByDate).map(([date, count], i) => (
+                    <View key={i} style={styles.matchItem}>
+                      <Text style={styles.matchDate}>{date}</Text>
+                      <Text style={styles.matchCount}>{count} partida(s)</Text>
+                    </View>
+                  ))}
+                </View>
+              </>
+            ) : (
+              <View style={{ marginTop: 20, alignItems: 'center' }}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontSize: 14,
+                    color: colors.textOnBase,
+                    fontFamily,
+                    marginBottom: 8,
+                  }}>
+                  Para visualizar o histórico de partidas e estatísticas completas, faça login.
+                </Text>
+                <ButtonHighlight title="Fazer Login" onPress={() => router.push('/login')} />
+              </View>
+            )}
           </>
         )}
       </ProfileLayout>
@@ -244,15 +282,39 @@ const styles = StyleSheet.create({
   error: { color: 'red', textAlign: 'center', marginVertical: 12 },
   cardsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+    gap: 16,
     marginBottom: 20,
+    flexWrap: 'wrap', // Para quebrar em telas pequenas
   },
   card: {
-    padding: 12,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    paddingVertical: 20,
+    paddingHorizontal: 30,
+    minWidth: 140,
     alignItems: 'center',
-    minWidth: 100,
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+    // largura responsiva opcional
+    flexGrow: 1,
+    maxWidth: 180,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#555',
+    marginBottom: 8,
+  },
+
+  cardValue: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#FF7043', // cor destaque, pode ajustar para seu tema
   },
   title: {
     fontWeight: 'bold',
@@ -294,5 +356,47 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 14,
+  },
+  chartContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    marginBottom: 20,
+  },
+  matchList: {
+    flexDirection: 'column',
+    gap: 8,
+    paddingHorizontal: 16,
+    marginBottom: 24,
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: 400,
+  },
+
+  matchItem: {
+    backgroundColor: '#F5F5F5',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+
+  matchDate: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#333',
+  },
+
+  matchCount: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FF7043',
   }
 });
