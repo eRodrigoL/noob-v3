@@ -68,70 +68,56 @@ const Overview: React.FC = () => {
       return;
     }
 
-    try {
-      const userId = await storage.getItem('userId');
-      const token = await storage.getItem('token');
+    const userId = await storage.getItem('userId');
+    const token = await storage.getItem('token');
 
-      if (!userId || !token) {
-        Toast.show({
-          type: 'error',
-          text1: 'Sessão expirada',
-          text2: 'Por favor, faça login novamente para acessar seu perfil.',
-        });
-        return;
-      }
+    if (!userId || !token) {
+      Toast.show({
+        type: 'error',
+        text1: 'Sessão expirada',
+        text2: 'Por favor, faça login novamente.',
+      });
+      return;
+    }
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      };
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    };
 
+    const montarFormData = (foto: any, capa: any) => {
       const formData = new FormData();
       formData.append('nome', editedData.nome);
       formData.append('email', editedData.email);
       formData.append('nascimento', editedData.nascimento);
 
-      // Helper: é URI local?
-      const isLocalUri = (uri: any): uri is string =>
-        typeof uri === 'string' && uri.startsWith('file://');
-
-      // Adiciona imagem de perfil (foto)
-      if (editedData.foto) {
-        if (isLocalUri(editedData.foto)) {
-          const filename = editedData.foto.split('/').pop()!;
-          const match = /\.(\w+)$/.exec(filename);
-          const fileType = match ? `image/${match[1]}` : 'image';
-
-          formData.append('foto', {
-            uri: editedData.foto,
-            name: filename,
-            type: fileType,
-          } as any);
-        } else {
-          formData.append('foto', editedData.foto as any); // File no navegador ou objeto { uri, name, type }
+      const appendImagem = (chave: 'foto' | 'capa', valor: any) => {
+        if (!valor) return;
+        if (typeof valor === 'string' && valor.startsWith('file://')) {
+          const nome = valor.split('/').pop()!;
+          const match = /\.(\w+)$/.exec(nome);
+          const tipo = match ? `image/${match[1]}` : 'image/jpeg';
+          formData.append(chave, { uri: valor, name: nome, type: tipo } as any);
+        } else if (valor?.uri && valor?.name && valor?.type) {
+          formData.append(chave, valor);
+        } else if (valor instanceof File) {
+          formData.append(chave, valor);
         }
-      }
+      };
 
-      // Adiciona imagem de capa
-      if (editedData.capa) {
-        if (isLocalUri(editedData.capa)) {
-          const filename = editedData.capa.split('/').pop()!;
-          const match = /\.(\w+)$/.exec(filename);
-          const fileType = match ? `image/${match[1]}` : 'image';
+      // adiciona imagens (padrão web)
+      appendImagem('foto', foto);
+      appendImagem('capa', capa);
 
-          formData.append('capa', {
-            uri: editedData.capa,
-            name: filename,
-            type: fileType,
-          } as any);
-        } else {
-          formData.append('capa', editedData.capa as any);
-        }
-      }
+      return formData;
+    };
 
-      await apiClient.put(`/usuarios/${userId}`, formData, config);
+    // tentativa padrão (web ou arquivo bem formado)
+    try {
+      const formDataWeb = montarFormData(editedData.foto, editedData.capa);
+      await apiClient.put(`/usuarios/${userId}`, formDataWeb, config);
 
       Toast.show({
         type: 'success',
@@ -139,21 +125,37 @@ const Overview: React.FC = () => {
         text2: 'Seu perfil foi atualizado com sucesso.',
       });
 
-      // Recarregar os dados do usuário após a atualização
       fetchUserData();
-    } catch (error: any) {
-      if (error.response) {
-        logger.error('Erro no servidor:', error.response.data);
-      } else if (error.request) {
-        logger.error('Erro de rede:', error.request);
-      } else {
-        logger.error('Erro desconhecido:', error.message);
+    } catch (error1: any) {
+      logger.warn(
+        'Tentativa web falhou, tentando fallback Android:',
+        error1?.response?.data || error1
+      );
+
+      // fallback forçado (mobile com file://)
+      try {
+        const foto = editedData.foto?.uri || editedData.foto;
+        const capa = editedData.capa?.uri || editedData.capa;
+        const formDataMobile = montarFormData(foto, capa);
+
+        await apiClient.put(`/usuarios/${userId}`, formDataMobile, config);
+
+        Toast.show({
+          type: 'success',
+          text1: '✅ Alterações salvas',
+          text2: 'Seu perfil foi atualizado com sucesso.',
+        });
+
+        fetchUserData();
+      } catch (error2: any) {
+        logger.error('Erro definitivo ao salvar perfil:', error2?.response?.data || error2);
+
+        Toast.show({
+          type: 'error',
+          text1: '❌ Falha ao salvar',
+          text2: 'Verifique os campos e tente novamente.',
+        });
       }
-      Toast.show({
-        type: 'error',
-        text1: 'Falha ao salvar',
-        text2: 'Verifique sua conexão ou tente novamente mais tarde.',
-      });
     }
   };
 
@@ -250,7 +252,7 @@ const Overview: React.FC = () => {
           Apelido:
         </Text>
         <TextInput
-         accessibilityLabel="Campo de apelido. Este campo não pode ser editado"
+          accessibilityLabel="Campo de apelido. Este campo não pode ser editado"
           style={[
             globalStyles.input,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
@@ -265,7 +267,7 @@ const Overview: React.FC = () => {
 
         {/* Data de Nascimento */}
         <Text
-         accessibilityLabel="Campo de data de nascimento"
+          accessibilityLabel="Campo de data de nascimento"
           style={[
             globalStyles.textJustifiedBoldItalic,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
@@ -294,7 +296,9 @@ const Overview: React.FC = () => {
 
         {/* Botão de Editar/Salvar */}
         <ButtonHighlight
-          accessibilityLabel={isEditing ? 'Botão para salvar alterações no perfil' : 'Botão para editar o perfil'}
+          accessibilityLabel={
+            isEditing ? 'Botão para salvar alterações no perfil' : 'Botão para editar o perfil'
+          }
           title={isEditing ? 'Salvar' : 'Editar Perfil'}
           onPress={handleEditToggle}
         />

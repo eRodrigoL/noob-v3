@@ -211,6 +211,8 @@ const handlePlayPress = async () => {
                     onPress={() => handleNavigate('/boardgame')}
                   />
                 )}
+
+                <ButtonHighlight title="Sair" onPress={handleLogout} />
               </>
             )}
           </View>

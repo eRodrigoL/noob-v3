@@ -11,6 +11,8 @@ light: {
     backgroundBase: '#FAF5F0', // Cor de fundo principal
     backgroundSemiHighlight: '#F8E7D4', // Cor para destaque secundário
     backgroundHighlight: '#F35B04', // Cor para destaque principal
+    input: '#5759B2',
+    inputError: '#fc9aaf',
     textHighlight: '#00004C', // Cor para texto destacado
     textOnBase: '#000048', // Cor para texto sobre o fundo principal
     textOnSemiHighlight: '#3D348B', // Cor para texto sobre o destaque secundário

@@ -1,5 +1,5 @@
 // app/_layout.tsx
-import SandwichMenu from '@components/buttons/SandwichMenu';
+import SandwichMenu from '@components/navigation/SandwichMenu';
 import { useUiStore } from '@store/useUiStore';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -9,8 +9,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
 import { useKeepApiAwake } from '@hooks/useKeepApiAwke';
-import { useSettingsStore } from '@store/useSettingsStore';
 import { storage } from '@store/storage';
+import { useSettingsStore } from '@store/useSettingsStore';
 
 SplashScreen.preventAutoHideAsync(); // impede que o splash desapareça automaticamente
 
