@@ -10,6 +10,7 @@ import { Text, TextInput, View } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Toast from 'react-native-toast-message';
 import { sanitizeInput } from '@utils/sanitize';
+import axios from 'axios';
 
 interface ProfileEntity {
   nome: string;
@@ -117,13 +118,19 @@ const UserRegister: React.FC = () => {
         router.replace('/login');
       }
     } catch (error: unknown) {
-      logger.error('Erro ao registrar usuário:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Erro ao registrar',
-        text2: 'Verifique os dados e tente novamente.',
-      });
-    }
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+    Toast.show({
+      type: 'error',
+      text1: 'Erro ao registrar',
+      text2: error.response.data.message,
+    });
+    } else {
+    Toast.show({
+      type: 'error',
+      text1: 'Erro ao registrar',
+      text2: 'Verifique os dados e tente novamente.',
+    });
+  }}
   };
 
   return (

@@ -1,11 +1,14 @@
 // app/(app)/(public)/boardgame/index.tsx
-import { GameCard, HeaderLayout, LoadingIndicator, NoResults, SearchBar } from '@components/index';
+import { ButtonHighlight, GameCard, HeaderLayout, LoadingIndicator, NoResults, SearchBar } from '@components/index';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { globalStyles, useTheme } from '@theme/index';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { FlatList, useWindowDimensions, View } from 'react-native';
+import { storage } from '@store/storage';
+import axios from 'axios';
+import { FlatList, useWindowDimensions, View, Text, StyleSheet } from 'react-native';
+
 
 interface Product {
   id: string;
@@ -21,8 +24,21 @@ export default function List() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [retryCount, setRetryCount] = useState<number>(0);
-  const { colors } = useTheme();
+  const { colors, fontFamily } = useTheme();
   const { width } = useWindowDimensions();
+
+
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = await storage.getItem('token');
+      setIsLoggedIn(!!token);
+    };
+    checkAuth();
+  }, []);
+
 
   const numColumns = width >= 1000 ? 4 : width >= 700 ? 3 : width >= 500 ? 2 : 1;
 
@@ -105,14 +121,46 @@ export default function List() {
             columnWrapperStyle={numColumns > 1 ? { gap: 12 } : undefined}
             showsVerticalScrollIndicator={false}
           />
-        ) : (
+        ) : isLoggedIn ? (
           <NoResults
             message="Jogo não encontrado. Deseja adicioná-lo?"
             actionText="Adicionar"
-            onAction={() => router.push('/boardgameOld/RegisterGame')}
+            onAction={() => router.push('/boardgame/RegisterGame')}
           />
+        ) : (
+          <View style={styles.alertContainer}>
+            <Text style={[globalStyles.textCenteredBold, { fontSize: 48, fontFamily, marginBottom: 12 }]}>
+              🎲
+            </Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 16,
+                color: colors.textOnBase,
+                fontFamily,
+                marginBottom: 16,
+              }}>
+              Para cadastrar novos jogos é necessário estar logado.
+            </Text>
+            <ButtonHighlight title="Fazer Login" onPress={() => router.push('/login')} />
+          </View>
         )}
       </HeaderLayout>
     </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  alertContainer: {
+    borderRadius: 12,
+    padding: 16,
+    margin: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+});
