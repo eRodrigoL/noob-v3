@@ -18,6 +18,10 @@ const theme = {
     shadow: 'rgba(0, 0, 0, 0.1)', // sombra suave
     overlay: 'rgba(0, 0, 0, 0.5)', // novo: fundo para sobreposições
     accentColor: '#00004C', // Adc: ícones ou pequenos detalhes
+    switchTrackOn: '#E0F7F6',
+    switchTrackOff: '#fc9aaf',
+    switchThumbOn: '#FFFFFF',
+    switchThumbOff: '#F35B04',
   },
 
   // Tema escuro com cores escolhidas
@@ -36,6 +40,10 @@ const theme = {
     shadow: 'rgba(0, 0, 0, 0.7)', // Sombra
     overlay: 'rgba(255, 255, 255, 0.2)', // Sobreposições
     accentColor: '#F7B801', // Amarelo para detalhes
+    switchTrackOn: '#F18701',
+    switchTrackOff: '#3A3A3C',
+    switchThumbOn: '#F35B04',
+    switchThumbOff: '#FFFFFF',
   },
 
   // Tema para daltônicos
@@ -54,6 +62,10 @@ const theme = {
     shadow: 'rgba(0, 0, 0, 0.7)', // Sombra
     overlay: 'rgba(255, 255, 255, 0.2)', // Sobreposições
     accentColor: '#F14B1B', // Laranja vibrante
+    switchTrackOn: '#F14B1B',
+    switchTrackOff: '#3D7461',
+    switchThumbOn: '#FFFFFF',
+    switchThumbOff: '#F14B1B',
   },
 
   daltonic_2: {
@@ -71,6 +83,10 @@ const theme = {
     shadow: 'rgba(0, 0, 0, 0.7)', // Sombra
     overlay: 'rgba(255, 255, 255, 0.2)', // Sobreposições
     accentColor: '#F5754E', // Laranja suave
+    switchTrackOn: '#F6BC1D',
+    switchTrackOff: '#1B3C72',
+    switchThumbOn: '#FFFFFF',
+    switchThumbOff: '#F5754E',
   },
 
   daltonic_3: {
@@ -88,6 +104,10 @@ const theme = {
     shadow: 'rgba(0, 0, 0, 0.7)', // Sombra
     overlay: 'rgba(255, 255, 255, 0.2)', // Sobreposições
     accentColor: '#3EA74B', // Verde esmeralda
+    switchTrackOn: '#3EA74B',
+    switchTrackOff: '#2857BF',
+    switchThumbOn: '#FFFFFF',
+    switchThumbOff: '#3EA74B',
   },
 };
 

@@ -1,24 +1,17 @@
-// app/(legacy)/matches/MatchStart.tsx
+// app/(app)/matches/MatchStart.tsx
+import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/index';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
-import styles from '@theme/themOld/globalStyle';
-import { Theme } from '@theme/themOld/theme';
+import { globalStyles, useTheme } from '@theme/index';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ScrollView, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { MaskedTextInput } from 'react-native-mask-text';
 import Toast from 'react-native-toast-message';
 
 const RegistroPartidaScreen = () => {
+  const { colors, fontFamily, fontSizes } = useTheme();
   const [explicacao, setExplicacao] = useState(false);
   const [tempoExplicacao, setTempoExplicacao] = useState('');
   const [inputText, setInputText] = useState('');
@@ -194,65 +187,154 @@ const RegistroPartidaScreen = () => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <Text style={[styles.title, localStyles.header]}>Registro de partida</Text>
-
-        <Text style={styles.label}>Participantes:</Text>
+    <HeaderLayout title="Registro de partida">
+      <View style={[globalStyles.containerPadding, { backgroundColor: colors.backgroundBase }]}>
+        <Text
+          style={[
+            globalStyles.textJustified,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}>
+          Participantes:
+        </Text>
         <TextInput
           placeholder="Digite o jogador a adicionar e pressione Enter..."
-          style={[styles.input, localStyles.input]}
+          style={[
+            globalStyles.input,
+            {
+              color: colors.textOnBase,
+              fontFamily,
+              fontSize: fontSizes.base,
+              borderWidth: 1,
+              borderColor: colors.textOnBase,
+            },
+          ]}
           value={inputText}
           onChangeText={setInputText}
           onSubmitEditing={addParticipant}
         />
-        <TouchableOpacity style={localStyles.addButton} onPress={addParticipant}>
-          <Text style={localStyles.addButtonText}>Adicionar</Text>
-        </TouchableOpacity>
 
-        <ScrollView horizontal style={localStyles.tagContainer}>
+        <ScrollView horizontal style={globalStyles.tagContainer}>
           {participants.map((participant, index) => (
-            <View key={index} style={localStyles.tag}>
-              <Text style={localStyles.tagText}>{participant}</Text>
+            <View
+              key={index}
+              style={[globalStyles.tag, { backgroundColor: colors.backgroundSemiHighlight }]}>
+              <Text
+                style={[
+                  globalStyles.textJustified,
+                  {
+                    color: colors.textOnBase,
+                    fontFamily,
+                    fontSize: fontSizes.base,
+                  },
+                ]}>
+                {participant}
+              </Text>
               <TouchableOpacity onPress={() => removeParticipant(index)}>
-                <Text style={localStyles.removeButtonText}>×</Text>
+                <Text
+                  style={[
+                    globalStyles.textJustified,
+                    {
+                      color: colors.textOnSemiHighlight,
+                      fontFamily,
+                      fontSize: fontSizes.small,
+                    },
+                  ]}>
+                  {' ×'}
+                </Text>
               </TouchableOpacity>
             </View>
           ))}
         </ScrollView>
 
-        <Text style={styles.label}>Jogo:</Text>
+        <ButtonSemiHighlight title="Adicionar" onPress={addParticipant} />
+
+        <Text
+          style={[
+            globalStyles.textJustified,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}>
+          Jogo:
+        </Text>
         <TextInput
-          placeholder="Digite o jogo a pesquisar..."
-          style={[styles.input, localStyles.input]}
+          placeholder="Digite o nome do jogo..."
+          style={[
+            globalStyles.input,
+            {
+              color: colors.textOnBase,
+              fontFamily,
+              fontSize: fontSizes.base,
+              borderWidth: 1,
+              borderColor: colors.textOnBase,
+            },
+          ]}
           value={inputJogo}
           onChangeText={setInputJogo}
           onBlur={validateGame}
         />
 
-        <View style={localStyles.explicacaoContainer}>
-          <View style={localStyles.rowContainer}>
-            <Text style={styles.label}>Tempo de explicação:</Text>
-            <TextInput
-              placeholder="Minutos"
-              style={[styles.input, localStyles.inputTime]}
-              value={tempoExplicacao}
-              onChangeText={setTempoExplicacao}
-              editable={!explicacao}
-              keyboardType="numeric"
-            />
-          </View>
-          <View style={localStyles.switchContainer}>
-            <Switch value={explicacao} onValueChange={setExplicacao} style={localStyles.switch} />
-            <Text style={localStyles.switchLabel}>não houve</Text>
-          </View>
+        <Text
+          style={[
+            globalStyles.textJustified,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}>
+          Tempo de explicação:
+        </Text>
+
+        <TextInput
+          placeholder="Minutos"
+          style={[
+            globalStyles.input,
+            {
+              color: colors.textOnBase,
+              fontFamily,
+              fontSize: fontSizes.base,
+              borderWidth: 1,
+              borderColor: colors.textOnBase,
+            },
+          ]}
+          value={tempoExplicacao}
+          onChangeText={setTempoExplicacao}
+          editable={!explicacao}
+          keyboardType="numeric"
+        />
+
+        <View style={globalStyles.containerRow}>
+          <Switch
+            value={explicacao}
+            onValueChange={setExplicacao}
+            style={[globalStyles.switch]}
+            trackColor={{ false: colors.switchTrackOff, true: colors.switchTrackOn }}
+            thumbColor={explicacao ? colors.switchThumbOn : colors.switchThumbOff}
+          />
+          <Text
+            style={[
+              globalStyles.textJustified,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            não houve
+          </Text>
         </View>
 
-        <Text style={styles.label}>Início da partida:</Text>
+        <Text
+          style={[
+            globalStyles.textJustified,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}>
+          Início da partida:
+        </Text>
         <MaskedTextInput
           mask="99:99"
-          placeholder="18:30"
-          style={[styles.input, localStyles.input]}
+          placeholder="Horário..."
+          style={[
+            globalStyles.input,
+            {
+              color: colors.textOnBase,
+              fontFamily,
+              fontSize: fontSizes.base,
+              borderWidth: 1,
+              borderColor: colors.textOnBase,
+            },
+          ]}
           value={inicioPartida}
           onChangeText={(text, rawText) => {
             const horarioRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
@@ -271,91 +353,10 @@ const RegistroPartidaScreen = () => {
           keyboardType="numeric"
         />
 
-        <TouchableOpacity style={styles.buttonPrimary} onPress={registrarPartida}>
-          <Text style={styles.buttonPrimaryText}>Registrar Partida</Text>
-        </TouchableOpacity>
+        <ButtonHighlight title="Avançar" onPress={registrarPartida} />
       </View>
-    </ScrollView>
+    </HeaderLayout>
   );
 };
-
-const localStyles = StyleSheet.create({
-  header: {
-    color: Theme.light.backgroundButton,
-    textAlign: 'center',
-  },
-  input: {
-    backgroundColor: Theme.light.backgroundCard,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  addButton: {
-    backgroundColor: Theme.light.secondary.background,
-    padding: 8,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  addButtonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  tagContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 20,
-  },
-  tag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Theme.light.secondary.backgroundButton,
-    borderRadius: 15,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginRight: 5,
-    marginBottom: 5,
-  },
-  tagText: {
-    color: Theme.light.textButton,
-    marginRight: 8,
-  },
-  removeButtonText: {
-    color: Theme.light.textButton,
-    fontWeight: 'bold',
-  },
-  explicacaoContainer: {
-    marginBottom: 20,
-    marginTop: 20,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  switch: {
-    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
-    marginRight: 10,
-  },
-  switchLabel: {
-    fontSize: 16,
-    color: '#000',
-  },
-  inputTime: {
-    backgroundColor: Theme.light.backgroundCard,
-    marginLeft: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 8,
-    width: 80,
-    textAlign: 'center',
-  },
-});
 
 export default RegistroPartidaScreen;
