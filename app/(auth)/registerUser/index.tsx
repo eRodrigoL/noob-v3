@@ -4,13 +4,12 @@ import ProfileLayout from '@components/layouts/ProfileLayout';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { globalStyles, useTheme } from '@theme/index';
+import { sanitizeInput } from '@utils/sanitize';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Toast from 'react-native-toast-message';
-import { sanitizeInput } from '@utils/sanitize';
-import axios from 'axios';
 
 interface ProfileEntity {
   nome: string;
@@ -90,7 +89,6 @@ const UserRegister: React.FC = () => {
     };
 
     // tentativa padrão (web ou arquivo bem formado)
-    // tentativa padrão (web ou arquivo bem formado)
     try {
       const formDataWeb = montarFormData(editedData.foto, editedData.capa);
 
@@ -105,18 +103,16 @@ const UserRegister: React.FC = () => {
         });
         router.replace('/login');
       }
-    } catch (error1: unknown) {
+    } catch (error1: any) {
       logger.warn(
-        'Tentativa padrão falhou, tentando fallback Android:',
-        error1
+        'Tentativa web falhou, tentando fallback Android:',
+        error1?.response?.data || error1
       );
 
       // fallback forçado (mobile com file://)
       try {
         const getUri = (imagem: any) =>
-          typeof imagem === 'object' && imagem !== null && 'uri' in imagem
-            ? imagem.uri
-            : imagem;
+          typeof imagem === 'object' && imagem !== null && 'uri' in imagem ? imagem.uri : imagem;
 
         const foto = getUri(editedData.foto);
         const capa = getUri(editedData.capa);
@@ -133,25 +129,16 @@ const UserRegister: React.FC = () => {
           });
           router.replace('/login');
         }
-      } catch (error2: unknown) {
-        if (axios.isAxiosError(error2) && error2.response?.data?.message) {
-          Toast.show({
-            type: 'error',
-            text1: 'Erro ao registrar',
-            text2: error2.response.data.message,
-          });
-        } else {
-          logger.error('Erro definitivo ao registrar usuário:', error2);
-          Toast.show({
-            type: 'error',
-            text1: 'Erro ao registrar',
-            text2: 'Verifique os dados e tente novamente.',
-          });
-        }
+      } catch (error2: any) {
+        logger.error('Erro definitivo ao registrar usuário:', error2?.response?.data || error2);
+        Toast.show({
+          type: 'error',
+          text1: 'Erro ao registrar',
+          text2: 'Verifique os dados e tente novamente.',
+        });
       }
     }
-  }
-
+  };
 
   return (
     <View style={{ flex: 1 }}>
