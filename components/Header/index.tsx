@@ -75,7 +75,8 @@ const Header = ({ title }: { title: string }) => {
 
   // Função para decidir qual tela abrir ao clicar no botão de configurações
   const handleSettingsPress = () => {
-    router.replace(hasOpenMatch ? '/(legacy)/matches/MatchFinish' : '/(legacy)/matches/MatchStart'); // TODO: remover ROUTES
+    //.replace(hasOpenMatch ? '/(app)/matches/matchFinish' : '/(app)/matches/matchStart'); // TODO: remover 
+    router.push(hasOpenMatch ? '/(app)/matches/matchFinish' : '/(app)/matches/matchStart');
   };
 
   return (

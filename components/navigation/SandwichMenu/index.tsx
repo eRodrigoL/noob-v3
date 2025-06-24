@@ -133,16 +133,49 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
   };
 
   // Lógica para botão "Jogar"
-  const handlePlayPress = () => {
-    handleClose();
-    if (hasOpenMatch) {
-      // TODO: Adicionar rota para finalizar partida
-      // TODO: router.push('/matches/finish');
+const handlePlayPress = async () => {
+  handleClose();
+
+  try {
+    const userId = await storage.getItem('userId');
+    const token = await storage.getItem('token');
+
+    if (userId && token) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+
+      const response = await apiClient.get(
+        `/partidas/filtro?registrador=${userId}&fim=null`,
+        config
+      );
+
+      const hasOpen = response.data.length > 0;
+
+      if (hasOpen) {
+        router.push('/(app)/matches/matchFinish');
+      } else {
+        router.push('/(app)/matches/matchStart');
+      }
     } else {
-      // TODO: Adicionar rota para finalizar partida
-      // TODO: router.push('/matches/play');
+      logger.warn('[handlePlayPress] Usuário não autenticado');
     }
-  };
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        router.push('/(app)/matches/matchStart');
+      } else {
+        logger.warn('[handlePlayPress] Erro na verificação de partidas:', error.message);
+      }
+    } else {
+      logger.warn('[handlePlayPress] Erro desconhecido:', error);
+    }
+  }
+};
+
 
   return (
     <Modal animationType="none" transparent visible={visible} onRequestClose={handleClose}>
