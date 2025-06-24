@@ -90,6 +90,7 @@ const UserRegister: React.FC = () => {
     };
 
     // tentativa padrão (web ou arquivo bem formado)
+    // tentativa padrão (web ou arquivo bem formado)
     try {
       const formDataWeb = montarFormData(editedData.foto, editedData.capa);
 
@@ -104,15 +105,53 @@ const UserRegister: React.FC = () => {
         });
         router.replace('/login');
       }
-    } catch (error: unknown) {
-      logger.error('Erro ao registrar usuário:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Erro ao registrar',
-        text2: 'Verifique os dados e tente novamente.',
-      });
+    } catch (error1: unknown) {
+      logger.warn(
+        'Tentativa padrão falhou, tentando fallback Android:',
+        error1
+      );
+
+      // fallback forçado (mobile com file://)
+      try {
+        const getUri = (imagem: any) =>
+          typeof imagem === 'object' && imagem !== null && 'uri' in imagem
+            ? imagem.uri
+            : imagem;
+
+        const foto = getUri(editedData.foto);
+        const capa = getUri(editedData.capa);
+        const formDataMobile = montarFormData(foto, capa);
+
+        const response = await apiClient.post('/usuarios', formDataMobile, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+
+        if (response.status === 201) {
+          Toast.show({
+            type: 'success',
+            text1: response.data.message || 'Usuário criado com sucesso!',
+          });
+          router.replace('/login');
+        }
+      } catch (error2: unknown) {
+        if (axios.isAxiosError(error2) && error2.response?.data?.message) {
+          Toast.show({
+            type: 'error',
+            text1: 'Erro ao registrar',
+            text2: error2.response.data.message,
+          });
+        } else {
+          logger.error('Erro definitivo ao registrar usuário:', error2);
+          Toast.show({
+            type: 'error',
+            text1: 'Erro ao registrar',
+            text2: 'Verifique os dados e tente novamente.',
+          });
+        }
+      }
     }
-  };
+  }
+
 
   return (
     <View style={{ flex: 1 }}>
