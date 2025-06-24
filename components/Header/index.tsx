@@ -7,10 +7,10 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
 import { Theme } from '@theme/themOld/theme';
 import axios from 'axios';
-import SandwichMenu from '../buttons/SandwichMenu';
-import { storage } from '@store/storage';
+import SandwichMenu from '../navigation/SandwichMenu';
 
 const Header = ({ title }: { title: string }) => {
   const [modalVisible, setModalVisible] = useState(false);

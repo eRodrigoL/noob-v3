@@ -60,7 +60,7 @@ const UserRegister: React.FC = () => {
     const emailSanitizado = sanitizeInput(email);
     const senhaSanitizada = sanitizeInput(senha);
 
-    try {
+    const montarFormData = (foto: any, capa: any) => {
       const formData = new FormData();
       formData.append('nome', nomeSanitizado);
       formData.append('apelido', `@${apelidoSanitizado}`);
@@ -68,45 +68,32 @@ const UserRegister: React.FC = () => {
       formData.append('email', emailSanitizado);
       formData.append('senha', senhaSanitizada);
 
-      // Helper: é URI local?
-      const isLocalUri = (uri: any): uri is string =>
-        typeof uri === 'string' && uri.startsWith('file://');
-
-      // Adiciona imagem de perfil (foto)
-      if (editedData.foto) {
-        if (isLocalUri(editedData.foto)) {
-          const filename = editedData.foto.split('/').pop()!;
-          const match = /\.(\w+)$/.exec(filename);
-          const fileType = match ? `image/${match[1]}` : 'image';
-
-          formData.append('foto', {
-            uri: editedData.foto,
-            name: filename,
-            type: fileType,
-          } as any);
-        } else {
-          formData.append('foto', editedData.foto as any); // File no navegador ou objeto { uri, name, type }
+      const appendImagem = (chave: 'foto' | 'capa', valor: any) => {
+        if (!valor) return;
+        if (typeof valor === 'string' && valor.startsWith('file://')) {
+          const nome = valor.split('/').pop()!;
+          const match = /\.(\w+)$/.exec(nome);
+          const tipo = match ? `image/${match[1]}` : 'image/jpeg';
+          formData.append(chave, { uri: valor, name: nome, type: tipo } as any);
+        } else if (valor?.uri && valor?.name && valor?.type) {
+          formData.append(chave, valor);
+        } else if (valor instanceof File) {
+          formData.append(chave, valor);
         }
-      }
+      };
 
-      // Adiciona imagem de capa
-      if (editedData.capa) {
-        if (isLocalUri(editedData.capa)) {
-          const filename = editedData.capa.split('/').pop()!;
-          const match = /\.(\w+)$/.exec(filename);
-          const fileType = match ? `image/${match[1]}` : 'image';
+      // adiciona imagens (padrão web)
+      appendImagem('foto', foto);
+      appendImagem('capa', capa);
 
-          formData.append('capa', {
-            uri: editedData.capa,
-            name: filename,
-            type: fileType,
-          } as any);
-        } else {
-          formData.append('capa', editedData.capa as any);
-        }
-      }
+      return formData;
+    };
 
-      const response = await apiClient.post('/usuarios', formData, {
+    // tentativa padrão (web ou arquivo bem formado)
+    try {
+      const formDataWeb = montarFormData(editedData.foto, editedData.capa);
+
+      const response = await apiClient.post('/usuarios', formDataWeb, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -118,19 +105,13 @@ const UserRegister: React.FC = () => {
         router.replace('/login');
       }
     } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response?.data?.message) {
-    Toast.show({
-      type: 'error',
-      text1: 'Erro ao registrar',
-      text2: error.response.data.message,
-    });
-    } else {
-    Toast.show({
-      type: 'error',
-      text1: 'Erro ao registrar',
-      text2: 'Verifique os dados e tente novamente.',
-    });
-  }}
+      logger.error('Erro ao registrar usuário:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Erro ao registrar',
+        text2: 'Verifique os dados e tente novamente.',
+      });
+    }
   };
 
   return (

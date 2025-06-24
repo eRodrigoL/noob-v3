@@ -207,13 +207,13 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
           <Pressable onPress={pickImage} style={stylesProfileLayout.photoContainer}>
             <Image
               source={getImageSource(selectedImage, images.userUnavailable)}
-              style={stylesProfileLayout.photo}
+              style={[stylesProfileLayout.photo, { backgroundColor: colors.backgroundBase }]}
             />
           </Pressable>
         ) : (
           <Image
             source={getImageSource(selectedImage, images.userUnavailable)}
-            style={stylesProfileLayout.photo}
+            style={[stylesProfileLayout.photo, { backgroundColor: colors.backgroundBase }]}
           />
         )}
 
