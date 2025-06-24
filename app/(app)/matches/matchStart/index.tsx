@@ -6,7 +6,15 @@ import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Platform,
+  ScrollView,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { MaskedTextInput } from 'react-native-mask-text';
 import Toast from 'react-native-toast-message';
 
@@ -303,8 +311,13 @@ const RegistroPartidaScreen = () => {
             value={explicacao}
             onValueChange={setExplicacao}
             style={[globalStyles.switch]}
-            trackColor={{ false: colors.switchTrackOff, true: colors.switchTrackOn }}
-            thumbColor={explicacao ? colors.switchThumbOn : colors.switchThumbOff}
+            {...(Platform.OS === 'android' && {
+              trackColor: {
+                false: colors.switchTrackOff,
+                true: colors.switchTrackOn,
+              },
+              thumbColor: explicacao ? colors.switchThumbOn : colors.switchThumbOff,
+            })}
           />
           <Text
             style={[
