@@ -178,6 +178,8 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
                     onPress={() => handleNavigate('/boardgame')}
                   />
                 )}
+
+                <ButtonHighlight title="Sair" onPress={handleLogout} />
               </>
             )}
           </View>

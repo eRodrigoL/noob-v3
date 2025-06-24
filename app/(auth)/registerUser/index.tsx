@@ -4,12 +4,12 @@ import ProfileLayout from '@components/layouts/ProfileLayout';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { globalStyles, useTheme } from '@theme/index';
+import { sanitizeInput } from '@utils/sanitize';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Toast from 'react-native-toast-message';
-import { sanitizeInput } from '@utils/sanitize';
 
 interface ProfileEntity {
   nome: string;
@@ -59,7 +59,7 @@ const UserRegister: React.FC = () => {
     const emailSanitizado = sanitizeInput(email);
     const senhaSanitizada = sanitizeInput(senha);
 
-    try {
+    const montarFormData = (foto: any, capa: any) => {
       const formData = new FormData();
       formData.append('nome', nomeSanitizado);
       formData.append('apelido', `@${apelidoSanitizado}`);
@@ -67,45 +67,32 @@ const UserRegister: React.FC = () => {
       formData.append('email', emailSanitizado);
       formData.append('senha', senhaSanitizada);
 
-      // Helper: é URI local?
-      const isLocalUri = (uri: any): uri is string =>
-        typeof uri === 'string' && uri.startsWith('file://');
-
-      // Adiciona imagem de perfil (foto)
-      if (editedData.foto) {
-        if (isLocalUri(editedData.foto)) {
-          const filename = editedData.foto.split('/').pop()!;
-          const match = /\.(\w+)$/.exec(filename);
-          const fileType = match ? `image/${match[1]}` : 'image';
-
-          formData.append('foto', {
-            uri: editedData.foto,
-            name: filename,
-            type: fileType,
-          } as any);
-        } else {
-          formData.append('foto', editedData.foto as any); // File no navegador ou objeto { uri, name, type }
+      const appendImagem = (chave: 'foto' | 'capa', valor: any) => {
+        if (!valor) return;
+        if (typeof valor === 'string' && valor.startsWith('file://')) {
+          const nome = valor.split('/').pop()!;
+          const match = /\.(\w+)$/.exec(nome);
+          const tipo = match ? `image/${match[1]}` : 'image/jpeg';
+          formData.append(chave, { uri: valor, name: nome, type: tipo } as any);
+        } else if (valor?.uri && valor?.name && valor?.type) {
+          formData.append(chave, valor);
+        } else if (valor instanceof File) {
+          formData.append(chave, valor);
         }
-      }
+      };
 
-      // Adiciona imagem de capa
-      if (editedData.capa) {
-        if (isLocalUri(editedData.capa)) {
-          const filename = editedData.capa.split('/').pop()!;
-          const match = /\.(\w+)$/.exec(filename);
-          const fileType = match ? `image/${match[1]}` : 'image';
+      // adiciona imagens (padrão web)
+      appendImagem('foto', foto);
+      appendImagem('capa', capa);
 
-          formData.append('capa', {
-            uri: editedData.capa,
-            name: filename,
-            type: fileType,
-          } as any);
-        } else {
-          formData.append('capa', editedData.capa as any);
-        }
-      }
+      return formData;
+    };
 
-      const response = await apiClient.post('/usuarios', formData, {
+    // tentativa padrão (web ou arquivo bem formado)
+    try {
+      const formDataWeb = montarFormData(editedData.foto, editedData.capa);
+
+      const response = await apiClient.post('/usuarios', formDataWeb, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -116,13 +103,40 @@ const UserRegister: React.FC = () => {
         });
         router.replace('/login');
       }
-    } catch (error: unknown) {
-      logger.error('Erro ao registrar usuário:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Erro ao registrar',
-        text2: 'Verifique os dados e tente novamente.',
-      });
+    } catch (error1: any) {
+      logger.warn(
+        'Tentativa web falhou, tentando fallback Android:',
+        error1?.response?.data || error1
+      );
+
+      // fallback forçado (mobile com file://)
+      try {
+        const getUri = (imagem: any) =>
+          typeof imagem === 'object' && imagem !== null && 'uri' in imagem ? imagem.uri : imagem;
+
+        const foto = getUri(editedData.foto);
+        const capa = getUri(editedData.capa);
+        const formDataMobile = montarFormData(foto, capa);
+
+        const response = await apiClient.post('/usuarios', formDataMobile, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+
+        if (response.status === 201) {
+          Toast.show({
+            type: 'success',
+            text1: response.data.message || 'Usuário criado com sucesso!',
+          });
+          router.replace('/login');
+        }
+      } catch (error2: any) {
+        logger.error('Erro definitivo ao registrar usuário:', error2?.response?.data || error2);
+        Toast.show({
+          type: 'error',
+          text1: 'Erro ao registrar',
+          text2: 'Verifique os dados e tente novamente.',
+        });
+      }
     }
   };
 

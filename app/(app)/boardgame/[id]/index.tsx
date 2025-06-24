@@ -58,17 +58,22 @@ const GameDetails: React.FC = () => {
       return;
     }
 
-    try {
-      const token = await storage.getItem('token');
-      if (!token) {
-        Toast.show({
-          type: 'error',
-          text1: 'Sessão expirada',
-          text2: 'Faça login novamente para editar.',
-        });
-        return;
-      }
+    const token = await storage.getItem('token');
+    if (!token) {
+      Toast.show({
+        type: 'error',
+        text1: 'Sessão expirada',
+        text2: 'Faça login novamente para editar.',
+      });
+      return;
+    }
 
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    };
+
+    const montarFormData = (foto: any, capa: any) => {
       const formData = new FormData();
       formData.append('nome', editedData.nome);
       formData.append('idade', editedData.idade);
@@ -77,66 +82,66 @@ const GameDetails: React.FC = () => {
       formData.append('categoria', editedData.categoria);
       formData.append('componentes', editedData.componentes);
       formData.append('descricao', editedData.descricao);
-
-      // Helper: é URI local?
-      const isLocalUri = (uri: any): uri is string =>
-        typeof uri === 'string' && uri.startsWith('file://');
-
-      // Adiciona imagem de perfil (foto)
-      if (editedData.foto) {
-        if (isLocalUri(editedData.foto)) {
-          const filename = editedData.foto.split('/').pop()!;
-          const match = /\.(\w+)$/.exec(filename);
-          const fileType = match ? `image/${match[1]}` : 'image';
-
-          formData.append('foto', {
-            uri: editedData.foto,
-            name: filename,
-            type: fileType,
-          } as any);
-        } else {
-          formData.append('foto', editedData.foto as any); // File no navegador ou objeto { uri, name, type }
+      const appendImagem = (chave: 'foto' | 'capa', valor: any) => {
+        if (!valor) return;
+        if (typeof valor === 'string' && valor.startsWith('file://')) {
+          const nome = valor.split('/').pop()!;
+          const match = /\.(\w+)$/.exec(nome);
+          const tipo = match ? `image/${match[1]}` : 'image/jpeg';
+          formData.append(chave, { uri: valor, name: nome, type: tipo } as any);
+        } else if (valor?.uri && valor?.name && valor?.type) {
+          formData.append(chave, valor);
+        } else if (valor instanceof File) {
+          formData.append(chave, valor);
         }
-      }
+      };
 
-      // Adiciona imagem de capa
-      if (editedData.capa) {
-        if (isLocalUri(editedData.capa)) {
-          const filename = editedData.capa.split('/').pop()!;
-          const match = /\.(\w+)$/.exec(filename);
-          const fileType = match ? `image/${match[1]}` : 'image';
+      // adiciona imagens (padrão web)
+      appendImagem('foto', foto);
+      appendImagem('capa', capa);
 
-          formData.append('capa', {
-            uri: editedData.capa,
-            name: filename,
-            type: fileType,
-          } as any);
-        } else {
-          formData.append('capa', editedData.capa as any);
-        }
-      }
+      return formData;
+    };
 
-      await apiClient.put(`/jogos/${id}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+    // tentativa padrão (web ou arquivo bem formado)
+    try {
+      const formData = montarFormData(editedData.foto, editedData.capa);
+      await apiClient.put(`/jogos/${id}`, formData, { headers });
 
       Toast.show({
         type: 'success',
         text1: '✅ Alterações salvas',
         text2: 'O jogo foi atualizado com sucesso.',
       });
-
       fetchGameData();
-    } catch (error: any) {
-      logger.error('Erro ao atualizar o jogo:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Falha ao salvar',
-        text2: 'Verifique sua conexão ou tente novamente mais tarde.',
-      });
+    } catch (error1: any) {
+      logger.warn(
+        'Primeira tentativa falhou, tentando fallback Android:',
+        error1?.response?.data || error1
+      );
+
+      // fallback forçado (mobile com file://)
+      try {
+        const fotoUri = editedData.foto?.uri || editedData.foto;
+        const capaUri = editedData.capa?.uri || editedData.capa;
+
+        const formDataFallback = montarFormData(fotoUri, capaUri);
+        await apiClient.put(`/jogos/${id}`, formDataFallback, { headers });
+
+        Toast.show({
+          type: 'success',
+          text1: '✅ Alterações salvas',
+          text2: 'O jogo foi atualizado com sucesso.',
+        });
+        fetchGameData();
+      } catch (error2: any) {
+        logger.error('Erro definitivo ao salvar jogo:', error2?.response?.data || error2);
+        Toast.show({
+          type: 'error',
+          text1: 'Falha ao salvar',
+          text2: 'Verifique os campos ou tente novamente.',
+        });
+      }
     }
   };
 
