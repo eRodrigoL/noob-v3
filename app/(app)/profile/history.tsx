@@ -126,7 +126,7 @@ export default function History() {
                 Você ainda não possui partidas registradas. Comece agora para acompanhar seu desempenho!
               </Text>
 
-              <ButtonHighlight title={'Ir para Partidas'} onPress={() => router.push("/login")}></ButtonHighlight>
+              <ButtonHighlight title={'Ir para Partidas'} onPress={() => router.push("/(app)/matches/matchStart")}></ButtonHighlight>
             </View>
           ) : (
 
