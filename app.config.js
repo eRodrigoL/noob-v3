@@ -56,7 +56,7 @@ export default ({ config }) => ({
       },
     ],
     
-    "expo-font", // Adicionado suporte ao expo-font
+    "expo-font", // Adicionei suporte ao expo-font
   ],
 
   // 🧪 Ativa rotas tipadas no Expo Router
