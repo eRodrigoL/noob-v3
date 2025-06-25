@@ -200,7 +200,12 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
                   onPress={() => handleNavigate('/settings')}
                 />
 
-                <ButtonHighlight title="Jogar" onPress={handlePlayPress} />
+                <ButtonHighlight title="Registrar partida" onPress={handlePlayPress} />
+
+                <ButtonHighlight
+                  title="Adicionar jogo"
+                  onPress={() => router.push('/boardgame/registerGame')}
+                />
 
                 <ButtonHighlight title="Feedback" onPress={() => handleNavigate('/feedback')} />
 

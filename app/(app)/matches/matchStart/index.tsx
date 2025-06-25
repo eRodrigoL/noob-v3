@@ -1,5 +1,5 @@
 // app/(app)/matches/MatchStart.tsx
-import { ButtonHighlight, HeaderLayout, ParticipantInput } from '@components/index';
+import { ButtonHighlight, GameInput, HeaderLayout, ParticipantInput } from '@components/index';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
@@ -247,28 +247,11 @@ const RegistroPartidaScreen = () => {
           onRemove={removeParticipant}
         />
 
-        <Text
-          style={[
-            globalStyles.textJustified,
-            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-          ]}>
-          Jogo:
-        </Text>
-        <TextInput
-          placeholder="Digite o nome do jogo..."
-          style={[
-            globalStyles.input,
-            {
-              color: colors.textOnBase,
-              fontFamily,
-              fontSize: fontSizes.base,
-              borderWidth: 1,
-              borderColor: colors.textOnBase,
-            },
-          ]}
+        <GameInput
           value={inputJogo}
           onChangeText={setInputJogo}
-          onBlur={validateGame}
+          onSelect={(selected) => setInputJogo(selected)}
+          validGames={validGames.map((j) => j.nome)}
         />
 
         <Text
