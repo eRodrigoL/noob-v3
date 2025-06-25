@@ -1,4 +1,6 @@
 // app/(app)/boardgame/[id]/review.tsx
+
+// Importações de componentes, serviços, hooks e dependências para o layout, tema e funcionalidade da página.
 import { ButtonHighlight, HeaderLayout, ProfileLayout } from '@components/index';
 import { useGameId } from '@hooks/useGameId';
 import { logger } from '@lib/logger';
@@ -7,11 +9,13 @@ import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { Circle, Line, Polygon, Svg, Text as SvgText } from 'react-native-svg';
 
 
+// Componente principal responsável por exibir e manipular os dados de desempenho do jogo.
 export default function GameReview() {
+  // Estados e configurações para gerenciar dados do jogo, avaliações, carregamento e erros.
   const id = useGameId();
   const [game, setGame] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -23,6 +27,7 @@ export default function GameReview() {
   const [playCount, setPlayCount] = useState<number | null>(null);
   const [matchesByDate, setMatchesByDate] = useState<Record<string, number>>({});
 
+  // Configurações para o gráfico (categorias, dimensões, cálculo de coordenadas).
   const categories = ['Beleza', 'Divertimento', 'Duração', 'Preço', 'Armazenamento'];
   const maxValue = 100;
   const chartSize = 250;
@@ -30,6 +35,7 @@ export default function GameReview() {
   const svgSize = chartSize + margin * 2;
   const radius = chartSize / 2;
 
+  // Função para calcular as coordenadas de cada ponto no gráfico.
   const calculateCoordinates = (value: number, index: number, total: number) => {
     const angle = (Math.PI * 2 * index) / total;
     const distance = (value / maxValue) * radius;
@@ -38,6 +44,7 @@ export default function GameReview() {
     return { x, y };
   };
 
+  // Gera os pontos para o polígono do gráfico.
   const points = data
     .map((value, index) => {
       const { x, y } = calculateCoordinates(value, index, data.length);
@@ -45,6 +52,7 @@ export default function GameReview() {
     })
     .join(' ');
 
+    // Busca dados do jogo e estatísticas (avaliações e partidas) da API.
   const fetchGameAndData = async () => {
     try {
       setLoading(true);
@@ -66,6 +74,7 @@ export default function GameReview() {
         return;
       }
 
+      // Calcula as médias para cada categoria e nota geral.
       const mapKey: { [k: string]: keyof (typeof evaluations)[0] } = {
         Beleza: 'beleza',
         Divertimento: 'divertimento',
@@ -115,6 +124,7 @@ export default function GameReview() {
     }
   };
 
+  // Requisição privada para partidas do jogo (se logado).
   const hexToRgba = (hex: string, alpha: number) => {
     const match = hex.replace('#', '').match(/.{1,2}/g);
     if (!match) return hex;
@@ -122,11 +132,12 @@ export default function GameReview() {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
-
+// Realiza a busca de dados ao carregar a página.
   useEffect(() => {
     if (id) fetchGameAndData();
   }, [id]);
 
+  // Renderização do componente (gráfico, avaliações e partidas).
   return (
     <HeaderLayout title="Desempenho">
       <ProfileLayout id={game?._id} name={game?.nome} photo={game?.foto} isUser={false}>
@@ -287,6 +298,8 @@ export default function GameReview() {
   );
 }
 
+
+// Estilos do componente / Configurações de layout e design.
 const styles = StyleSheet.create({
   error: { color: 'red', textAlign: 'center', marginVertical: 12 },
   cardsContainer: {

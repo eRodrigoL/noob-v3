@@ -1,18 +1,22 @@
+// app/(app)/boardgame/[id]/rate.tsx
+
+// Importações necessárias para o componente, incluindo botões, layouts, hooks, serviços, e utilitários.
 import {
   ButtonHighlight,
   HeaderLayout,
   ProfileLayout,
 } from '@components/index';
+import { useGameId } from '@hooks/useGameId';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
-import { useGameId } from '@hooks/useGameId';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
+// Interface para o modelo de dados de um jogo.
 interface Game {
   _id: string;
   nome: string;
@@ -20,17 +24,20 @@ interface Game {
   foto?: string;
 }
 
+// Interface para o modelo de dados de uma avaliação.
 interface Avaliacao {
   beleza: number;
   divertimento: number;
   duracao: number;
   preco: number;
   armazenamento: number;
-  nota: number;
+  nota: number; // Média das notas atribuídas
 }
 
-export default function GameReview() {
+export default function GameReview() { // Obtém o ID do jogo atual.
   const id = useGameId();
+
+  // Estados para gerenciar o jogo, a avaliação e o estado geral da página.
   const [game, setGame] = useState<Game | null>(null);
   const [avaliacao, setAvaliacao] = useState<Avaliacao>({
     beleza: 0,
@@ -40,11 +47,13 @@ export default function GameReview() {
     armazenamento: 0,
     nota: 0,
   });
-  const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const { colors, fontFamily, fontSizes } = useTheme();
 
+  const [loading, setLoading] = useState(true); // Indica se a página está carregando.
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Indica se o usuário está logado.
+  const [error, setError] = useState<string | null>(null); // Armazena mensagens de erro.
+  const { colors, fontFamily, fontSizes } = useTheme(); // Estilos dinâmicos baseados no tema.
+
+  // Calcula a nota média da avaliação.
   const calculateAverage = (avaliacao: Avaliacao) => {
     const total =
       avaliacao.beleza +
@@ -55,18 +64,20 @@ export default function GameReview() {
     return Math.floor(total / 5);
   };
 
+  // Atualiza um campo específico da avaliação com validação de entrada (0 a 10).
   const handleInputChange = (field: keyof Avaliacao, value: string) => {
     const numeric = parseInt(value);
     if (!isNaN(numeric) && numeric >= 0 && numeric <= 10) {
       setAvaliacao((prev) => {
         const updated = { ...prev, [field]: numeric };
-        return { ...updated, nota: calculateAverage(updated) };
+        return { ...updated, nota: calculateAverage(updated) }; // Atualiza a nota geral.
       });
     } else {
       Toast.show({ type: 'error', text1: 'Insira um valor entre 0 e 10' });
     }
   };
 
+  // Busca os detalhes do jogo a partir do ID.
   const fetchGameDetails = async () => {
     try {
       const response = await apiClient.get(`/jogos/${id}`);
@@ -79,6 +90,7 @@ export default function GameReview() {
     }
   };
 
+  // Verifica se o usuário está logado e busca os detalhes do jogo, se necessário.
   useEffect(() => {
     const checkLogin = async () => {
       const token = await storage.getItem('token');
@@ -94,6 +106,7 @@ export default function GameReview() {
     if (id) checkLogin();
   }, [id]);
 
+  // Envia a avaliação do jogo para o servidor.
   const submitReview = async () => {
     const token = await storage.getItem('token');
     const userId = await storage.getItem('userId');
@@ -125,6 +138,7 @@ export default function GameReview() {
     }
   };
 
+  // Renderiza a mensagem de erro se o usuário não estiver logado.
   if (error) {
     return (
       <HeaderLayout title="Avaliar Jogo">
@@ -145,6 +159,7 @@ export default function GameReview() {
     );
   }
 
+  // Renderiza o estado de carregamento ou a página principal.
   if (!game) {
     return (
       <HeaderLayout title="Avaliar Jogo">
@@ -153,6 +168,7 @@ export default function GameReview() {
     );
   }
 
+  // Renderiza um campo de avaliação individual.
   const renderField = (label: string, field: keyof Avaliacao) => (
     <View style={{ marginBottom: 16 }}>
       <Text
@@ -176,6 +192,7 @@ export default function GameReview() {
     </View>
   );
 
+  // Renderiza a página de avaliação do jogo.
   return (
     <HeaderLayout title="Avaliar Jogo">
       <ProfileLayout
