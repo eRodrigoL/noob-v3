@@ -86,6 +86,8 @@ export default function GameReview() {
       setData(averages);
       setAverageRating(avgScore);
 
+
+
       // 🔐 Requisição privada (partidas)
       if (loggedIn) {
         const config = {
@@ -111,6 +113,13 @@ export default function GameReview() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const hexToRgba = (hex: string, alpha: number) => {
+    const match = hex.replace('#', '').match(/.{1,2}/g);
+    if (!match) return hex;
+    const [r, g, b] = match.map((x) => parseInt(x, 16));
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
 
@@ -211,7 +220,7 @@ export default function GameReview() {
                     />
                   );
                 })}
-                <Polygon points={points} fill="rgba(255, 160, 122, 0.3)" stroke="orange" />
+                <Polygon points={points} fill={hexToRgba(colors.backgroundHighlight,0.2)} stroke={hexToRgba(colors.backgroundHighlight, 0.8)} />
                 <Circle cx={margin + radius} cy={margin + radius} r="3" fill="black" />
                 {categories.map((cat, idx) => {
                   const { x, y } = calculateCoordinates(maxValue + 20, idx, categories.length);
@@ -220,7 +229,7 @@ export default function GameReview() {
                       key={idx}
                       x={x}
                       y={y}
-                      fontSize="12"
+                      fontSize="13"
                       textAnchor="middle"
                       fill={colors.textOnBase}>
                       {cat}

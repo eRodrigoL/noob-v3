@@ -1,17 +1,18 @@
-// app/(legacy)/matches/MatchFinish.tsx
+// app/(app)/matches/MatchFinish.tsx
+import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/index';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
-import styles from '@theme/themOld/globalStyle';
-import { Theme } from '@theme/themOld/theme';
+import { globalStyles, useTheme } from '@theme/index';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { MaskedTextInput } from 'react-native-mask-text';
 import { RadioButton } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 
 const RegistroPartidaScreen = () => {
+  const { colors, fontSizes, fontFamily } = useTheme();
   const [victory, setVictory] = useState('');
   const [scoreType, setScoreType] = useState('');
   const [score, setScore] = useState<string | null>(null);
@@ -232,15 +233,28 @@ const RegistroPartidaScreen = () => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <Text style={[styles.title, localStyles.header]}>Registro de partida</Text>
-
-        <Text style={styles.label}>Fim da partida:</Text>
+    <HeaderLayout title="Registro de partida ">
+      <View style={[globalStyles.containerPadding, { backgroundColor: colors.backgroundBase }]}>
+        <Text
+          style={[
+            globalStyles.textJustified,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}>
+          Fim da partida:
+        </Text>
         <MaskedTextInput
           mask="99:99"
-          placeholder="18:30"
-          style={[styles.input, localStyles.input]}
+          placeholder="Horário..."
+          style={[
+            globalStyles.input,
+            {
+              color: colors.textOnBase,
+              fontFamily,
+              fontSize: fontSizes.base,
+              borderWidth: 1,
+              borderColor: colors.textOnBase,
+            },
+          ]}
           value={endTime}
           onChangeText={(text, rawText) => {
             const horarioRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
@@ -259,145 +273,218 @@ const RegistroPartidaScreen = () => {
           keyboardType="numeric" // Garante que o teclado numérico seja exibido
         />
 
-        <Text style={styles.label}>Vitória:</Text>
+        <Text
+          style={[
+            globalStyles.textJustified,
+            {
+              color: colors.textOnBase,
+              fontFamily,
+              fontSize: fontSizes.base,
+            },
+          ]}>
+          Vitória:
+        </Text>
         <TextInput
           placeholder="Digite o/os vencedores e pressione Enter..."
-          style={[styles.input, localStyles.input]}
+          style={[
+            globalStyles.input,
+            {
+              color: colors.textOnBase,
+              fontFamily,
+              fontSize: fontSizes.base,
+              borderWidth: 1,
+              borderColor: colors.textOnBase,
+            },
+          ]}
           value={inputText}
           onChangeText={setInputText}
           onSubmitEditing={victory === '' ? addParticipant : undefined}
           editable={victory === ''}
         />
-        <TouchableOpacity
-          style={localStyles.addButton}
-          onPress={victory === '' ? addParticipant : undefined}
-          disabled={victory !== ''}>
-          <Text style={localStyles.addButtonText}>Adicionar</Text>
-        </TouchableOpacity>
 
-        <ScrollView horizontal style={localStyles.tagContainer}>
-          {participants.map((participant, index) => (
-            <View key={index} style={localStyles.tag}>
-              <Text style={localStyles.tagText}>{participant}</Text>
-              <TouchableOpacity onPress={() => removeParticipant(index)}>
-                <Text style={localStyles.removeButtonText}>×</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </ScrollView>
+        <View>
+          <ScrollView horizontal style={globalStyles.tagContainer}>
+            {participants.map((participant, index) => (
+              <View
+                key={index}
+                style={[globalStyles.tag, { backgroundColor: colors.backgroundSemiHighlight }]}>
+                <Text
+                  style={[
+                    globalStyles.textJustified,
+                    {
+                      color: colors.textOnBase,
+                      fontFamily,
+                      fontSize: fontSizes.base,
+                    },
+                  ]}>
+                  {participant}
+                </Text>
+                <TouchableOpacity onPress={() => removeParticipant(index)}>
+                  <Text
+                    style={[
+                      globalStyles.textJustified,
+                      {
+                        color: colors.textOnSemiHighlight,
+                        fontFamily,
+                        fontSize: fontSizes.small,
+                      },
+                    ]}>
+                    {' ×'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
 
-        <Text style={styles.label}>Ou selecione as opções abaixo:</Text>
+        <ButtonSemiHighlight title="Adicionar" onPress={addParticipant} disabled={victory !== ''} />
+
+        <Text
+          style={[
+            globalStyles.textJustified,
+            {
+              color: colors.textOnBase,
+              fontFamily,
+              fontSize: fontSizes.base,
+            },
+          ]}>
+          Ou selecione as opções abaixo:
+        </Text>
         <RadioButton.Group
           onValueChange={(newValue) => {
             setVictory(newValue === victory ? '' : newValue);
             if (newValue !== victory) setParticipants([]);
           }}
           value={victory}>
-          <View style={localStyles.radioContainer}>
-            <RadioButton disabled={participants.length > 0} value="coletiva" />
-            <Text style={localStyles.radioLabel}>Vitória coletiva</Text>
+          <View style={globalStyles.containerRow}>
+            <RadioButton
+              disabled={participants.length > 0}
+              value="coletiva"
+              color={colors.backgroundHighlight}
+            />
+            <Text
+              style={[
+                globalStyles.textJustified,
+                {
+                  color: colors.textOnBase,
+                  fontFamily,
+                  fontSize: fontSizes.base,
+                },
+              ]}>
+              Vitória coletiva
+            </Text>
           </View>
-          <View style={localStyles.radioContainer}>
-            <RadioButton disabled={participants.length > 0} value="derrota" />
-            <Text style={localStyles.radioLabel}>Derrota coletiva (o jogo venceu)</Text>
+          <View style={globalStyles.containerRow}>
+            <RadioButton
+              disabled={participants.length > 0}
+              value="derrota"
+              color={colors.backgroundHighlight}
+            />
+            <Text
+              style={[
+                globalStyles.textJustified,
+                {
+                  color: colors.textOnBase,
+                  fontFamily,
+                  fontSize: fontSizes.base,
+                },
+              ]}>
+              Derrota coletiva (o jogo venceu)
+            </Text>
           </View>
-          <View style={localStyles.radioContainer}>
-            <RadioButton disabled={participants.length > 0} value="naoConcluido" />
-            <Text style={localStyles.radioLabel}>Jogo não concluído</Text>
+          <View style={globalStyles.containerRow}>
+            <RadioButton
+              disabled={participants.length > 0}
+              value="naoConcluido"
+              color={colors.backgroundHighlight}
+            />
+            <Text
+              style={[
+                globalStyles.textJustified,
+                {
+                  color: colors.textOnBase,
+                  fontFamily,
+                  fontSize: fontSizes.base,
+                },
+              ]}>
+              Jogo não concluído
+            </Text>
           </View>
         </RadioButton.Group>
 
-        <Text style={styles.label}>Pontuações:</Text>
+        <Text
+          style={[
+            globalStyles.textJustified,
+            {
+              color: colors.textOnBase,
+              fontFamily,
+              fontSize: fontSizes.base,
+            },
+          ]}>
+          Pontuações:
+        </Text>
         <RadioButton.Group onValueChange={(newValue) => setScoreType(newValue)} value={scoreType}>
-          <View style={localStyles.radioContainer}>
-            <RadioButton value="semPontuacao" />
-            <Text style={localStyles.radioLabel}>Sem pontuação</Text>
+          <View style={globalStyles.containerRow}>
+            <RadioButton value="semPontuacao" color={colors.backgroundHighlight} />
+            <Text
+              style={[
+                globalStyles.textJustified,
+                {
+                  color: colors.textOnBase,
+                  fontFamily,
+                  fontSize: fontSizes.base,
+                },
+              ]}>
+              Sem pontuação
+            </Text>
           </View>
-          <View style={localStyles.radioContainer}>
-            <RadioButton value="pontos" />
-            <Text style={localStyles.radioLabel}>Pontos</Text>
+          <View style={globalStyles.containerRow}>
+            <RadioButton value="pontos" color={colors.backgroundHighlight} />
+            <Text
+              style={[
+                globalStyles.textJustified,
+                {
+                  color: colors.textOnBase,
+                  fontFamily,
+                  fontSize: fontSizes.base,
+                },
+              ]}>
+              Pontos
+            </Text>
           </View>
         </RadioButton.Group>
 
         {scoreType === 'pontos' && (
           <TextInput
             placeholder="Digite a pontuação"
-            style={[styles.input, localStyles.input]}
+            style={[
+              globalStyles.input,
+              {
+                color: colors.textOnBase,
+                fontFamily,
+                fontSize: fontSizes.base,
+                borderWidth: 1,
+                borderColor: colors.textOnBase,
+              },
+            ]}
             keyboardType="numeric"
             value={score || ''}
             onChangeText={(text) => setScore(text)}
           />
         )}
 
-        <TouchableOpacity style={styles.buttonPrimary} onPress={handleSaveMatch}>
-          <Text style={styles.buttonPrimaryText}>Salvar Partida</Text>
-        </TouchableOpacity>
+        <ButtonHighlight title="Finilizar agora" onPress={handleSaveMatch} />
 
-        <TouchableOpacity
-          style={styles.buttonPrimary}
+        <ButtonSemiHighlight
+          title="Finalizar depois"
           onPress={() => {
-            router.push('/boardgame'); // Redireciona para a lista ao finalizar depois
+            router.push('/boardgame');
             refreshScreen();
-          }}>
-          <Text style={styles.buttonPrimaryText}>Finalizar depois</Text>
-        </TouchableOpacity>
+          }}
+        />
       </View>
-    </ScrollView>
+    </HeaderLayout>
   );
 };
-
-const localStyles = StyleSheet.create({
-  header: {
-    color: Theme.light.backgroundButton,
-    textAlign: 'center',
-  },
-  input: {
-    backgroundColor: Theme.light.backgroundCard,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  radioContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 5,
-  },
-  radioLabel: {
-    color: Theme.light.text,
-    marginLeft: 5,
-  },
-  addButton: {
-    backgroundColor: Theme.light.secondary.background,
-    padding: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  addButtonText: {
-    color: Theme.light.textButton,
-  },
-  tagContainer: {
-    flexDirection: 'row',
-    marginVertical: 10,
-  },
-  tag: {
-    flexDirection: 'row',
-    backgroundColor: Theme.light.secondary.backgroundButton,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 20,
-    alignItems: 'center',
-    marginRight: 10,
-  },
-  tagText: {
-    color: Theme.light.textButton,
-    marginRight: 5,
-  },
-  removeButtonText: {
-    color: Theme.light.textButton,
-    fontWeight: 'bold',
-  },
-});
 
 export default RegistroPartidaScreen;

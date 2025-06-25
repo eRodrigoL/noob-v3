@@ -1,25 +1,19 @@
-// app/(legacy)/matches/MatchStart.tsx
+// app/(app)/matches/MatchStart.tsx
+import { ButtonHighlight, GameInput, HeaderLayout, ParticipantInput } from '@components/index';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
-import styles from '@theme/themOld/globalStyle';
-import { Theme } from '@theme/themOld/theme';
+import { useMatchStore } from '@store/useMatchStore';
+import { globalStyles, useTheme } from '@theme/index';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Switch, Text, TextInput, View } from 'react-native';
 import { MaskedTextInput } from 'react-native-mask-text';
 import Toast from 'react-native-toast-message';
 
 const RegistroPartidaScreen = () => {
-  const [explicacao, setExplicacao] = useState(false);
+  const { colors, fontFamily, fontSizes } = useTheme();
+  const [explicacao, setExplicacao] = useState(true);
   const [tempoExplicacao, setTempoExplicacao] = useState('');
   const [inputText, setInputText] = useState('');
   const [inputJogo, setInputJogo] = useState('');
@@ -27,14 +21,24 @@ const RegistroPartidaScreen = () => {
   const [participants, setParticipants] = useState<string[]>([]);
   const [validNicknames, setValidNicknames] = useState<string[]>([]);
   const [validGames, setValidGames] = useState<{ id: string; nome: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const router = useRouter();
 
   useEffect(() => {
-    const fetchNicknames = async () => {
+    const fetchData = async () => {
       try {
         const userId = await storage.getItem('userId');
         const token = await storage.getItem('token');
+
+        if (!userId || !token) {
+          Toast.show({
+            type: 'error',
+            text1: 'Erro de autenticação',
+            text2: 'Usuário não autenticado.',
+          });
+          return;
+        }
 
         const config = {
           headers: {
@@ -43,29 +47,50 @@ const RegistroPartidaScreen = () => {
           },
         };
 
-        const response = await apiClient.get('/usuarios', config);
-        const nicknames = response.data.map((usuario: any) => usuario.apelido);
-        setValidNicknames(nicknames);
+        const [usuariosRes, jogosRes] = await Promise.all([
+          apiClient.get('/usuarios', config),
+          apiClient.get('/jogos'),
+        ]);
+
+        if (Array.isArray(usuariosRes.data)) {
+          const nicknames = usuariosRes.data.map((usuario: any) => usuario.apelido);
+          setValidNicknames(nicknames);
+        } else {
+          logger.warn('Resposta inesperada de /usuarios:', usuariosRes.data);
+          Toast.show({
+            type: 'error',
+            text1: 'Erro',
+            text2: 'Falha ao carregar usuários.',
+          });
+        }
+
+        if (Array.isArray(jogosRes.data)) {
+          const games = jogosRes.data.map((jogo: any) => ({
+            id: jogo._id,
+            nome: jogo.nome,
+          }));
+          setValidGames(games);
+        } else {
+          logger.warn('Resposta inesperada de /jogos:', jogosRes.data);
+          Toast.show({
+            type: 'error',
+            text1: 'Erro',
+            text2: 'Falha ao carregar jogos.',
+          });
+        }
       } catch (error) {
-        logger.error('Erro ao buscar apelidos:', error);
+        logger.error('Erro ao carregar dados iniciais:', error);
+        Toast.show({
+          type: 'error',
+          text1: 'Erro',
+          text2: 'Não foi possível carregar os dados. Tente novamente.',
+        });
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    const fetchGames = async () => {
-      try {
-        const response = await apiClient.get('/jogos');
-        const games = response.data.map((jogo: any) => ({
-          id: jogo._id,
-          nome: jogo.nome,
-        }));
-        setValidGames(games);
-      } catch (error) {
-        logger.error('Erro ao buscar jogos:', error);
-      }
-    };
-
-    fetchNicknames();
-    fetchGames();
+    fetchData();
   }, []);
 
   const addParticipant = () => {
@@ -83,6 +108,7 @@ const RegistroPartidaScreen = () => {
           text1: 'Erro',
           text2: 'Apelido não encontrado. Por favor, insira um apelido válido.',
         });
+        setInputText('');
       }
     } else {
       setParticipants([...participants, trimmedInput]);
@@ -91,6 +117,8 @@ const RegistroPartidaScreen = () => {
   };
 
   const validateGame = () => {
+    if (validGames.length === 0) return;
+
     const selectedGame = validGames.find((game) => game.nome === inputJogo.trim());
     if (!selectedGame) {
       Toast.show({
@@ -139,7 +167,6 @@ const RegistroPartidaScreen = () => {
       const horarioRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
       const trimmedInicioPartida = inicioPartida.trim();
 
-      // Validando o formato do horário
       if (trimmedInicioPartida.length !== 5 || !horarioRegex.test(trimmedInicioPartida)) {
         throw new Error('Horário inválido. Insira no formato hh:mm.');
       }
@@ -166,6 +193,9 @@ const RegistroPartidaScreen = () => {
           text1: 'Partida registrada!',
           text2: 'Seus dados foram salvos com sucesso.',
         });
+
+        await useMatchStore.getState().checkOpenMatch();
+
         setParticipants([]);
         setInputJogo('');
         setTempoExplicacao('');
@@ -193,66 +223,117 @@ const RegistroPartidaScreen = () => {
     }
   };
 
-  return (
-    <ScrollView>
-      <View style={styles.container}>
-        <Text style={[styles.title, localStyles.header]}>Registro de partida</Text>
+  useEffect(() => {
+    if (explicacao) {
+      setTempoExplicacao('');
+    }
+  }, [explicacao]);
 
-        <Text style={styles.label}>Participantes:</Text>
-        <TextInput
-          placeholder="Digite o jogador a adicionar e pressione Enter..."
-          style={[styles.input, localStyles.input]}
+  if (isLoading) {
+    return (
+      <HeaderLayout title="Registro de partida">
+        <View style={[globalStyles.containerPadding, { backgroundColor: colors.backgroundBase }]}>
+          <Text
+            style={[
+              globalStyles.textJustified,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            Carregando dados...
+          </Text>
+        </View>
+      </HeaderLayout>
+    );
+  }
+
+  return (
+    <HeaderLayout title="Registro de partida">
+      <View style={[globalStyles.containerPadding, { backgroundColor: colors.backgroundBase }]}>
+        <ParticipantInput
           value={inputText}
           onChangeText={setInputText}
-          onSubmitEditing={addParticipant}
+          onAdd={addParticipant}
+          validNicknames={validNicknames}
+          participants={participants}
+          onRemove={removeParticipant}
         />
-        <TouchableOpacity style={localStyles.addButton} onPress={addParticipant}>
-          <Text style={localStyles.addButtonText}>Adicionar</Text>
-        </TouchableOpacity>
 
-        <ScrollView horizontal style={localStyles.tagContainer}>
-          {participants.map((participant, index) => (
-            <View key={index} style={localStyles.tag}>
-              <Text style={localStyles.tagText}>{participant}</Text>
-              <TouchableOpacity onPress={() => removeParticipant(index)}>
-                <Text style={localStyles.removeButtonText}>×</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </ScrollView>
-
-        <Text style={styles.label}>Jogo:</Text>
-        <TextInput
-          placeholder="Digite o jogo a pesquisar..."
-          style={[styles.input, localStyles.input]}
+        <GameInput
           value={inputJogo}
           onChangeText={setInputJogo}
-          onBlur={validateGame}
+          onSelect={(selected) => setInputJogo(selected)}
+          validGames={validGames.map((j) => j.nome)}
         />
 
-        <View style={localStyles.explicacaoContainer}>
-          <View style={localStyles.rowContainer}>
-            <Text style={styles.label}>Tempo de explicação:</Text>
-            <TextInput
-              placeholder="Minutos"
-              style={[styles.input, localStyles.inputTime]}
-              value={tempoExplicacao}
-              onChangeText={setTempoExplicacao}
-              editable={!explicacao}
-              keyboardType="numeric"
+        <View style={globalStyles.containerRow}>
+          <Text
+            style={[
+              globalStyles.textJustified,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            Tempo de explicação:
+          </Text>
+          <View style={{ paddingLeft: 15 }}>
+            <Switch
+              value={explicacao}
+              onValueChange={setExplicacao}
+              style={[globalStyles.switch]}
+              trackColor={{
+                false: colors.switchTrackOff,
+                true: colors.switchTrackOn,
+              }}
+              thumbColor={explicacao ? colors.switchThumbOn : colors.switchThumbOff}
             />
           </View>
-          <View style={localStyles.switchContainer}>
-            <Switch value={explicacao} onValueChange={setExplicacao} style={localStyles.switch} />
-            <Text style={localStyles.switchLabel}>não houve</Text>
-          </View>
+          <Text
+            style={[
+              globalStyles.textJustified,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            não houve explicação
+          </Text>
         </View>
 
-        <Text style={styles.label}>Início da partida:</Text>
+        {!explicacao && (
+          <TextInput
+            placeholder="...em MINUTOS"
+            placeholderTextColor={colors.textOnBase}
+            style={[
+              globalStyles.input,
+              {
+                color: colors.textOnBase,
+                fontFamily,
+                fontSize: fontSizes.base,
+                borderWidth: 1,
+                borderColor: colors.textOnBase,
+              },
+            ]}
+            value={tempoExplicacao}
+            onChangeText={setTempoExplicacao}
+            keyboardType="numeric"
+          />
+        )}
+
+        <Text
+          style={[
+            globalStyles.textJustified,
+            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+          ]}>
+          Horário do início da partida (exp.: 20:30):
+        </Text>
         <MaskedTextInput
           mask="99:99"
-          placeholder="18:30"
-          style={[styles.input, localStyles.input]}
+          placeholder="Digite somente números..."
+          placeholderTextColor={colors.textOnBase}
+          style={[
+            globalStyles.input,
+            {
+              color: colors.textOnBase,
+              fontFamily,
+              fontSize: fontSizes.base,
+              borderWidth: 1,
+              borderColor: colors.textOnBase,
+            },
+          ]}
           value={inicioPartida}
           onChangeText={(text, rawText) => {
             const horarioRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
@@ -271,91 +352,10 @@ const RegistroPartidaScreen = () => {
           keyboardType="numeric"
         />
 
-        <TouchableOpacity style={styles.buttonPrimary} onPress={registrarPartida}>
-          <Text style={styles.buttonPrimaryText}>Registrar Partida</Text>
-        </TouchableOpacity>
+        <ButtonHighlight title="Avançar" onPress={registrarPartida} />
       </View>
-    </ScrollView>
+    </HeaderLayout>
   );
 };
-
-const localStyles = StyleSheet.create({
-  header: {
-    color: Theme.light.backgroundButton,
-    textAlign: 'center',
-  },
-  input: {
-    backgroundColor: Theme.light.backgroundCard,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  addButton: {
-    backgroundColor: Theme.light.secondary.background,
-    padding: 8,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  addButtonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  tagContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 20,
-  },
-  tag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Theme.light.secondary.backgroundButton,
-    borderRadius: 15,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginRight: 5,
-    marginBottom: 5,
-  },
-  tagText: {
-    color: Theme.light.textButton,
-    marginRight: 8,
-  },
-  removeButtonText: {
-    color: Theme.light.textButton,
-    fontWeight: 'bold',
-  },
-  explicacaoContainer: {
-    marginBottom: 20,
-    marginTop: 20,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  switch: {
-    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
-    marginRight: 10,
-  },
-  switchLabel: {
-    fontSize: 16,
-    color: '#000',
-  },
-  inputTime: {
-    backgroundColor: Theme.light.backgroundCard,
-    marginLeft: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 8,
-    width: 80,
-    textAlign: 'center',
-  },
-});
 
 export default RegistroPartidaScreen;

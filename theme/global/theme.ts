@@ -21,6 +21,10 @@ light: {
     shadow: 'rgba(0, 0, 0, 0.15)', // Sombra: Sutil para adicionar profundidade
     overlay: 'rgba(0, 0, 0, 0.3)', // Sobreposição: Transparência discreta pensando em ter foco
     accentColor: '#F7B801', // Cor de destaque adicional: Amarelo para elementos chamativos
+    switchTrackOn: '#E0F7F6',
+    switchTrackOff: '#fc9aaf',
+    switchThumbOn: '#FFFFFF',
+    switchThumbOff: '#F35B04',
 },
 
   
@@ -39,7 +43,11 @@ light: {
     shadow: 'rgba(0, 0, 0, 0.8)',
     overlay: 'rgba(255, 255, 255, 0.1)',
     accentColor: '#FF6B6B',
-},
+    switchTrackOn: '#F18701',
+    switchTrackOff: '#3A3A3C',
+    switchThumbOn: '#F35B04',
+    switchThumbOff: '#FFFFFF',
+  },
 
   // Define o tema "daltonic" (daltônico 1)
 
@@ -56,6 +64,10 @@ light: {
     shadow: 'rgba(0, 0, 0, 0.7)',
     overlay: 'rgba(255, 255, 255, 0.2)',
     accentColor: '#B0B0B0',
+     switchTrackOn: '#F14B1B',
+    switchTrackOff: '#3D7461',
+    switchThumbOn: '#FFFFFF',
+    switchThumbOff: '#F14B1B',
 },
 
   // Define o tema "daltonic_2" (daltônico 2)
@@ -73,6 +85,10 @@ daltonic_2: {
     shadow: 'rgba(0, 0, 0, 0.4)',
     overlay: 'rgba(255, 255, 255, 0.25)',
     accentColor: '#F6BC1D',
+     switchTrackOn: '#F6BC1D',
+    switchTrackOff: '#1B3C72',
+    switchThumbOn: '#FFFFFF',
+    switchThumbOff: '#F5754E',
 },
 
 
@@ -91,6 +107,10 @@ daltonic_2: {
     shadow: 'rgba(0, 0, 0, 0.7)',
     overlay: 'rgba(255, 255, 255, 0.2)',
     accentColor: '#FBE3B5',
+     switchTrackOn: '#3EA74B',
+    switchTrackOff: '#2857BF',
+    switchThumbOn: '#FFFFFF',
+    switchThumbOff: '#3EA74B',
 },
 };
 

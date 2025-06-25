@@ -38,6 +38,7 @@ const GameRanking = () => {
   const [topScores, setTopScores] = useState<ScoreItem[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const styles = useStyles(colors, fontFamily, fontSizes);
 
 
   useEffect(() => {
@@ -113,44 +114,27 @@ const GameRanking = () => {
   }, [id]);
 
   const renderRanking = (lista: RankingItem[], nome: string) => (
-    <>
-      <Text style={[globalStyles.textCenteredBold, { fontSize: fontSizes.large, fontFamily }]}>
-        {nome}
-      </Text>
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>{nome}</Text>
       {lista.map((item, index) => (
-        <Text
-          key={index}
-          style={{
-            fontSize: fontSizes.base,
-            fontFamily,
-            color: colors.textOnBase,
-            marginVertical: 4,
-          }}>
+        <Text key={index} style={styles.rankingItem}>
           {index + 1}. {item.apelido}: {item.count} vez(es)
         </Text>
       ))}
-    </>
+    </View>
   );
 
   const renderScores = (lista: ScoreItem[], nome: string) => (
-    <>
-      <Text style={[globalStyles.textCenteredBold, { fontSize: fontSizes.large, fontFamily }]}>
-        {nome}
-      </Text>
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>{nome}</Text>
       {lista.map((item, index) => (
-        <Text
-          key={index}
-          style={{
-            fontSize: fontSizes.base,
-            fontFamily,
-            color: colors.textOnBase,
-            marginVertical: 4,
-          }}>
+        <Text key={index} style={styles.rankingItem}>
           {index + 1}. {item.apelido}: {item.score} pontos
         </Text>
       ))}
-    </>
+    </View>
   );
+
 
   return (
     <HeaderLayout title="Ranking">
@@ -197,11 +181,15 @@ const GameRanking = () => {
             <ButtonHighlight title="Ir para partidas" onPress={() => router.push('/(app)/matches/matchStart')} />
           </View>
         ) : (
-          <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ padding: 16, paddingBottom: 24 }}
+            showsVerticalScrollIndicator={false}>
             {renderRanking(mostPlayed, 'Top Jogadores (Mais partidas)')}
             {renderRanking(mostWins, 'Top Vencedores')}
             {renderScores(topScores, 'Maiores pontuações únicas')}
           </ScrollView>
+
         )}
 
       </ProfileLayout>
@@ -209,38 +197,48 @@ const GameRanking = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  alertContainer: {
-    //backgroundColor: '#FFF4E5',
-    borderRadius: 12,
-    padding: 16,
-    margin: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  alertIcon: {
-    fontSize: 32,
-    marginBottom: 8,
-  },
-  alertText: {
-    fontSize: 16,
-    color: '#8A6D3B',
-    textAlign: 'center',
-    marginBottom: 12,
-    fontWeight: '500',
-  },
-  alertButton: {
-    backgroundColor: '#FFA726',
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  alertButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-});
+const useStyles = (colors: any, fontFamily: string, fontSizes: any) =>
+  StyleSheet.create({
+
+    alertContainer: {
+      borderRadius: 12,
+      padding: 16,
+      margin: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.surfaceBase,
+    },
+    alertIcon: {
+      fontSize: 32,
+      marginBottom: 8,
+    },
+    section: {
+      backgroundColor: colors.surfaceVariant,
+      borderRadius: 12,
+      padding: 16,
+      marginBottom: 20,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.05,
+      shadowRadius: 2,
+      elevation: 2,
+    },
+    sectionTitle: {
+      fontSize: fontSizes.large,
+      fontFamily,
+      fontWeight: '600',
+      color: colors.textOnBase,
+      marginBottom: 12,
+      textAlign: 'center',
+    },
+    rankingItem: {
+      fontSize: fontSizes.base,
+      fontFamily,
+      color: colors.textOnBase,
+      marginVertical: 4,
+    },
+  });
+
 
 
 export default GameRanking;

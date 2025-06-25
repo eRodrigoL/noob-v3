@@ -55,6 +55,12 @@ const globalStyles = StyleSheet.create({
     padding: 24,
   },
 
+  containerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+
   // Imagens
   imageRounded: {
     width: 100,
@@ -134,6 +140,27 @@ const globalStyles = StyleSheet.create({
     fontStyle: 'italic',
     fontWeight: 'bold',
     textAlign: 'justify',
+  },
+
+  // tag
+  tagContainer: {
+    flexDirection: 'row',
+    marginVertical: 10,
+  },
+
+  tag: {
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+    alignItems: 'center',
+    marginRight: 10,
+  },
+
+  // switch
+  switch: {
+    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
+    marginRight: 10,
   },
 });
 
