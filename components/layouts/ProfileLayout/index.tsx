@@ -224,6 +224,7 @@ const ProfileLayout: React.FC<ProfileLayoutProps> = ({
               { color: colors.textOnBase, fontFamily, fontSize: fontSizes.giant },
             ]}
             placeholder={isUser ? 'Digite o nome aqui...' : 'Digite o nome do jogo aqui...'}
+            placeholderTextColor={colors.textOnBase}
             value={name || ''}
             onChangeText={handleNomeChange}
           />

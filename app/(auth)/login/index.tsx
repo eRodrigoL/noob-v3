@@ -108,6 +108,7 @@ const Login: React.FC = () => {
                 },
               ]}
               placeholder="Insira seu nome de usuário"
+              placeholderTextColor={colors.textOnBase}
               value={`@${apelido}`}
               onChangeText={(text) => setApelido(text.replace('@', ''))}
               autoCapitalize="none"

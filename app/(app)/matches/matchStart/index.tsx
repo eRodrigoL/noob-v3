@@ -1,5 +1,11 @@
 // app/(app)/matches/MatchStart.tsx
-import { ButtonHighlight, GameInput, HeaderLayout, ParticipantInput } from '@components/index';
+import {
+  ButtonHighlight,
+  ButtonSemiHighlight,
+  GameInput,
+  HeaderLayout,
+  ParticipantInput,
+} from '@components/index';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
@@ -353,6 +359,7 @@ const RegistroPartidaScreen = () => {
         />
 
         <ButtonHighlight title="Avançar" onPress={registrarPartida} />
+        <ButtonSemiHighlight title="Cancelar" onPress={() => router.replace('/boardgame')} />
       </View>
     </HeaderLayout>
   );

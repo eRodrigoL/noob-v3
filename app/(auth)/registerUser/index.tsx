@@ -175,6 +175,7 @@ const UserRegister: React.FC = () => {
           <TextInput
             style={styleInput(apelido)}
             placeholder="Apelido"
+            placeholderTextColor={colors.textOnBase}
             value={`@${apelido}`}
             onChangeText={(text) => {
               const somenteLetrasENumeros = text.replace(/[^a-zA-Z0-9]/g, '');
@@ -194,6 +195,7 @@ const UserRegister: React.FC = () => {
           <TextInput
             style={styleInput(email, isEmailInvalido)}
             placeholder="Email"
+            placeholderTextColor={colors.textOnBase}
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}
@@ -212,6 +214,7 @@ const UserRegister: React.FC = () => {
             type="datetime"
             options={{ format: 'DD/MM/YYYY' }}
             placeholder="Data de nascimento"
+            placeholderTextColor={colors.textOnBase}
             value={nascimento}
             onChangeText={setNascimento}
           />
@@ -227,6 +230,7 @@ const UserRegister: React.FC = () => {
           <TextInput
             style={styleInput(senha, isSenhaInvalida)}
             placeholder="Senha"
+            placeholderTextColor={colors.textOnBase}
             secureTextEntry
             value={senha}
             onChangeText={setSenha}
@@ -269,6 +273,7 @@ const UserRegister: React.FC = () => {
           <TextInput
             style={styleInput(confirmarSenha, isConfirmacaoInvalida)}
             placeholder="Confirmar senha"
+            placeholderTextColor={colors.textOnBase}
             secureTextEntry
             value={confirmarSenha}
             onChangeText={setConfirmarSenha}
