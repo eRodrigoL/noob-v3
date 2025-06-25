@@ -168,7 +168,7 @@ export default function GameReview() {
         ) : (
           <>
             {/* Avaliação geral (visível sempre) */}
-          <View
+            <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -324,7 +324,15 @@ export default function GameReview() {
                   {Object.entries(matchesByDate).map(([date, count], i) => (
                     <View key={i} style={styles.matchItem}>
                       <Text style={styles.matchDate}>{date}</Text>
-                      <Text style={styles.matchCount}>{count} partida(s)</Text>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontWeight: '600',
+                          color: colors.backgroundHighlight,
+                        }}>
+                        {count} partida(s)
+                      </Text>
+
                     </View>
                   ))}
                 </View>
