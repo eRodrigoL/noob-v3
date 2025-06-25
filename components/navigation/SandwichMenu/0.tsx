@@ -1,4 +1,3 @@
-// components/buttons/SandwichMenu/index.tsx
 import ButtonHighlight from '@components/buttons/ButtonHighlight';
 import { useTheme } from '@hooks/useTheme';
 import { logger } from '@lib/logger';
@@ -118,19 +117,15 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
             ) : (
               <>
                 <ButtonHighlight title="Perfil" onPress={() => handleNavigate('/profile')} />
-
                 <ButtonHighlight
                   title="Configurações"
                   onPress={() => handleNavigate('/settings')}
                 />
-
                 <ButtonHighlight title="Registrar partida" onPress={handlePlayPress} />
-
                 <ButtonHighlight
                   title="Adicionar jogo"
                   onPress={() => router.push('/boardgame/registerGame')}
                 />
-
                 <ButtonHighlight title="Feedback" onPress={() => handleNavigate('/feedback')} />
 
                 {isDev && (

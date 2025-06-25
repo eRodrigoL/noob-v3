@@ -3,14 +3,15 @@ import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
+import { useMatchStore } from '@store/useMatchStore';
+import { useSettingsStore } from '@store/useSettingsStore';
 import { globalStyles, useTheme } from '@theme/index';
+import { sanitizeInput } from '@utils/sanitize';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import stylesLogin from './styles';
-import { useSettingsStore } from '@store/useSettingsStore';
-import { sanitizeInput } from '@utils/sanitize';
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -33,7 +34,10 @@ const Login: React.FC = () => {
     const apelidoCorrigido = `@${apelidoSanitizado}`;
 
     try {
-      const response = await apiClient.post('/login', { apelido: apelidoCorrigido, senha: senhaSanitizada });
+      const response = await apiClient.post('/login', {
+        apelido: apelidoCorrigido,
+        senha: senhaSanitizada,
+      });
 
       if (response.status === 200) {
         const { token, usuario, msg } = response.data;
@@ -47,7 +51,9 @@ const Login: React.FC = () => {
 
         Toast.show({ type: 'success', text1: msg });
 
+        // Carrega preferências e verifica partidas abertas
         await useSettingsStore.getState().loadPreferences();
+        await useMatchStore.getState().checkOpenMatch();
 
         router.replace('/boardgame');
       }
@@ -102,6 +108,7 @@ const Login: React.FC = () => {
                 },
               ]}
               placeholder="Insira seu nome de usuário"
+              placeholderTextColor={colors.textOnBase}
               value={`@${apelido}`}
               onChangeText={(text) => setApelido(text.replace('@', ''))}
               autoCapitalize="none"

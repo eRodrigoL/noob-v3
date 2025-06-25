@@ -1,5 +1,5 @@
 // components/SearchBar/index.tsx
-import styles from '@theme/themOld/globalStyle'; // TODO: substituir por estilos locais no futuro
+import { globalStyles, useTheme } from '@theme/index';
 import React from 'react';
 import { TextInput } from 'react-native';
 
@@ -10,13 +10,23 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ placeholder, value, onChangeText }) => {
+  const { colors, fontFamily, fontSizes } = useTheme();
   return (
     <TextInput
-      style={styles.searchBar}
+      style={[
+        globalStyles.input,
+        {
+          color: colors.textOnBase,
+          fontFamily,
+          fontSize: fontSizes.base,
+          borderWidth: 1,
+          borderColor: colors.textOnBase,
+        },
+      ]}
       placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
-      placeholderTextColor="#999"
+      placeholderTextColor={colors.textOnBase}
       accessible
       accessibilityLabel="Campo de busca de jogos"
       accessibilityHint="Digite o nome do jogo que deseja encontrar"
@@ -25,4 +35,3 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder, value, onChangeText 
 };
 
 export default SearchBar;
-
