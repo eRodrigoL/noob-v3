@@ -293,7 +293,7 @@ export default function GameReview() {
                       key={idx}
                       x={x}
                       y={y}
-                      fontSize="1"
+                      fontSize="14"
                       textAnchor="middle"
                       fill={colors.textOnBase}>
                       {cat}
