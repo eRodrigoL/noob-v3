@@ -62,32 +62,46 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
       const userId = await storage.getItem('userId');
       const token = await storage.getItem('token');
 
-      if (userId && token) {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        };
+      if (!userId || !token) {
+        logger.warn('[Header] Usuário não autenticado.');
+        setHasOpenMatch(false);
+        return;
+      }
 
-        // ✅ Agora a URL vem da base + path via template string
-        const response = await apiClient.get(
-          `/partidas/filtro?registrador=${userId}&fim=null`,
-          config
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json', // ← importante para o Render e API REST padrão
+        },
+      };
+
+      const url = `/partidas/filtro?registrador=${userId}&fim=null`;
+      const response = await apiClient.get(url, config);
+
+      if (Array.isArray(response.data)) {
+        const encontrou = response.data.length > 0;
+        logger.info(`[Header] Partidas abertas encontradas: ${response.data.length}`);
+        setHasOpenMatch(encontrou);
+      } else {
+        logger.warn(
+          '[Header] Resposta inesperada da API ao verificar partidas abertas:',
+          response.data
         );
-
-        setHasOpenMatch(response.data.length > 0);
+        setHasOpenMatch(false);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 404) {
-          // Nenhuma partida em aberto
+          // Supondo que 404 significa "nenhuma partida encontrada"
+          logger.info('[Header] Nenhuma partida em aberto.');
           setHasOpenMatch(false);
         } else {
-          logger.warn('[Header] Erro ao verificar partidas abertas:', error.message);
+          logger.warn('[Header] Erro de API ao verificar partidas abertas:', error.message);
+          setHasOpenMatch(false);
         }
       } else {
-        logger.warn('[Header] Erro desconhecido ao verificar partidas abertas:', error);
+        logger.error('[Header] Erro desconhecido ao verificar partidas abertas:', error);
+        setHasOpenMatch(false);
       }
     }
   };

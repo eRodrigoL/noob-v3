@@ -97,6 +97,20 @@ const ParticipantInput: React.FC<Props> = ({
 
   return (
     <View>
+      <Text
+        style={[
+          globalStyles.textJustified,
+          { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+        ]}>
+        Participantes:
+      </Text>
+      <Text
+        style={[
+          globalStyles.textJustified,
+          { color: colors.textOnBase, fontFamily, fontSize: fontSizes.small },
+        ]}>
+        Obs.: use @ para pesquisar participantes cadastrados
+      </Text>
       <TextInput
         ref={inputRef}
         placeholder="Digite o jogador e pressione Enter..."

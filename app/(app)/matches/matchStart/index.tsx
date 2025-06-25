@@ -20,6 +20,7 @@ const RegistroPartidaScreen = () => {
   const [participants, setParticipants] = useState<string[]>([]);
   const [validNicknames, setValidNicknames] = useState<string[]>([]);
   const [validGames, setValidGames] = useState<{ id: string; nome: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const router = useRouter();
 
@@ -83,6 +84,8 @@ const RegistroPartidaScreen = () => {
           text1: 'Erro',
           text2: 'Não foi possível carregar os dados. Tente novamente.',
         });
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -104,6 +107,7 @@ const RegistroPartidaScreen = () => {
           text1: 'Erro',
           text2: 'Apelido não encontrado. Por favor, insira um apelido válido.',
         });
+        setInputText('');
       }
     } else {
       setParticipants([...participants, trimmedInput]);
@@ -112,6 +116,8 @@ const RegistroPartidaScreen = () => {
   };
 
   const validateGame = () => {
+    if (validGames.length === 0) return;
+
     const selectedGame = validGames.find((game) => game.nome === inputJogo.trim());
     if (!selectedGame) {
       Toast.show({
@@ -160,7 +166,6 @@ const RegistroPartidaScreen = () => {
       const horarioRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
       const trimmedInicioPartida = inicioPartida.trim();
 
-      // Validando o formato do horário
       if (trimmedInicioPartida.length !== 5 || !horarioRegex.test(trimmedInicioPartida)) {
         throw new Error('Horário inválido. Insira no formato hh:mm.');
       }
@@ -214,16 +219,25 @@ const RegistroPartidaScreen = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <HeaderLayout title="Registro de partida">
+        <View style={[globalStyles.containerPadding, { backgroundColor: colors.backgroundBase }]}>
+          <Text
+            style={[
+              globalStyles.textJustified,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            Carregando dados...
+          </Text>
+        </View>
+      </HeaderLayout>
+    );
+  }
+
   return (
     <HeaderLayout title="Registro de partida">
       <View style={[globalStyles.containerPadding, { backgroundColor: colors.backgroundBase }]}>
-        <Text
-          style={[
-            globalStyles.textJustified,
-            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-          ]}>
-          Participantes:
-        </Text>
         <ParticipantInput
           value={inputText}
           onChangeText={setInputText}
