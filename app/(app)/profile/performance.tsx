@@ -115,6 +115,14 @@ export default function Desempenho() {
     }
   };
 
+  const hexToRgba = (hex: string, alpha: number) => {
+  const match = hex.replace('#', '').match(/.{1,2}/g);
+  if (!match) return hex;
+  const [r, g, b] = match.map((x) => parseInt(x, 16));
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
+
   useEffect(() => {
     fetchUserData().finally(() => setLoading(false));
   }, []);
@@ -158,154 +166,171 @@ export default function Desempenho() {
     chartRadius
   );
 
-  return (
-    <HeaderLayout title="Perfil">
-      <ProfileLayout
-        id={user?._id}
-        name={user?.nome}
-        photo={user?.foto}
-        cover={user?.capa}
-        isEditing={isEditing}
-        isUser={true}
-        isLoading={loading}
-        setEdited={seteditedData}>
-        <View style={{ alignItems: 'center', paddingVertical: 20 }}>
-          {noData ? (
-            <View
+ return (
+  <HeaderLayout title="Desempenho">
+    <ProfileLayout
+      id={user?._id}
+      name={user?.nome}
+      photo={user?.foto}
+      cover={user?.capa}
+      isEditing={isEditing}
+      isUser={true}
+      isLoading={loading}
+      setEdited={seteditedData}>
+      <View style={{ alignItems: 'center', paddingVertical: 24, paddingHorizontal: 16 }}>
+        {noData ? (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 24,
+              borderRadius: 12,
+              marginTop: 30,
+              backgroundColor: colors.backgroundBase,
+              shadowColor: '#000',
+              shadowOpacity: 0.1,
+              shadowRadius: 10,
+              elevation: 2,
+            }}>
+            <Text
               style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 24,
-                borderRadius: 12,
-                marginTop: 30,
+                fontSize: 48,
+                fontFamily,
+                marginBottom: 16,
               }}>
-              <Text
-                style={[
-                  globalStyles.textCenteredBold,
-                  {
-                    fontSize: 48,
-                    fontFamily,
-                    marginBottom: 12,
-                  },
-                ]}>
-                🎲
-              </Text>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontSize: 16,
-                  color: colors.textOnBase,
-                  fontFamily,
-                  marginBottom: 12,
-                }}>
-                Você ainda não possui partidas registradas. Comece agora para acompanhar seu desempenho!
-              </Text>
+              🎲
+            </Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: fontSizes.base,
+                color: hexToRgba(colors.textOnBase, 0.3),
+                fontFamily,
+                marginBottom: 16,
+              }}>
+              Você ainda não possui partidas registradas. Comece agora para acompanhar seu desempenho!
+            </Text>
 
-              <ButtonHighlight title={'Ir para Partidas'} onPress={() => router.push("/login")}>
-              </ButtonHighlight>
-            </View>
-          ) : (
-            <>
-              {/* Gráfico de Indicador */}
-              <Svg height={150} width={250} viewBox="0 0 250 150">
-                <G rotation="-90" origin="125, 125">
-                  {/* Círculo completo (background) */}
-                  <Circle
-                    cx="125"
-                    cy="125"
-                    r={radius}
-                    stroke="#ddd"
-                    strokeWidth={strokeWidth}
-                    fill="none"
-                    strokeDasharray={`${circumference} ${circumference}`}
-                    strokeDashoffset={0}
-                  />
-                  {/* Círculo de derrotas (vermelho) */}
-                  <Circle
-                    cx="125"
-                    cy="125"
-                    r={radius}
-                    stroke="#808080"
-                    strokeWidth={strokeWidth}
-                    fill="none"
-                    strokeDasharray={`${circumference} ${circumference}`}
-                    strokeDashoffset={offsetDerrotas}
-                  />
-                  {/* Círculo de vitórias (verde) */}
-                  <Circle
-                    cx="125"
-                    cy="125"
-                    r={radius}
-                    stroke="#fc8e49"
-                    strokeWidth={strokeWidth}
-                    fill="none"
-                    strokeDasharray={`${circumference} ${circumference}`}
-                    strokeDashoffset={circumference - offsetDerrotas}
-                  />
-                </G>
-                <SvgText x="125" y="120" textAnchor="middle" fontSize="20" fill="#333" dy="8">
-                  {`${vitoriasPercent.toFixed(1)}%`}
-                </SvgText>
-              </Svg>
+            <ButtonHighlight
+              title="Ir para Partidas"
+              onPress={() => router.push('/(app)/matches/matchStart')}
+            />
+          </View>
+        ) : (
+          <>
+            <Text
+              style={{
+                fontSize: fontSizes.large,
+                fontFamily,
+                color: colors.textOnBase,
+                marginBottom: 12,
+              }}>
+              Visão Geral de Vitórias e Derrotas
+            </Text>
 
-              <Text style={{ fontSize: 16, marginTop: 10 }}>
-                Vitórias: {vitorias} | Derrotas: {derrotas}
-              </Text>
+            {/* Gráfico circular */}
+            <Svg height={150} width={250} viewBox="0 0 250 150">
+              <G rotation="-90" origin="125, 125">
+                <Circle
+                  cx="125"
+                  cy="125"
+                  r={radius}
+                  stroke="#ddd"
+                  strokeWidth={strokeWidth}
+                  fill="none"
+                  strokeDasharray={`${circumference} ${circumference}`}
+                  strokeDashoffset={0}
+                />
+                <Circle
+                  cx="125"
+                  cy="125"
+                  r={radius}
+                  stroke={colors.textOnSemiHighlight}
+                  strokeWidth={strokeWidth}
+                  fill="none"
+                  strokeDasharray={`${circumference} ${circumference}`}
+                  strokeDashoffset={offsetDerrotas}
+                />
+                <Circle
+                  cx="125"
+                  cy="125"
+                  r={radius}
+                  stroke={colors.backgroundHighlight}
+                  strokeWidth={strokeWidth}
+                  fill="none"
+                  strokeDasharray={`${circumference} ${circumference}`}
+                  strokeDashoffset={circumference - offsetDerrotas}
+                />
+              </G>
+              <SvgText x="125" y="120" textAnchor="middle" fontSize="20" fill={colors.textOnBase} dy="8">
+                {`${vitoriasPercent.toFixed(1)}%`}
+              </SvgText>
+            </Svg>
 
-              <Text style={{ fontSize: 18, marginVertical: 30, marginBottom: 0 }}>
-                Desempenho por categoria
-              </Text>
+            <Text
+              style={{
+                fontSize: fontSizes.base,
+                fontFamily,
+                color: colors.textOnBase,
+                marginTop: 12,
+              }}>
+              Vitórias: {vitorias} | Derrotas: {derrotas}
+            </Text>
 
-              {/* Gráfico de Teia de Aranha */}
-              <Svg height={350} width={350} viewBox="-30 -30 310 310">
-                {outerPoints.map((p, i) => (
-                  <Line
-                    key={`line-${i}`}
-                    x1={centerX}
-                    y1={centerY}
-                    x2={p.x}
-                    y2={p.y}
+            <Text
+              style={{
+                fontSize: fontSizes.large,
+                fontFamily,
+                color: colors.textOnBase,
+                marginTop: 32,
+                marginBottom: 12,
+              }}>
+              Desempenho por Categoria
+            </Text>
+
+            {/* Gráfico de Teia de Aranha */}
+            <Svg height={350} width={350} viewBox="-30 -30 310 310">
+              {outerPoints.map((p, i) => (
+                <Line key={`line-${i}`} x1={centerX} y1={centerY} x2={p.x} y2={p.y} stroke="#ccc" />
+              ))}
+              {Array.from({ length: 5 }, (_, i) => {
+                const r = (chartRadius / 5) * (i + 1);
+                const points = calculatePoints(Array(labels.length).fill(max), r);
+                return (
+                  <Polygon
+                    key={`polygon-${i}`}
+                    points={points.map((p) => `${p.x},${p.y}`).join(' ')}
                     stroke="#ccc"
                     strokeWidth={1}
+                    fill="none"
                   />
-                ))}
-                {Array.from({ length: 5 }, (_, i) => {
-                  const r = (chartRadius / 5) * (i + 1);
-                  const points = calculatePoints(Array(labels.length).fill(max), r);
-                  return (
-                    <Polygon
-                      key={`polygon-${i}`}
-                      points={points.map((p) => `${p.x},${p.y}`).join(' ')}
-                      stroke="#ccc"
-                      strokeWidth={1}
-                      fill="none"
-                    />
-                  );
-                })}
-                <Polygon
-                  points={valuePoints.map((p) => `${p.x},${p.y}`).join(' ')}
-                  stroke="#FFA07A"
-                  strokeWidth={2}
-                  fill="rgba(255, 160, 122, 0.4)"
-                />
-                {outerPoints.map((p, i) => (
-                  <SvgText
-                    key={`label-${i}`}
-                    x={p.x}
-                    y={p.y}
-                    textAnchor={p.x > centerX ? 'start' : p.x < centerX ? 'end' : 'middle'}
-                    fontSize="10"
-                    fill="#333"
-                    dx={p.x > centerX ? 15 : p.x < centerX ? -15 : 0}
-                    dy={p.y > centerY ? 10 : p.y < centerY ? -10 : -5}>
-                    {`${labels[i]}: ${values[i]}`}
-                  </SvgText>
-                ))}
-              </Svg>
-            </>
-          )}
-        </View>
-      </ProfileLayout>
-    </HeaderLayout>
-  );
+                );
+              })}
+              <Polygon
+                points={valuePoints.map((p) => `${p.x},${p.y}`).join(' ')}
+                stroke={hexToRgba(colors.backgroundHighlight, 0.8)}
+                strokeWidth={2}
+                fill={hexToRgba(colors.backgroundHighlight, 0.2)}
+              />
+              {outerPoints.map((p, i) => (
+                <SvgText
+                  key={`label-${i}`}
+                  x={p.x}
+                  y={p.y}
+                  textAnchor={p.x > centerX ? 'start' : p.x < centerX ? 'end' : 'middle'}
+                  fontSize="10"
+                  fill={colors.textOnBase}
+                  dx={p.x > centerX ? 15 : p.x < centerX ? -15 : 0}
+                  dy={p.y > centerY ? 10 : p.y < centerY ? -10 : -5}>
+                  {`${labels[i]}: ${values[i]}`}
+                </SvgText>
+              ))}
+            </Svg>
+          </>
+        )}
+      </View>
+    </ProfileLayout>
+  </HeaderLayout>
+);
+
 }
