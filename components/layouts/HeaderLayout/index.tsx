@@ -4,15 +4,15 @@ import { useTheme } from '@hooks/useTheme';
 import { logger } from '@lib/logger';
 import { useFocusEffect } from '@react-navigation/native';
 import { apiClient } from '@services/apiClient';
+import { storage } from '@store/storage';
+import { useSettingsStore } from '@store/useSettingsStore';
 import { useUiStore } from '@store/useUiStore';
 import axios from 'axios';
+import { router } from 'expo-router';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { ScrollView, ScrollViewProps, Text, View, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import stylesHeaderLayout from './styles';
-import { storage } from '@store/storage';
-import { useSettingsStore } from '@store/useSettingsStore';
-import { router } from 'expo-router';
 
 interface HeaderLayoutProps {
   title: string;
@@ -113,10 +113,10 @@ const HeaderLayout: React.FC<HeaderLayoutProps> = ({
   const handleSettingsPress = () => {
     if (hasOpenMatch) {
       // TODO: Adicionar rota para finalizar partida
-      router.push('/(app)/matches/matchFinish');
+      router.push('/matches/matchFinish');
     } else {
       // TODO: Adicionar rota para iniciar nova partida
-      router.push('/(app)/matches/matchStart');
+      router.push('/matches/matchStart');
     }
   };
 

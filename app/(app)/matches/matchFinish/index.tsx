@@ -302,38 +302,40 @@ const RegistroPartidaScreen = () => {
           editable={victory === ''}
         />
 
-        <ScrollView horizontal style={globalStyles.tagContainer}>
-          {participants.map((participant, index) => (
-            <View
-              key={index}
-              style={[globalStyles.tag, { backgroundColor: colors.backgroundSemiHighlight }]}>
-              <Text
-                style={[
-                  globalStyles.textJustified,
-                  {
-                    color: colors.textOnBase,
-                    fontFamily,
-                    fontSize: fontSizes.base,
-                  },
-                ]}>
-                {participant}
-              </Text>
-              <TouchableOpacity onPress={() => removeParticipant(index)}>
+        <View>
+          <ScrollView horizontal style={globalStyles.tagContainer}>
+            {participants.map((participant, index) => (
+              <View
+                key={index}
+                style={[globalStyles.tag, { backgroundColor: colors.backgroundSemiHighlight }]}>
                 <Text
                   style={[
                     globalStyles.textJustified,
                     {
-                      color: colors.textOnSemiHighlight,
+                      color: colors.textOnBase,
                       fontFamily,
-                      fontSize: fontSizes.small,
+                      fontSize: fontSizes.base,
                     },
                   ]}>
-                  {' ×'}
+                  {participant}
                 </Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </ScrollView>
+                <TouchableOpacity onPress={() => removeParticipant(index)}>
+                  <Text
+                    style={[
+                      globalStyles.textJustified,
+                      {
+                        color: colors.textOnSemiHighlight,
+                        fontFamily,
+                        fontSize: fontSizes.small,
+                      },
+                    ]}>
+                    {' ×'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
 
         <ButtonSemiHighlight title="Adicionar" onPress={addParticipant} disabled={victory !== ''} />
 

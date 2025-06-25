@@ -1,20 +1,12 @@
 // app/(app)/matches/MatchStart.tsx
-import { ButtonHighlight, ButtonSemiHighlight, HeaderLayout } from '@components/index';
+import { ButtonHighlight, HeaderLayout, ParticipantInput } from '@components/index';
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
 import { globalStyles, useTheme } from '@theme/index';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import {
-  Platform,
-  ScrollView,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Switch, Text, TextInput, View } from 'react-native';
 import { MaskedTextInput } from 'react-native-mask-text';
 import Toast from 'react-native-toast-message';
 
@@ -32,10 +24,19 @@ const RegistroPartidaScreen = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchNicknames = async () => {
+    const fetchData = async () => {
       try {
         const userId = await storage.getItem('userId');
         const token = await storage.getItem('token');
+
+        if (!userId || !token) {
+          Toast.show({
+            type: 'error',
+            text1: 'Erro de autenticação',
+            text2: 'Usuário não autenticado.',
+          });
+          return;
+        }
 
         const config = {
           headers: {
@@ -44,29 +45,48 @@ const RegistroPartidaScreen = () => {
           },
         };
 
-        const response = await apiClient.get('/usuarios', config);
-        const nicknames = response.data.map((usuario: any) => usuario.apelido);
-        setValidNicknames(nicknames);
+        const [usuariosRes, jogosRes] = await Promise.all([
+          apiClient.get('/usuarios', config),
+          apiClient.get('/jogos'),
+        ]);
+
+        if (Array.isArray(usuariosRes.data)) {
+          const nicknames = usuariosRes.data.map((usuario: any) => usuario.apelido);
+          setValidNicknames(nicknames);
+        } else {
+          logger.warn('Resposta inesperada de /usuarios:', usuariosRes.data);
+          Toast.show({
+            type: 'error',
+            text1: 'Erro',
+            text2: 'Falha ao carregar usuários.',
+          });
+        }
+
+        if (Array.isArray(jogosRes.data)) {
+          const games = jogosRes.data.map((jogo: any) => ({
+            id: jogo._id,
+            nome: jogo.nome,
+          }));
+          setValidGames(games);
+        } else {
+          logger.warn('Resposta inesperada de /jogos:', jogosRes.data);
+          Toast.show({
+            type: 'error',
+            text1: 'Erro',
+            text2: 'Falha ao carregar jogos.',
+          });
+        }
       } catch (error) {
-        logger.error('Erro ao buscar apelidos:', error);
+        logger.error('Erro ao carregar dados iniciais:', error);
+        Toast.show({
+          type: 'error',
+          text1: 'Erro',
+          text2: 'Não foi possível carregar os dados. Tente novamente.',
+        });
       }
     };
 
-    const fetchGames = async () => {
-      try {
-        const response = await apiClient.get('/jogos');
-        const games = response.data.map((jogo: any) => ({
-          id: jogo._id,
-          nome: jogo.nome,
-        }));
-        setValidGames(games);
-      } catch (error) {
-        logger.error('Erro ao buscar jogos:', error);
-      }
-    };
-
-    fetchNicknames();
-    fetchGames();
+    fetchData();
   }, []);
 
   const addParticipant = () => {
@@ -204,57 +224,14 @@ const RegistroPartidaScreen = () => {
           ]}>
           Participantes:
         </Text>
-        <TextInput
-          placeholder="Digite o jogador a adicionar e pressione Enter..."
-          style={[
-            globalStyles.input,
-            {
-              color: colors.textOnBase,
-              fontFamily,
-              fontSize: fontSizes.base,
-              borderWidth: 1,
-              borderColor: colors.textOnBase,
-            },
-          ]}
+        <ParticipantInput
           value={inputText}
           onChangeText={setInputText}
-          onSubmitEditing={addParticipant}
+          onAdd={addParticipant}
+          validNicknames={validNicknames}
+          participants={participants}
+          onRemove={removeParticipant}
         />
-
-        <ScrollView horizontal style={globalStyles.tagContainer}>
-          {participants.map((participant, index) => (
-            <View
-              key={index}
-              style={[globalStyles.tag, { backgroundColor: colors.backgroundSemiHighlight }]}>
-              <Text
-                style={[
-                  globalStyles.textJustified,
-                  {
-                    color: colors.textOnBase,
-                    fontFamily,
-                    fontSize: fontSizes.base,
-                  },
-                ]}>
-                {participant}
-              </Text>
-              <TouchableOpacity onPress={() => removeParticipant(index)}>
-                <Text
-                  style={[
-                    globalStyles.textJustified,
-                    {
-                      color: colors.textOnSemiHighlight,
-                      fontFamily,
-                      fontSize: fontSizes.small,
-                    },
-                  ]}>
-                  {' ×'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </ScrollView>
-
-        <ButtonSemiHighlight title="Adicionar" onPress={addParticipant} />
 
         <Text
           style={[
@@ -311,13 +288,11 @@ const RegistroPartidaScreen = () => {
             value={explicacao}
             onValueChange={setExplicacao}
             style={[globalStyles.switch]}
-            {...(Platform.OS === 'android' && {
-              trackColor: {
-                false: colors.switchTrackOff,
-                true: colors.switchTrackOn,
-              },
-              thumbColor: explicacao ? colors.switchThumbOn : colors.switchThumbOff,
-            })}
+            trackColor={{
+              false: colors.switchTrackOff,
+              true: colors.switchTrackOn,
+            }}
+            thumbColor={explicacao ? colors.switchThumbOn : colors.switchThumbOff}
           />
           <Text
             style={[

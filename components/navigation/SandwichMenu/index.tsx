@@ -133,49 +133,48 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
   };
 
   // Lógica para botão "Jogar"
-const handlePlayPress = async () => {
-  handleClose();
+  const handlePlayPress = async () => {
+    handleClose();
 
-  try {
-    const userId = await storage.getItem('userId');
-    const token = await storage.getItem('token');
+    try {
+      const userId = await storage.getItem('userId');
+      const token = await storage.getItem('token');
 
-    if (userId && token) {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      };
+      if (userId && token) {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        };
 
-      const response = await apiClient.get(
-        `/partidas/filtro?registrador=${userId}&fim=null`,
-        config
-      );
+        const response = await apiClient.get(
+          `/partidas/filtro?registrador=${userId}&fim=null`,
+          config
+        );
 
-      const hasOpen = response.data.length > 0;
+        const hasOpen = response.data.length > 0;
 
-      if (hasOpen) {
-        router.push('/(app)/matches/matchFinish');
+        if (hasOpen) {
+          router.push('/matches/matchFinish');
+        } else {
+          router.push('/matches/matchStart');
+        }
       } else {
-        router.push('/(app)/matches/matchStart');
+        logger.warn('[handlePlayPress] Usuário não autenticado');
       }
-    } else {
-      logger.warn('[handlePlayPress] Usuário não autenticado');
-    }
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 404) {
-        router.push('/(app)/matches/matchStart');
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 404) {
+          router.push('/matches/matchStart');
+        } else {
+          logger.warn('[handlePlayPress] Erro na verificação de partidas:', error.message);
+        }
       } else {
-        logger.warn('[handlePlayPress] Erro na verificação de partidas:', error.message);
+        logger.warn('[handlePlayPress] Erro desconhecido:', error);
       }
-    } else {
-      logger.warn('[handlePlayPress] Erro desconhecido:', error);
     }
-  }
-};
-
+  };
 
   return (
     <Modal animationType="none" transparent visible={visible} onRequestClose={handleClose}>
