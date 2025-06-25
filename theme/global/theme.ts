@@ -107,7 +107,7 @@ daltonic_2: {
     shadow: 'rgba(0, 0, 0, 0.7)',
     overlay: 'rgba(255, 255, 255, 0.2)',
     accentColor: '#FBE3B5',
-     switchTrackOn: '#3EA74B',
+    switchTrackOn: '#3EA74B',
     switchTrackOff: '#2857BF',
     switchThumbOn: '#FFFFFF',
     switchThumbOff: '#3EA74B',

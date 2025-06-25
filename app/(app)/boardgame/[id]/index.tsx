@@ -1,4 +1,7 @@
 // app/(app)/boardgame/[id]/index.tsx
+
+// Importações de componentes, hooks, serviços, estilos e bibliotecas necessárias para o funcionamento da tela.
+
 import {
   ButtonHighlight,
   ButtonSemiHighlight,
@@ -14,8 +17,9 @@ import React, { useEffect, useState } from 'react';
 import { Text, TextInput } from 'react-native';
 import Toast from 'react-native-toast-message';
 
-// Componente principal
+// Componente principal da página de detalhes do jogo.
 const GameDetails: React.FC = () => {
+
   // Estado para armazenar os dados do jogo ou usuário
   const id = useGameId();
   const [game, setGame] = useState<any>(null);
@@ -25,17 +29,20 @@ const GameDetails: React.FC = () => {
   const [editedData, seteditedData] = useState<any>(null);
   const { colors, fontFamily, fontSizes } = useTheme();
 
-  // Função para buscar os dados do usuário
+  // Função para buscar os dados do usuário da API
   const fetchGameData = async () => {
     try {
-      setLoading(true);
-      const token = await storage.getItem('token');
+      setLoading(true); // Inicia o carregamento.
+      const token = await storage.getItem('token'); // Obtém o token do usuário.
       setIsLoggedIn(!!token); // define como true se houver token
 
+
+      // Requisição para obter os detalhes do jogo pelo ID.
       const response = await apiClient.get(`/jogos/${id}`);
-      setGame(response.data);
-      seteditedData(response.data);
+      setGame(response.data); // Armazena os dados do jogo no estado.
+      seteditedData(response.data); // Preenche os dados editáveis com os dados do jogo.
     } catch (error) {
+      // Exibe mensagem de erro e registra no log.
       logger.error('Erro ao buscar os dados do jogo:', error);
       Toast.show({
         type: 'error',
@@ -43,12 +50,13 @@ const GameDetails: React.FC = () => {
         text2: 'Não foi possível carregar os dados do jogo.',
       });
     } finally {
-      setLoading(false);
+      setLoading(false); // Finaliza o carregamento.
     }
   };
 
   // Função para enviar os dados atualizados
   const updateGameProfile = async () => {
+    // Validação básica para evitar envio de dados inválidos.
     if (!editedData || !editedData.nome) {
       Toast.show({
         type: 'error',
@@ -73,6 +81,7 @@ const GameDetails: React.FC = () => {
       'Content-Type': 'multipart/form-data',
     };
 
+    // Função auxiliar para montar o formulário com os dados do jogo.
     const montarFormData = (foto: any, capa: any) => {
       const formData = new FormData();
       formData.append('nome', editedData.nome);
@@ -82,6 +91,8 @@ const GameDetails: React.FC = () => {
       formData.append('categoria', editedData.categoria);
       formData.append('componentes', editedData.componentes);
       formData.append('descricao', editedData.descricao);
+
+      // Função para adicionar imagens ao formulário.
       const appendImagem = (chave: 'foto' | 'capa', valor: any) => {
         if (!valor) return;
         if (typeof valor === 'string' && valor.startsWith('file://')) {
@@ -103,7 +114,7 @@ const GameDetails: React.FC = () => {
       return formData;
     };
 
-    // tentativa padrão (web ou arquivo bem formado)
+    // Tenta enviar os dados para atualizar o jogo. (web ou arquivo bem formado)
     try {
       const formData = montarFormData(editedData.foto, editedData.capa);
       await apiClient.put(`/jogos/${id}`, formData, { headers });
@@ -113,14 +124,14 @@ const GameDetails: React.FC = () => {
         text1: '✅ Alterações salvas',
         text2: 'O jogo foi atualizado com sucesso.',
       });
-      fetchGameData();
+      fetchGameData(); // Atualiza os dados após salvar.
     } catch (error1: any) {
       logger.warn(
         'Primeira tentativa falhou, tentando fallback Android:',
         error1?.response?.data || error1
       );
 
-      // fallback forçado (mobile com file://)
+      // fallback forçado (mobile com file://) // Tenta novamente usando uma abordagem alternativa
       try {
         const fotoUri = editedData.foto?.uri || editedData.foto;
         const capaUri = editedData.capa?.uri || editedData.capa;
@@ -133,7 +144,7 @@ const GameDetails: React.FC = () => {
           text1: '✅ Alterações salvas',
           text2: 'O jogo foi atualizado com sucesso.',
         });
-        fetchGameData();
+        fetchGameData(); // Exibe mensagem de erro final.
       } catch (error2: any) {
         logger.error('Erro definitivo ao salvar jogo:', error2?.response?.data || error2);
         Toast.show({
@@ -145,15 +156,18 @@ const GameDetails: React.FC = () => {
     }
   };
 
+  // Busca os dados do jogo ao carregar a página ou mudar o ID.
   useEffect(() => {
     if (id) fetchGameData();
   }, [id]);
 
+  // Alterna entre os modos de edição e visualização
   const handleEditToggle = () => {
     if (isEditing) updateGameProfile();
     setIsEditing(!isEditing);
   };
 
+  // Renderiza uma interface de carregamento ou o conteúdo do jogo.
   if (!game) {
     return (
       <HeaderLayout title="Jogo">
@@ -162,6 +176,7 @@ const GameDetails: React.FC = () => {
     );
   }
 
+  // Renderiza os campos do formulário para edição ou exibição.
   const renderField = (label: string, value: string, field: keyof typeof editedData) => (
     <>
       <Text
@@ -196,6 +211,7 @@ const GameDetails: React.FC = () => {
     </>
   );
 
+  // Renderiza a interface principal do jogo.
   return (
     <HeaderLayout title="Jogo">
       <ProfileLayout
