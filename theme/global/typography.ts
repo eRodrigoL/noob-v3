@@ -5,10 +5,15 @@ const typography = {
   // Famílias de fontes disponíveis no app (devem corresponder ao nome no useFonts)
   fonts: {
     arial: 'Arial',
-    helvetica: 'Helvetica',
+    calibri: 'Calibri', 
+    comic: 'Comic', 
+    georgia: 'Georgia', 
+    nunitoBold: 'Nunito', 
     roboto: 'Roboto',
-    serif: 'Serif',
-    times: 'Times New Roman',
+    sansSerifCollection: 'Sans Serif Collection', 
+    tahoma: 'Tahoma',
+    timesbd: 'Times New Roman',
+    verdana: 'Verdana', // Excelente legibilidade em telas; 
   },
 
   // Tamanhos base de fonte e multiplicadores
@@ -19,6 +24,7 @@ const typography = {
     smallMultiplier: 0.85, // Pequeno (15% menor que o padrão)
     largeMultiplier: 1.3, // Grande (30% maior que o padrão)
     giantMultiplier: 1.6, // Gigante (60% maior que o padrão)
+    
 
     // Limites globais
     min: 12, // Tamanho mínimo permitido (em pixels)

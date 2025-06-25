@@ -55,6 +55,8 @@ export default ({ config }) => ({
         backgroundColor: "#ffffff", // Cor de fundo da tela de splash
       },
     ],
+    
+    "expo-font", // Adicionado suporte ao expo-font
   ],
 
   // 🧪 Ativa rotas tipadas no Expo Router
