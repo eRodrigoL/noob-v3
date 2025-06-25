@@ -114,6 +114,7 @@ const ParticipantInput: React.FC<Props> = ({
       <TextInput
         ref={inputRef}
         placeholder="Digite o jogador e pressione Enter..."
+        placeholderTextColor={colors.textOnBase}
         value={value}
         onChangeText={handleInput}
         onSubmitEditing={handleSubmit}

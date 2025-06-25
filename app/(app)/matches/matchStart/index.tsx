@@ -3,6 +3,7 @@ import { ButtonHighlight, GameInput, HeaderLayout, ParticipantInput } from '@com
 import { logger } from '@lib/logger';
 import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
+import { useMatchStore } from '@store/useMatchStore';
 import { globalStyles, useTheme } from '@theme/index';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -12,7 +13,7 @@ import Toast from 'react-native-toast-message';
 
 const RegistroPartidaScreen = () => {
   const { colors, fontFamily, fontSizes } = useTheme();
-  const [explicacao, setExplicacao] = useState(false);
+  const [explicacao, setExplicacao] = useState(true);
   const [tempoExplicacao, setTempoExplicacao] = useState('');
   const [inputText, setInputText] = useState('');
   const [inputJogo, setInputJogo] = useState('');
@@ -192,6 +193,9 @@ const RegistroPartidaScreen = () => {
           text1: 'Partida registrada!',
           text2: 'Seus dados foram salvos com sucesso.',
         });
+
+        await useMatchStore.getState().checkOpenMatch();
+
         setParticipants([]);
         setInputJogo('');
         setTempoExplicacao('');
@@ -218,6 +222,12 @@ const RegistroPartidaScreen = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (explicacao) {
+      setTempoExplicacao('');
+    }
+  }, [explicacao]);
 
   if (isLoading) {
     return (
@@ -254,62 +264,66 @@ const RegistroPartidaScreen = () => {
           validGames={validGames.map((j) => j.nome)}
         />
 
-        <Text
-          style={[
-            globalStyles.textJustified,
-            { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
-          ]}>
-          Tempo de explicação:
-        </Text>
-
-        <TextInput
-          placeholder="Minutos"
-          style={[
-            globalStyles.input,
-            {
-              color: colors.textOnBase,
-              fontFamily,
-              fontSize: fontSizes.base,
-              borderWidth: 1,
-              borderColor: colors.textOnBase,
-            },
-          ]}
-          value={tempoExplicacao}
-          onChangeText={setTempoExplicacao}
-          editable={!explicacao}
-          keyboardType="numeric"
-        />
-
         <View style={globalStyles.containerRow}>
-          <Switch
-            value={explicacao}
-            onValueChange={setExplicacao}
-            style={[globalStyles.switch]}
-            trackColor={{
-              false: colors.switchTrackOff,
-              true: colors.switchTrackOn,
-            }}
-            thumbColor={explicacao ? colors.switchThumbOn : colors.switchThumbOff}
-          />
           <Text
             style={[
               globalStyles.textJustified,
               { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
             ]}>
-            não houve
+            Tempo de explicação:
+          </Text>
+          <View style={{ paddingLeft: 15 }}>
+            <Switch
+              value={explicacao}
+              onValueChange={setExplicacao}
+              style={[globalStyles.switch]}
+              trackColor={{
+                false: colors.switchTrackOff,
+                true: colors.switchTrackOn,
+              }}
+              thumbColor={explicacao ? colors.switchThumbOn : colors.switchThumbOff}
+            />
+          </View>
+          <Text
+            style={[
+              globalStyles.textJustified,
+              { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
+            ]}>
+            não houve explicação
           </Text>
         </View>
+
+        {!explicacao && (
+          <TextInput
+            placeholder="...em MINUTOS"
+            placeholderTextColor={colors.textOnBase}
+            style={[
+              globalStyles.input,
+              {
+                color: colors.textOnBase,
+                fontFamily,
+                fontSize: fontSizes.base,
+                borderWidth: 1,
+                borderColor: colors.textOnBase,
+              },
+            ]}
+            value={tempoExplicacao}
+            onChangeText={setTempoExplicacao}
+            keyboardType="numeric"
+          />
+        )}
 
         <Text
           style={[
             globalStyles.textJustified,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
           ]}>
-          Início da partida:
+          Horário do início da partida (exp.: 20:30):
         </Text>
         <MaskedTextInput
           mask="99:99"
-          placeholder="Horário..."
+          placeholder="Digite somente números..."
+          placeholderTextColor={colors.textOnBase}
           style={[
             globalStyles.input,
             {

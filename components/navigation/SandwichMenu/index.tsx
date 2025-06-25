@@ -2,9 +2,8 @@
 import ButtonHighlight from '@components/buttons/ButtonHighlight';
 import { useTheme } from '@hooks/useTheme';
 import { logger } from '@lib/logger';
-import { apiClient } from '@services/apiClient';
 import { storage } from '@store/storage';
-import axios from 'axios';
+import { useMatchStore } from '@store/useMatchStore';
 import Constants from 'expo-constants';
 import { Href, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
@@ -12,20 +11,20 @@ import { Alert, Animated, Dimensions, Modal, Platform, Pressable, View } from 'r
 import stylesSandwichMenu from './styles';
 
 const isDev = Constants.expoConfig?.extra?.EXPO_PUBLIC_APP_MODE === 'development';
+const { width } = Dimensions.get('window');
 
 interface ModalProps {
   visible: boolean;
   onClose: () => void;
 }
 
-const { width } = Dimensions.get('window');
-
 const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
   const { colors } = useTheme();
   const slideAnim = useRef(new Animated.Value(-width)).current;
-  const [hasOpenMatch, setHasOpenMatch] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
+
+  const hasOpenMatch = useMatchStore((state) => state.hasOpenMatch);
 
   // Verifica se há usuário logado
   const checkAuthentication = async () => {
@@ -36,40 +35,6 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
     } catch (error) {
       logger.warn('[SandwichMenu] Erro ao verificar autenticação:', error);
       setIsAuthenticated(false);
-    }
-  };
-
-  // Verifica se há partidas em aberto
-  const checkOpenMatches = async () => {
-    try {
-      const userId = await storage.getItem('userId');
-      const token = await storage.getItem('token');
-
-      if (userId && token) {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        };
-
-        const response = await apiClient.get(
-          `/partidas/filtro?registrador=${userId}&fim=null`,
-          config
-        );
-
-        setHasOpenMatch(response.data.length > 0);
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 404) {
-          setHasOpenMatch(false);
-        } else {
-          logger.warn('[SandwichMenu] Erro na verificação de partidas:', error.message);
-        }
-      } else {
-        logger.warn('[SandwichMenu] Erro desconhecido:', error);
-      }
     }
   };
 
@@ -110,13 +75,6 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
     }
   }, [visible]);
 
-  // Verifica partidas após confirmação de login
-  useEffect(() => {
-    if (isAuthenticated) {
-      checkOpenMatches();
-    }
-  }, [isAuthenticated]);
-
   // Fecha o menu com animação
   const handleClose = () => {
     Animated.timing(slideAnim, {
@@ -132,47 +90,13 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
     router.push(path);
   };
 
-  // Lógica para botão "Jogar"
-  const handlePlayPress = async () => {
+  // Botão que registra partidas
+  const handlePlayPress = () => {
     handleClose();
-
-    try {
-      const userId = await storage.getItem('userId');
-      const token = await storage.getItem('token');
-
-      if (userId && token) {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        };
-
-        const response = await apiClient.get(
-          `/partidas/filtro?registrador=${userId}&fim=null`,
-          config
-        );
-
-        const hasOpen = response.data.length > 0;
-
-        if (hasOpen) {
-          router.push('/matches/matchFinish');
-        } else {
-          router.push('/matches/matchStart');
-        }
-      } else {
-        logger.warn('[handlePlayPress] Usuário não autenticado');
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 404) {
-          router.push('/matches/matchStart');
-        } else {
-          logger.warn('[handlePlayPress] Erro na verificação de partidas:', error.message);
-        }
-      } else {
-        logger.warn('[handlePlayPress] Erro desconhecido:', error);
-      }
+    if (hasOpenMatch) {
+      router.push('/matches/matchFinish');
+    } else {
+      router.push('/matches/matchStart');
     }
   };
 

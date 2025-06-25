@@ -48,6 +48,7 @@ const GameInput: React.FC<Props> = ({ value, onChangeText, onSelect, validGames 
       </Text>
       <TextInput
         placeholder="Digite o nome do jogo..."
+        placeholderTextColor={colors.textOnBase}
         value={value}
         onChangeText={handleInput}
         style={[
