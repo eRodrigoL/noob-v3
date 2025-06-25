@@ -126,7 +126,7 @@ export default function History() {
                 Você ainda não possui partidas registradas. Comece agora para acompanhar seu desempenho!
               </Text>
 
-              <ButtonHighlight title={'Ir para Partidas'} onPress={() => router.push("/login")}></ButtonHighlight>
+              <ButtonHighlight title={'Ir para Partidas'} onPress={() => router.push("/(app)/matches/matchStart")}></ButtonHighlight>
             </View>
           ) : (
 
@@ -147,20 +147,20 @@ export default function History() {
                     borderRadius: 8,
                     padding: 12,
                   }}>
-                  <Text style={{ color: colors.textOnHighlight, fontWeight: 'bold' }}>
+                  <Text style={{ color: colors.textOnSemiHighlight, fontWeight: 'bold' }}>
                     {partida.nomeJogo}
                   </Text>
-                  <Text style={{ color: colors.textOnHighlight }}>Data: {dataConclusao}</Text>
-                  <Text style={{ color: colors.textOnHighlight }}>
+                  <Text style={{ color: colors.textOnBase}}>Data: {dataConclusao}</Text>
+                  <Text style={{ color: colors.textOnBase }}>
                     Participantes: {participantes}
                   </Text>
-                  <Text style={{ color: colors.textOnHighlight }}>
+                  <Text style={{ color: colors.textOnBase }}>
                     Duração: {partida.duracao * 60} minutos
                   </Text>
-                  <Text style={{ color: colors.textOnHighlight }}>
+                  <Text style={{ color: colors.textOnBase }}>
                     Explicação: {partida.explicacao} minutos
                   </Text>
-                  <Text style={{ color: colors.textOnHighlight }}>
+                  <Text style={{ color: colors.textOnBase }}>
                     Vencedor: {vencedorNome || 'Nenhum'}
                   </Text>
                 </View>
