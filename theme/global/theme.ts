@@ -5,8 +5,8 @@
 // Define o tema "ligth" (tema claro)
 
 const theme = {
-//
-light: {
+  //
+  light: {
     name: 'Light',
     backgroundBase: '#FAF5F0', // Cor de fundo principal
     backgroundSemiHighlight: '#F8E7D4', // Cor para destaque secundário
@@ -25,9 +25,8 @@ light: {
     switchTrackOff: '#fc9aaf',
     switchThumbOn: '#FFFFFF',
     switchThumbOff: '#F35B04',
-},
+  },
 
-  
   // Define o tema "dark" (tema escuro)
 
   dark: {
@@ -35,6 +34,8 @@ light: {
     backgroundBase: '#1E1E24',
     backgroundSemiHighlight: '#2E2B27',
     backgroundHighlight: '#602401',
+    input: '#444654',
+    inputError: '#A9313D',
     textHighlight: '#FFFFFF',
     textOnBase: '#BFBCB7',
     textOnSemiHighlight: '#BFBCB7',
@@ -51,11 +52,13 @@ light: {
 
   // Define o tema "daltonic" (daltônico 1)
 
- daltonic: {
+  daltonic: {
     name: 'Daltonic 1',
     backgroundBase: '#383428',
     backgroundSemiHighlight: '#3D7461',
     backgroundHighlight: '#F14B1B',
+    input: '#83A279',
+    inputError: '#FC9A9A',
     textHighlight: '#FFFFFF',
     textOnBase: '#FFFFFF',
     textOnSemiHighlight: '#83A279',
@@ -64,19 +67,21 @@ light: {
     shadow: 'rgba(0, 0, 0, 0.7)',
     overlay: 'rgba(255, 255, 255, 0.2)',
     accentColor: '#B0B0B0',
-     switchTrackOn: '#F14B1B',
+    switchTrackOn: '#F14B1B',
     switchTrackOff: '#3D7461',
     switchThumbOn: '#FFFFFF',
     switchThumbOff: '#F14B1B',
-},
+  },
 
   // Define o tema "daltonic_2" (daltônico 2)
 
-daltonic_2: {
+  daltonic_2: {
     name: 'Daltonic 2',
     backgroundBase: '#1B3C72',
     backgroundSemiHighlight: '#F5754E',
     backgroundHighlight: '#F6BC1D',
+    input: '#B7CFE8',
+    inputError: '#E28585',
     textHighlight: '#FFFFFF',
     textOnBase: '#FFFFFF',
     textOnSemiHighlight: '#1B3C72',
@@ -85,20 +90,21 @@ daltonic_2: {
     shadow: 'rgba(0, 0, 0, 0.4)',
     overlay: 'rgba(255, 255, 255, 0.25)',
     accentColor: '#F6BC1D',
-     switchTrackOn: '#F6BC1D',
+    switchTrackOn: '#F6BC1D',
     switchTrackOff: '#1B3C72',
     switchThumbOn: '#FFFFFF',
     switchThumbOff: '#F5754E',
-},
-
+  },
 
   // Define o tema "daltonic_3" (daltônico 3)
-  
- daltonic_3: {
+
+  daltonic_3: {
     name: 'Daltonic 3',
     backgroundBase: '#2B3131',
     backgroundSemiHighlight: '#2857BF',
     backgroundHighlight: '#3EA74B',
+    input: '#A6D8F0',
+    inputError: '#FCB5B5',
     textHighlight: '#FFFFFF',
     textOnBase: '#FFFFFF',
     textOnSemiHighlight: '#F5AC07',
@@ -111,7 +117,7 @@ daltonic_2: {
     switchTrackOff: '#2857BF',
     switchThumbOn: '#FFFFFF',
     switchThumbOff: '#3EA74B',
-},
+  },
 };
 
 // Exporta o objeto "theme" para ser usado em outras partes do código
