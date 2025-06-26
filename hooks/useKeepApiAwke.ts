@@ -1,5 +1,6 @@
 // hooks/useKeepApiAwke.ts
 import { warmUpApi } from '@hooks/useWarmUpApi';
+import { useMatchStore } from '@store/useMatchStore';
 import { useEffect, useRef } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 
@@ -11,9 +12,11 @@ import { AppState, AppStateStatus } from 'react-native';
  */
 export function useKeepApiAwake() {
   const appState = useRef<AppStateStatus>(AppState.currentState);
+  const checkOpenMatch = useMatchStore((state) => state.checkOpenMatch);
 
   useEffect(() => {
     warmUpApi();
+    checkOpenMatch();
 
     const appStateListener = AppState.addEventListener('change', (nextState) => {
       const isReturningFromBackground =
@@ -21,6 +24,7 @@ export function useKeepApiAwake() {
 
       if (isReturningFromBackground) {
         warmUpApi();
+        checkOpenMatch();
       }
 
       appState.current = nextState;
@@ -29,6 +33,7 @@ export function useKeepApiAwake() {
     const intervalId = setInterval(() => {
       if (appState.current === 'active') {
         warmUpApi();
+        checkOpenMatch();
       }
     }, 240_000);
 
