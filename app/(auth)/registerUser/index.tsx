@@ -85,7 +85,7 @@ const UserRegister: React.FC = () => {
     const montarFormData = (foto: any, capa: any) => {
       const formData = new FormData();
       formData.append('nome', nomeSanitizado);
-      formData.append('apelido', `@${apelidoSanitizado}`);
+      formData.append('apelido', `@${apelido.toLowerCase()}`);
       formData.append('nascimento', nascimentoSanitizado);
       formData.append('email', emailSanitizado);
       formData.append('senha', senhaSanitizada);
@@ -178,8 +178,8 @@ const UserRegister: React.FC = () => {
             placeholderTextColor={colors.textOnBase}
             value={`@${apelido}`}
             onChangeText={(text) => {
-              const somenteLetrasENumeros = text.replace(/[^a-zA-Z0-9]/g, '');
-              setApelido(somenteLetrasENumeros);
+              const sanitized = text.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+              setApelido(sanitized);
             }}
             autoCapitalize="none"
           />
