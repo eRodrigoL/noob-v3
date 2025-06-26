@@ -14,27 +14,24 @@ import React, { useEffect, useState } from 'react';
 import { Text, TextInput } from 'react-native';
 import Toast from 'react-native-toast-message';
 
-// Componente principal
 const GameDetails: React.FC = () => {
-  // Estado para armazenar os dados do jogo ou usuário
   const id = useGameId();
   const [game, setGame] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [editedData, seteditedData] = useState<any>(null);
+  const [editedData, setEditedData] = useState<any>(null);
   const { colors, fontFamily, fontSizes } = useTheme();
 
-  // Função para buscar os dados do usuário
   const fetchGameData = async () => {
     try {
       setLoading(true);
       const token = await storage.getItem('token');
-      setIsLoggedIn(!!token); // define como true se houver token
+      setIsLoggedIn(!!token);
 
       const response = await apiClient.get(`/jogos/${id}`);
       setGame(response.data);
-      seteditedData(response.data);
+      setEditedData(response.data);
     } catch (error) {
       logger.error('Erro ao buscar os dados do jogo:', error);
       Toast.show({
@@ -47,9 +44,8 @@ const GameDetails: React.FC = () => {
     }
   };
 
-  // Função para enviar os dados atualizados
   const updateGameProfile = async () => {
-    if (!editedData || !editedData.nome) {
+    if (!editedData?.nome) {
       Toast.show({
         type: 'error',
         text1: '⛔ Nome é obrigatório',
@@ -76,12 +72,16 @@ const GameDetails: React.FC = () => {
     const montarFormData = (foto: any, capa: any) => {
       const formData = new FormData();
       formData.append('nome', editedData.nome);
+      formData.append('ano', editedData.ano);
       formData.append('idade', editedData.idade);
       formData.append('designer', editedData.designer);
+      formData.append('artista', editedData.artista);
       formData.append('editora', editedData.editora);
       formData.append('categoria', editedData.categoria);
       formData.append('componentes', editedData.componentes);
       formData.append('descricao', editedData.descricao);
+      formData.append('digital', editedData.digital);
+
       const appendImagem = (chave: 'foto' | 'capa', valor: any) => {
         if (!valor) return;
         if (typeof valor === 'string' && valor.startsWith('file://')) {
@@ -96,14 +96,12 @@ const GameDetails: React.FC = () => {
         }
       };
 
-      // adiciona imagens (padrão web)
-      appendImagem('foto', foto);
-      appendImagem('capa', capa);
+      appendImagem('foto', editedData.foto);
+      appendImagem('capa', editedData.capa);
 
       return formData;
     };
 
-    // tentativa padrão (web ou arquivo bem formado)
     try {
       const formData = montarFormData(editedData.foto, editedData.capa);
       await apiClient.put(`/jogos/${id}`, formData, { headers });
@@ -115,17 +113,12 @@ const GameDetails: React.FC = () => {
       });
       fetchGameData();
     } catch (error1: any) {
-      logger.warn(
-        'Primeira tentativa falhou, tentando fallback Android:',
-        error1?.response?.data || error1
-      );
-
-      // fallback forçado (mobile com file://)
+      logger.warn('Primeira tentativa falhou, tentando fallback Android:', error1?.response?.data || error1);
       try {
         const fotoUri = editedData.foto?.uri || editedData.foto;
         const capaUri = editedData.capa?.uri || editedData.capa;
-
         const formDataFallback = montarFormData(fotoUri, capaUri);
+
         await apiClient.put(`/jogos/${id}`, formDataFallback, { headers });
 
         Toast.show({
@@ -167,11 +160,7 @@ const GameDetails: React.FC = () => {
       <Text
         style={[
           globalStyles.textJustifiedBoldItalic,
-          {
-            color: colors.textOnBase,
-            fontFamily,
-            fontSize: fontSizes.base,
-          },
+          { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
         ]}>
         {label}
       </Text>
@@ -181,8 +170,8 @@ const GameDetails: React.FC = () => {
             globalStyles.input,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
           ]}
-          value={editedData[field]}
-          onChangeText={(text) => seteditedData((prev: any) => ({ ...prev, [field]: text }))}
+          value={editedData?.[field] || ''}
+          onChangeText={(text) => setEditedData((prev: any) => ({ ...prev, [field]: text }))}
         />
       ) : (
         <Text
@@ -190,7 +179,7 @@ const GameDetails: React.FC = () => {
             globalStyles.input,
             { color: colors.textOnBase, fontFamily, fontSize: fontSizes.base },
           ]}>
-          {value}
+          {value || '-'}
         </Text>
       )}
     </>
@@ -206,27 +195,26 @@ const GameDetails: React.FC = () => {
         isEditing={isEditing}
         isUser={false}
         isLoading={loading}
-        setEdited={seteditedData}>
+        setEdited={setEditedData}>
         {renderField('Lançamento:', game.ano, 'ano')}
         {renderField('Idade:', game.idade, 'idade')}
         {renderField('Designer:', game.designer, 'designer')}
+        {renderField('Artista:', game.artista, 'artista')}
         {renderField('Editora:', game.editora, 'editora')}
         {renderField('Categoria:', game.categoria, 'categoria')}
         {renderField('Componentes:', game.componentes, 'componentes')}
         {renderField('Descrição:', game.descricao, 'descricao')}
+        {renderField('Link Digital:', game.digital, 'digital')}
 
         {isLoggedIn && (
-          <ButtonHighlight
-            title={isEditing ? 'Salvar' : 'Editar Jogo'}
-            onPress={handleEditToggle}
-          />
+          <ButtonHighlight title={isEditing ? 'Salvar' : 'Editar Jogo'} onPress={handleEditToggle} />
         )}
         {isEditing && (
           <ButtonSemiHighlight
             title="Cancelar"
             onPress={() => {
               setIsEditing(false);
-              seteditedData(game);
+              setEditedData(game);
             }}
           />
         )}
