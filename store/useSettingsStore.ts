@@ -88,45 +88,41 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 
   loadPreferences: async () => {
     try {
-          const [fontOptionValue, fontSizeValue, themeValue] = await Promise.all([
-      storage.getItem('fontOption'),
-      storage.getItem('fontSize'),
-      storage.getItem('theme'),
-    ]);
+      const [fontOptionValue, fontSizeValue, themeValue] = await Promise.all([
+        storage.getItem('fontOption'),
+        storage.getItem('fontSize'),
+        storage.getItem('theme'),
+      ]);
 
-    const validFontOptions = Object.keys(typography.fonts);
-    const validThemeOptions = Object.keys(theme);
+      const validFontOptions = Object.keys(typography.fonts);
+      const validThemeOptions = Object.keys(theme);
 
-    const fontOption: FontOption =
-      validFontOptions.includes(fontOptionValue ?? '')
+      const fontOption: FontOption = validFontOptions.includes(fontOptionValue ?? '')
         ? (fontOptionValue as FontOption)
         : DEFAULTS.fontOption;
 
-    const themeName: ThemeName =
-      validThemeOptions.includes(themeValue ?? '')
+      const themeName: ThemeName = validThemeOptions.includes(themeValue ?? '')
         ? (themeValue as ThemeName)
         : DEFAULTS.theme;
 
-    const fontSize = parseFloat(fontSizeValue ?? '');
-    const fontSizeMultiplier =
-      Math.min(
-        Math.max(fontSize, typography.sizes.min / typography.sizes.base),
-        typography.sizes.max / typography.sizes.base
-      ) || DEFAULTS.fontSizeMultiplier;
+      const fontSize = parseFloat(fontSizeValue ?? '');
+      const fontSizeMultiplier =
+        Math.min(
+          Math.max(fontSize, typography.sizes.min / typography.sizes.base),
+          typography.sizes.max / typography.sizes.base
+        ) || DEFAULTS.fontSizeMultiplier;
 
-    set({
-      fontOption,
-      fontSizeMultiplier,
-      theme: themeName,
-      isLoaded: true,
-    });
+      set({
+        fontOption,
+        fontSizeMultiplier,
+        theme: themeName,
+        isLoaded: true,
+      });
 
-    logger.log('📦 Preferências carregadas do armazenamento local.');
-
+      logger.log('📦 Preferências carregadas do armazenamento local.');
     } catch (error) {
       logger.warn('⚠️ Erro ao carregar preferências, usando padrão.', error);
       set({ ...DEFAULTS, isLoaded: true });
     }
   },
 }));
-

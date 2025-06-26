@@ -90,8 +90,8 @@ function SettingsScreen() {
           }}
           selectedValue={selectedTheme}
           onValueChange={(itemValue) => setTheme(itemValue)}>
-          {typedKeys(theme).map((key) => (
-            <Picker.Item key={key} label={key} value={key} />
+          {Object.entries(theme).map(([key, value]) => (
+            <Picker.Item key={key} label={value.name} value={key} />
           ))}
         </Picker>
 

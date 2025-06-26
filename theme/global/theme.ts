@@ -7,7 +7,7 @@
 const theme = {
   //
   light: {
-    name: 'Light',
+    name: 'Claro',
     backgroundBase: '#FAF5F0', // Cor de fundo principal
     backgroundSemiHighlight: '#F8E7D4', // Cor para destaque secundário
     backgroundHighlight: '#F35B04', // Cor para destaque principal
@@ -30,7 +30,7 @@ const theme = {
   // Define o tema "dark" (tema escuro)
 
   dark: {
-    name: 'Dark',
+    name: 'Escuro',
     backgroundBase: '#1E1E24',
     backgroundSemiHighlight: '#2E2B27',
     backgroundHighlight: '#602401',
@@ -53,7 +53,7 @@ const theme = {
   // Define o tema "daltonic" (daltônico 1)
 
   daltonic: {
-    name: 'Daltonic 1',
+    name: 'Daltônico: vermelho/verde',
     backgroundBase: '#383428',
     backgroundSemiHighlight: '#3D7461',
     backgroundHighlight: '#F14B1B',
@@ -76,7 +76,7 @@ const theme = {
   // Define o tema "daltonic_2" (daltônico 2)
 
   daltonic_2: {
-    name: 'Daltonic 2',
+    name: 'Daltônico: azul',
     backgroundBase: '#1B3C72',
     backgroundSemiHighlight: '#F5754E',
     backgroundHighlight: '#F6BC1D',
@@ -99,7 +99,7 @@ const theme = {
   // Define o tema "daltonic_3" (daltônico 3)
 
   daltonic_3: {
-    name: 'Daltonic 3',
+    name: 'Daltônico: alto contraste',
     backgroundBase: '#2B3131',
     backgroundSemiHighlight: '#2857BF',
     backgroundHighlight: '#3EA74B',
