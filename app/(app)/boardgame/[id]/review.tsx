@@ -179,19 +179,83 @@ export default function GameReview() {
         ) : (
           <>
             {/* Avaliação geral (visível sempre) */}
-            <View style={styles.cardsContainer}>
-              <View style={styles.card}>
-                <Text style={styles.cardTitle}>Média Geral</Text>
-                <Text style={styles.cardValue}>{averageRating?.toFixed(1)}</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                flexWrap: 'wrap',
+                gap: 16,
+                marginBottom: 20,
+              }}>
+              <View
+                style={{
+                  backgroundColor: '#F5F5F5',
+                  borderRadius: 12,
+                  paddingVertical: 20,
+                  paddingHorizontal: 24,
+                  minWidth: 140,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexGrow: 1,
+                  maxWidth: 180,
+                }}>
+                <Text
+                  style={{
+                    fontSize: fontSizes.base,
+                    fontFamily,
+                    color: '#333',
+                    marginBottom: 8,
+                    fontWeight: '600',
+                  }}>
+                  Média Geral
+                </Text>
+                <Text
+                  style={{
+                    fontSize: fontSizes.giant,
+                    fontFamily,
+                    fontWeight: '700',
+                    color: colors.backgroundHighlight,
+                  }}>
+                  {averageRating?.toFixed(1)}
+                </Text>
               </View>
 
               {isLoggedIn && (
-                <View style={styles.card}>
-                  <Text style={styles.cardTitle}>Vezes Jogadas</Text>
-                  <Text style={styles.cardValue}>{playCount}</Text>
+                <View
+                  style={{
+                    backgroundColor: '#F5F5F5',
+                    borderRadius: 12,
+                    paddingVertical: 20,
+                    paddingHorizontal: 24,
+                    minWidth: 140,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexGrow: 1,
+                    maxWidth: 180,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: fontSizes.base,
+                      fontFamily,
+                      color: '#333',
+                      marginBottom: 8,
+                      fontWeight: '600',
+                    }}>
+                    Vezes Jogadas
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: fontSizes.giant,
+                      fontFamily,
+                      fontWeight: '700',
+                      color: colors.backgroundHighlight,
+                    }}>
+                    {playCount}
+                  </Text>
                 </View>
               )}
             </View>
+
 
             {/* Gráfico de categorias */}
             <Text
@@ -231,7 +295,7 @@ export default function GameReview() {
                     />
                   );
                 })}
-                <Polygon points={points} fill={hexToRgba(colors.backgroundHighlight,0.2)} stroke={hexToRgba(colors.backgroundHighlight, 0.8)} />
+                <Polygon points={points} fill={hexToRgba(colors.backgroundHighlight, 0.2)} stroke={hexToRgba(colors.backgroundHighlight, 0.8)} />
                 <Circle cx={margin + radius} cy={margin + radius} r="3" fill="black" />
                 {categories.map((cat, idx) => {
                   const { x, y } = calculateCoordinates(maxValue + 20, idx, categories.length);
@@ -240,7 +304,7 @@ export default function GameReview() {
                       key={idx}
                       x={x}
                       y={y}
-                      fontSize="13"
+                      fontSize="14"
                       textAnchor="middle"
                       fill={colors.textOnBase}>
                       {cat}
@@ -271,7 +335,15 @@ export default function GameReview() {
                   {Object.entries(matchesByDate).map(([date, count], i) => (
                     <View key={i} style={styles.matchItem}>
                       <Text style={styles.matchDate}>{date}</Text>
-                      <Text style={styles.matchCount}>{count} partida(s)</Text>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontWeight: '600',
+                          color: colors.backgroundHighlight,
+                        }}>
+                        {count} partida(s)
+                      </Text>
+
                     </View>
                   ))}
                 </View>
@@ -301,51 +373,7 @@ export default function GameReview() {
 
 // Estilos do componente / Configurações de layout e design.
 const styles = StyleSheet.create({
-  error: { color: 'red', textAlign: 'center', marginVertical: 12 },
-  cardsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 16,
-    marginBottom: 20,
-    flexWrap: 'wrap', // Para quebrar em telas pequenas
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    paddingVertical: 20,
-    paddingHorizontal: 30,
-    minWidth: 140,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
-    // largura responsiva opcional
-    flexGrow: 1,
-    maxWidth: 180,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#555',
-    marginBottom: 8,
-  },
-
-  cardValue: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#FF7043', // cor destaque, pode ajustar para seu tema
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 10,
-    textAlign: 'center',
-  },
   alertContainer: {
-    //: '#FFF4E5',
     borderRadius: 12,
     padding: 16,
     margin: 20,
@@ -355,24 +383,6 @@ const styles = StyleSheet.create({
   alertIcon: {
     fontSize: 32,
     marginBottom: 8,
-  },
-  alertText: {
-    fontSize: 16,
-    color: '#8A6D3B',
-    textAlign: 'center',
-    marginBottom: 12,
-    fontWeight: '500',
-  },
-  alertButton: {
-    backgroundColor: '#FFA726',
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  alertButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 14,
   },
   chartContainer: {
     alignItems: 'center',
@@ -389,7 +399,6 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 400,
   },
-
   matchItem: {
     backgroundColor: '#F5F5F5',
     borderRadius: 8,
@@ -404,16 +413,15 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
   },
-
   matchDate: {
     fontSize: 14,
     fontWeight: '500',
     color: '#333',
   },
-
   matchCount: {
     fontSize: 14,
     fontWeight: '600',
     color: '#FF7043',
-  }
+  },
 });
+
