@@ -151,7 +151,7 @@ const GameRegister: React.FC = () => {
               height: 100,
             },
             {
-              label: 'Link para versão digital (opcional):',
+              label: 'Link para versão digital (se houver):',
               value: digitalLink,
               onChange: setDigitalLink,
             },

@@ -23,7 +23,6 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
   const slideAnim = useRef(new Animated.Value(-width)).current;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
-
   const hasOpenMatch = useMatchStore((state) => state.hasOpenMatch);
 
   // Verifica se há usuário logado
@@ -57,7 +56,21 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
     }
   };
 
-  // Animação de entrada e saída do menu
+  // Fecha com animação
+  const handleClose = () => {
+    Animated.timing(slideAnim, {
+      toValue: -width,
+      duration: 500,
+      useNativeDriver: Platform.OS !== 'web',
+    }).start(() => onClose());
+  };
+
+  // Alternativa limpa: espera o fechamento antes de navegar
+  const navigateAfterClose = (path: Href) => {
+    handleClose();
+    setTimeout(() => router.push(path), 500);
+  };
+
   useEffect(() => {
     if (visible) {
       checkAuthentication();
@@ -75,31 +88,6 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
     }
   }, [visible]);
 
-  // Fecha o menu com animação
-  const handleClose = () => {
-    Animated.timing(slideAnim, {
-      toValue: -width,
-      duration: 500,
-      useNativeDriver: Platform.OS !== 'web',
-    }).start(() => onClose());
-  };
-
-  // Navega para uma rota e fecha o menu
-  const handleNavigate = (path: Href) => {
-    handleClose();
-    router.push(path);
-  };
-
-  // Botão que registra partidas
-  const handlePlayPress = () => {
-    handleClose();
-    if (hasOpenMatch) {
-      router.push('/matches/matchFinish');
-    } else {
-      router.push('/matches/matchStart');
-    }
-  };
-
   return (
     <Modal animationType="none" transparent visible={visible} onRequestClose={handleClose}>
       <Pressable onPress={handleClose} style={stylesSandwichMenu.modalContainer}>
@@ -112,34 +100,35 @@ const SandwichMenu: React.FC<ModalProps> = ({ visible, onClose }) => {
             },
           ]}>
           <View style={stylesSandwichMenu.buttonContainer}>
-            <ButtonHighlight title="Início" onPress={() => handleNavigate('/boardgame')} />
+            <ButtonHighlight title="Início" onPress={() => navigateAfterClose('/boardgame')} />
             {!isAuthenticated ? (
-              <ButtonHighlight title="Login" onPress={() => handleNavigate('/login')} />
+              <ButtonHighlight title="Login" onPress={() => navigateAfterClose('/login')} />
             ) : (
               <>
-                <ButtonHighlight title="Perfil" onPress={() => handleNavigate('/profile')} />
-
+                <ButtonHighlight title="Perfil" onPress={() => navigateAfterClose('/profile')} />
                 <ButtonHighlight
                   title="Configurações"
-                  onPress={() => handleNavigate('/settings')}
+                  onPress={() => navigateAfterClose('/settings')}
                 />
-
-                <ButtonHighlight title="Registrar partida" onPress={handlePlayPress} />
-
+                <ButtonHighlight
+                  title="Registrar partida"
+                  onPress={() =>
+                    navigateAfterClose(
+                      hasOpenMatch ? '/matches/matchFinish' : '/matches/matchStart'
+                    )
+                  }
+                />
                 <ButtonHighlight
                   title="Adicionar jogo"
-                  onPress={() => router.push('/boardgame/registerGame')}
+                  onPress={() => navigateAfterClose('/boardgame/registerGame')}
                 />
-
-                <ButtonHighlight title="Feedback" onPress={() => handleNavigate('/feedback')} />
-
+                <ButtonHighlight title="Feedback" onPress={() => navigateAfterClose('/feedback')} />
                 {isDev && (
                   <ButtonHighlight
                     title="testando telas"
-                    onPress={() => handleNavigate('/boardgame')}
+                    onPress={() => navigateAfterClose('/boardgame')}
                   />
                 )}
-
                 <ButtonHighlight title="Sair" onPress={handleLogout} />
               </>
             )}
