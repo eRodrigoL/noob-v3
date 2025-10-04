@@ -8,6 +8,15 @@ A aplicação tem como objetivo facilitar o **registro de partidas em jogos de t
 
 ---
 
+## 🔗 Acesso em Produção
+
+A aplicação está publicada em domínio próprio:
+
+- **URL:** [https://noob.app.br/](https://noob.app.br/)
+- **Plataforma:** Vercel (deploy para Web)
+
+---
+
 ## 🚀 Tecnologias Utilizadas
 
 - [React Native](https://reactnative.dev) com TypeScript
@@ -70,7 +79,7 @@ Em seguida, foi executado o script `npm run reset-project` para trazer a aplica�
 1. **Clone o repositório:**
 
    ```bash
-   git clone https://github.com/seu-usuario/noob-v3.git
+   git clone https://github.com/eRodrigoL/noob-v3.git
    cd noob-v3
    ```
 
